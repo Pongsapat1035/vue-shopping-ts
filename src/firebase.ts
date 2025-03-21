@@ -1,10 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FB_APY_KEY,
   authDomain: import.meta.env.VITE_FB_AUTH_DOMAIN,
@@ -14,9 +11,16 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FB_APP_ID,
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+const auth = getAuth();
 
-export { db };
+const enableEmulator = true;
+
+if (enableEmulator) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099");
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+}
+
+export { db, auth };
