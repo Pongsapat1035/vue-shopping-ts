@@ -1,13 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router'
-import { onMounted } from 'vue'
-import UserLayout from '../layout/UserLayout.vue'
-import ProductCard from '../components/ProductCard.vue'
 
-onMounted(() => {
-    // couterStore.testFirebase()
-    // console.log(import.meta.env.VITE_FB_APY_KEY) // "123"
-})
+import UserLayout from '../layout/UserLayout.vue'
+import ProductCard from '../components/client/ProductCard.vue'
 
 
 </script>
@@ -33,7 +27,7 @@ onMounted(() => {
                 <ProductCard></ProductCard>
                 <ProductCard></ProductCard>
             </div>
-            <!-- <button class="btn btn-primary self-center">View more</button> -->
+            <RouterLink to="/user/all-product" class="btn btn-primary w-40 self-center">View more</RouterLink>
         </div>
     </UserLayout>
 </template>

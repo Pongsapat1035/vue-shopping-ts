@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import TextInputTag from './TextInputTag.vue';
+import { RouterLink } from 'vue-router';
+import InputTag from '../InputTag.vue';
+import PasswordInput from '../PasswordInput.vue';
 </script>
 <template>
-    <div class="bg-white shadow-sm rounded-3xl flex flex-col p-10 gap-5 w-1/3 max-w-[480px]">
+    <div class="flex flex-col p-10 gap-5 w-1/3 max-w-[480px]">
         <h1 class="font-bold text-5xl mb-5">Login</h1>
-        <TextInputTag inputName="E-mail" inputType="email"></TextInputTag>
-        <TextInputTag inputName="Password" inputType="password"></TextInputTag>
-        <button class="btn btn-primary">Login</button>
+        <InputTag title="E-mail" type="email" name="email" placeHolderText="example@mail.com"></InputTag>
+        <PasswordInput title="Password" name="password"></PasswordInput>
+        <button class="btn btn-primary mt-5">Login</button>
         <button class="btn bg-white text-black border-[#e5e5e5]">
             <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 512 512">
@@ -20,6 +22,6 @@ import TextInputTag from './TextInputTag.vue';
             </svg>
             Login with Google
         </button>
-        <p class="font-semibold cursor-pointer self-center">Create new account</p>
+        <RouterLink to="/register" class="font-semibold cursor-pointer self-center">Create new account</RouterLink>
     </div>
 </template>

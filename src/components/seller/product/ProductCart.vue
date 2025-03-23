@@ -1,9 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 </script>
-
 <template>
-    <div class="card bg-base-100 w-96 shadow-sm">
+    <div class="card bg-base-100 w-80 shadow-sm">
         <figure>
             <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
         </figure>

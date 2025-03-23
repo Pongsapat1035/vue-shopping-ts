@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import LoginForm from '../components/Auth/LoginForm.vue';
 import RegisterForm from '../components/Auth/RegisterForm.vue';
 </script>
-
 <template>
-    <div class="w-screen h-screen flex justify-center items-center">
-        <LoginForm></LoginForm>
+    <div class="container h-screen mx-auto flex justify-center items-center">
         <RegisterForm></RegisterForm>
     </div>
 </template>
