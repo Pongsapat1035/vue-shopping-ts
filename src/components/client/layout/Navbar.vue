@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+import { useAuthStore } from '../../../store/auth';
+const authStore = useAuthStore()
 </script>
 <template>
     <div class="navbar bg-base-100">
@@ -47,7 +49,7 @@ import { RouterLink } from 'vue-router';
                     <li>
                         <RouterLink to="/user/order">My order</RouterLink>
                     </li>
-                    <li><a>Logout</a></li>
+                    <li><a @click="authStore.signout()">Logout</a></li>
                 </ul>
             </div>
         </div>

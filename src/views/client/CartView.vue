@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import ProductListCart from '../../components/cart/ProductListCart.vue';
+import ProductListCart from '../../components/client/cart/ProductListCart.vue';
 import UserLayout from '../../layout/UserLayout.vue';
 </script>
 

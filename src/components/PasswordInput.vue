@@ -1,21 +1,77 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-defineProps<{
+import ValidatePasswordLists from './Auth/ValidatePasswordLists.vue';
+const props = defineProps<{
     title: string
     name: string
+    value: string
     errorMsg?: string
+    vertify?: boolean
 }>()
 
+const emit = defineEmits(['update:value', 'update:error'])
 const showPassword = ref(false)
+
+const validateLists = ref([
+    {
+        isValid: false,
+        text: "Must be at least 8 characters."
+    },
+    {
+        isValid: false,
+        text: "Must contain at least one uppercase and one lowercase letter."
+    },
+    {
+        isValid: false,
+        text: "Must contain at least one special character."
+    },
+])
+
+const passwordValidate = (password: string) => {
+    const lengthCheck = /.{8,}/.test(password); // At least 9 characters
+    const caseCheck = /(?=.*[A-Z])(?=.*[a-z])/.test(password); // At least one uppercase and one lowercase letter
+    const specialCharCheck = /[@$!%*?&\-_]/.test(password); //
+    validateLists.value[0].isValid = lengthCheck
+    validateLists.value[1].isValid = caseCheck
+    validateLists.value[2].isValid = specialCharCheck
+
+    if (!lengthCheck || !caseCheck || !specialCharCheck) {
+        return true
+    } else {
+        return false
+    }
+}
+
+const handleInput = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target) {
+        if (props.vertify) {
+            const userPassword: string = target.value
+            if (userPassword) {
+                if (passwordValidate(userPassword)) {
+                    emit('update:error', "please fill password incorrect format")
+                } else {
+                    emit('update:error', "")
+                }
+            } else {
+                validateLists.value.forEach(list => {
+                    list.isValid = false
+                })
+            }
+
+        }
+        emit('update:value', target.value)
+    }
+}       
 </script>
 
 <template>
     <fieldset class="flex flex-col gap-2">
         <legend class="font-semibold mb-2">{{ title }}</legend>
         <div class=" flex px-4 py-3 bg-gray-100 rounded-lg">
-            <input :type="showPassword ? 'text' : 'password'" :name="name"
+            <input :type="showPassword ? 'text' : 'password'" :name="name" :value="value" @input="handleInput"
                 class="outline-none w-full font-light text-sm" placeholder="********" />
-            <button class="rounded-full cursor-pointer" @click="showPassword = !showPassword">
+            <button class="rounded-full cursor-pointer" type="button" @click="showPassword = !showPassword">
                 <svg v-if="showPassword" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" height="18"
                     width="18">
                     <path
@@ -27,6 +83,7 @@ const showPassword = ref(false)
                 </svg>
             </button>
         </div>
+        <ValidatePasswordLists v-if="vertify" :validateLists="validateLists"></ValidatePasswordLists>
         <p v-if="errorMsg" class="text-red-400 text-sm ml-2">{{ errorMsg }}</p>
     </fieldset>
 </template>
