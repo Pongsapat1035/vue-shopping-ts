@@ -64,6 +64,6 @@ const handleSubmit = async () => {
         </PasswordInput>
         <button type="submit" class="btn btn-primary mt-5">Register</button>
         <GoogleLoginBtn></GoogleLoginBtn>
-        <RouterLink to="/auth" class="font-semibold cursor-pointer self-center">Return to login</RouterLink>
+        <RouterLink to="/auth/login" class="font-semibold cursor-pointer self-center">Return to login</RouterLink>
     </form>
 </template>

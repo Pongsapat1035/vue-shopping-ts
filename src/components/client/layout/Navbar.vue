@@ -8,7 +8,7 @@ const authStore = useAuthStore()
         <div class="flex-1">
             <RouterLink to="/" class="btn btn-ghost text-xl">Mart.shop</RouterLink>
         </div>
-        <RouterLink class="btn btn-primary" to="/auth">Login</RouterLink>
+        <RouterLink class="btn btn-primary" to="/auth/login">Login</RouterLink>
         <RouterLink class="btn btn-primary" to="/seller/dashboard">Seller</RouterLink>
         <div class="flex-none flex gap-3">
             <div class="dropdown dropdown-end">

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   GoogleAuthProvider,
   signInWithPopup,
@@ -9,6 +9,8 @@ import {
   updateProfile,
   signOut,
 } from "firebase/auth";
+
+import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 
 interface SignUpData {
   email: string;
@@ -20,32 +22,48 @@ interface SignUpData {
 export const useAuthStore = defineStore("authStore", {
   state: (): {
     userId: string;
+    role: string;
   } => ({
     userId: "",
+    role: "",
   }),
   actions: {
     async checkAuth() {
       return new Promise((resolve) => {
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
           if (user) {
-            console.log("user : ", user);
+            const uid = user.uid;
+
+            const docRef = doc(db, "users", uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              // user exist
+              const userInfo = docSnap.data();
+              this.role = userInfo.role;
+            } else {
+              // new user
+              const colRef = collection(db, "users");
+              await setDoc(doc(colRef, uid), {
+                role: "client",
+                name: user.displayName,
+              });
+              this.role = "client";
+            }
             this.userId = user.uid;
             resolve(true);
-          } else { 
+          } else {
             console.log("user is not login");
             resolve(false);
           }
         });
       });
     },
+
     async signInWithGoogle() {
       const provider = new GoogleAuthProvider();
-      console.log("login with google");
       try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        this.userId = user.uid;
-        console.log("Login success : ", user);
+        await signInWithPopup(auth, provider);
+        console.log("Login success : ");
       } catch (error) {
         console.log("error login google: ", error);
       }
@@ -53,14 +71,12 @@ export const useAuthStore = defineStore("authStore", {
 
     async signUp(data: SignUpData) {
       const { email, password, name } = data;
-
       try {
         const response = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
-
         // update user name
         await updateProfile(response.user, {
           displayName: name,
@@ -73,7 +89,6 @@ export const useAuthStore = defineStore("authStore", {
     async signIn(email: string, password: string) {
       try {
         await signInWithEmailAndPassword(auth, email, password);
-
         console.log("login success !!");
       } catch (error) {
         console.log("error from sign in : ", error);

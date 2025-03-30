@@ -2,7 +2,14 @@
 
 import UserLayout from '../layout/UserLayout.vue'
 import ProductCard from '../components/client/ProductCard.vue'
+import { useAuthStore } from '../store/auth';
+import { onMounted } from 'vue';
 
+const authStore = useAuthStore()
+
+onMounted(async () => {
+    await authStore.checkAuth()
+})
 
 </script>
 <template>

@@ -12,7 +12,7 @@ const handleClick = async () => {
 
 </script>
 <template>
-    <button class="btn bg-white text-black border-[#e5e5e5]" @click="handleClick">
+    <button type="button" class="btn bg-white text-black border-[#e5e5e5]" @click="handleClick">
         <svg aria-label="Google logo" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
             <g>
                 <path d="m0 0H512V512H0" fill="#fff"></path>

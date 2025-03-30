@@ -41,6 +41,6 @@ const handleSubmit = async () => {
         <PasswordInput title="Password" name="password" v-model:value="formData.password"></PasswordInput>
         <button type="submit" class="btn btn-primary mt-5">Login</button>
         <GoogleLoginBtn></GoogleLoginBtn>
-        <RouterLink to="/register" class="font-semibold cursor-pointer self-center">Create new account</RouterLink>
+        <RouterLink to="/auth/register" class="font-semibold cursor-pointer self-center">Create new account</RouterLink>
     </form>
 </template>

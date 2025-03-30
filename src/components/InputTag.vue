@@ -2,9 +2,9 @@
 import { ref } from 'vue';
 const props = defineProps<{
     title: string
-    name: string
+    name: string 
     type: string
-    value: string
+    value?: string | number
     error?: string
     placeHolderText?: string
 

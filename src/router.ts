@@ -1,6 +1,8 @@
 import { createWebHistory, createRouter } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
+import { useAuthStore } from "./store/auth";
+
 // buyer view
 import HomeView from "./views/HomeView.vue";
 import LoginView from "./views/LoginView.vue";
@@ -18,22 +20,64 @@ import ProductManageView from "./views/seller/ProductManageView.vue";
 import AddProductView from "./views/seller/AddProductView.vue";
 
 const routes: RouteRecordRaw[] = [
-  { path: "/", component: HomeView },
-  { path: "/auth", component: LoginView },
-  { path: "/register", component: RegisterView },
-  { path: "/user/cart", component: CartView },
-  { path: "/user/checkout", component: CheckoutView },
-  { path: "/user/all-product", component: AllProductListView },
-  { path: "/user/profile", component: ProfileView },
-  { path: "/user/order", component: OrderView },
-  { path: "/product/:id", component: ProductDetailView },
-  { path: "/seller/dashboard", component: DashboardView },
-  { path: "/seller/orders", component: OrderManangeView },
-  { path: "/seller/products", component: ProductManageView },
-  { path: "/seller/product/add", component: AddProductView },
+  { path: "/", name: "home", component: HomeView },
+  { path: "/auth/login", name: "auth-login", component: LoginView },
+  { path: "/auth/register", name: "auth-register", component: RegisterView },
+  { path: "/user/cart", name: "user-cart", component: CartView },
+  { path: "/user/checkout", name: "user-checkout", component: CheckoutView },
+  {
+    path: "/user/all-product",
+    name: "user-products",
+    component: AllProductListView,
+  },
+  { path: "/user/profile", name: "user-profile", component: ProfileView },
+  { path: "/user/order", name: "user-order", component: OrderView },
+  {
+    path: "/product/:id",
+    name: "user-productDetail",
+    component: ProductDetailView,
+  },
+  {
+    path: "/seller/dashboard",
+    name: "seller-dashboard",
+    component: DashboardView,
+  },
+  {
+    path: "/seller/orders",
+    name: "seller-orders",
+    component: OrderManangeView,
+  },
+  {
+    path: "/seller/products",
+    name: "seller-products",
+    component: ProductManageView,
+  },
+  {
+    path: "/seller/product/add",
+    name: "seller-addProduct",
+    component: AddProductView,
+  },
 ];
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+router.beforeEach(async (to, from, next) => {
+  const authStore = useAuthStore();
+  await authStore.checkAuth();
+  const role = authStore.role;
+  // check if not admin can't access seller page
+  if (
+    typeof to.name === "string" &&
+    to.name.includes("seller") &&
+    role !== "admin"
+  ) {
+    next({ name: "home" });
+  } else {
+    next();
+  }
+});
+
+export default router;
