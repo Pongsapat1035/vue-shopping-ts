@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { useAuthStore } from '../store/auth';
+import { useRouter } from 'vue-router';
+
 const authStore = useAuthStore()
+const router = useRouter()
 
 const handleClick = async () => {
     try {
         await authStore.signInWithGoogle()
+        router.push({ name: 'home' })
     } catch (error) {
         console.log('error : ', error)
     }

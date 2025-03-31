@@ -18,6 +18,8 @@ import DashboardView from "./views/seller/DashboardView.vue";
 import OrderManangeView from "./views/seller/OrderManangeView.vue";
 import ProductManageView from "./views/seller/ProductManageView.vue";
 import AddProductView from "./views/seller/AddProductView.vue";
+import EditProductView from "./views/seller/EditProductView.vue";
+
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: HomeView },
@@ -56,7 +58,11 @@ const routes: RouteRecordRaw[] = [
     path: "/seller/product/add",
     name: "seller-addProduct",
     component: AddProductView,
-  },
+  },{
+    path: '/seller/product/edit/:id',
+    name: "seller-editproduct",
+    component: EditProductView
+  }
 ];
 
 const router = createRouter({

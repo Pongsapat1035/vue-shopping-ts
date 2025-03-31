@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import InputTag from '../InputTag.vue';
 import PasswordInput from '../PasswordInput.vue';
 import GoogleLoginBtn from '../GoogleLoginBtn.vue';
 import { useAuthStore } from '../../store/auth';
 import { onMounted, reactive } from 'vue';
 
+
 const authStore = useAuthStore()
+const router = useRouter()
 
 interface FormData {
     email: string
@@ -27,6 +29,7 @@ const handleSubmit = async () => {
     try {
         const { email, password } = formData
         await authStore.signIn(email, password)
+        router.push({ name: 'home' })
     } catch (error) {
         console.log(error)
     }

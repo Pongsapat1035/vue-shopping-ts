@@ -6,37 +6,118 @@ import SizeSelectField from '../../components/seller/product/SizeSelectField.vue
 import CoverPicture from '../../components/seller/product/CoverPicture.vue';
 
 import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
 import { useSellerProductStore } from '../../store/seller/product';
+import { ref, type Ref } from 'vue';
+
 const productStore = useSellerProductStore()
+const router = useRouter()
+
+type CheckBoxOption = { name: string, isCheck: boolean }
+
 interface FormData {
     coverImg: string
     name: string
-    quality: number
+    quantity: number
     price: number
     detail: string
-    colors: string[]
-    sizes: string[]
+    colors: CheckBoxOption[]
+    sizes: CheckBoxOption[]
 }
+
+interface InputValidate {
+    name: string
+    quantity: string
+    price: string
+    description: string
+}
+
+const colorLists: CheckBoxOption[] = [
+    {
+        name: '#F7374F',
+        isCheck: false
+    },
+    {
+        name: '#FCB454',
+        isCheck: false
+    },
+    {
+        name: '#27548A',
+        isCheck: false
+    },
+    {
+        name: '#77B254',
+        isCheck: false
+    },
+    {
+        name: '#A31D1D',
+        isCheck: false
+    }
+]
+
+const sizeLists: CheckBoxOption[] = [
+    {
+        name: "XS",
+        isCheck: false
+    },
+    {
+        name: "S",
+        isCheck: false
+    },
+    {
+        name: "M",
+        isCheck: false
+    },
+    {
+        name: "L",
+        isCheck: false
+    },
+    {
+        name: "XL",
+        isCheck: false
+    }, {
+        name: "XXL",
+        isCheck: false
+    }
+]
+
+const inputError: InputValidate = reactive({
+    name: '',
+    quantity: '',
+    price: '',
+    description: ''
+})
 
 const formData: FormData = reactive({
     coverImg: '',
     name: '',
-    quality: 0,
+    quantity: 0,
     price: 0,
     detail: '',
-    colors: [],
-    sizes: []
+    colors: colorLists,
+    sizes: sizeLists
 })
+
 
 const handleSubmit = async () => {
     console.log(formData)
+
     try {
+        const validateInput = inputError.name || inputError.quantity || inputError.price || inputError.description
+        if (validateInput) {
+            throw new Error("input error ")
+        }
+
         await productStore.addProduct(formData)
+        router.push({ name: 'seller-products' })
+        alert('create product success !')
     } catch (error) {
         console.log('error : ', error)
     }
 
 }
+const checkColorState: Ref<boolean> = ref(false)
+const checkSizeState: Ref<boolean> = ref(false)
 
 </script>
 <template>
@@ -52,24 +133,25 @@ const handleSubmit = async () => {
                     v-model:value="formData.name"></InputTag>
                 <div class="flex gap-5">
                     <div class="flex-auto">
-                        <InputTag title="Quality" name="number" type="text" placeHolderText="quality"
-                            v-model:value="formData.quality"></InputTag>
+                        <InputTag title="Quality" name="quantity" type="number" placeHolderText="quantity"
+                            v-model:value="formData.quantity" v-model:error="inputError.quantity"></InputTag>
                     </div>
                     <div class="flex-auto">
-                        <InputTag title="Price" name="number" type="text" placeHolderText="price"
-                            v-model:value="formData.price"></InputTag>
+                        <InputTag title="Price" name="price" type="number" placeHolderText="price"
+                            v-model:value="formData.price" v-model:error="inputError.price"></InputTag>
                     </div>
                 </div>
                 <fieldset class="flex flex-col gap-2">
                     <legend class="font-semibold mb-2">Detail</legend>
                     <div class="px-4 py-3 bg-gray-100 rounded-lg">
-                        <textarea class="bg-gray-100 rounded-lg outline-none w-full" placeholder="detail"
+                        <textarea class="bg-gray-100 rounded-lg outline-none w-full font-light" placeholder="detail"
                             v-model="formData.detail"></textarea>
                     </div>
                 </fieldset>
                 <div class="flex gap-5">
-                    <ColorSelectField v-model:value="formData.colors"></ColorSelectField>
-                    <SizeSelectField v-model:value="formData.sizes"></SizeSelectField>
+                    <ColorSelectField v-model:colors="formData.colors" v-model:enable="checkColorState">
+                    </ColorSelectField>
+                    <SizeSelectField v-model:sizes="formData.sizes" v-model:enable="checkSizeState"></SizeSelectField>
                 </div>
             </div>
         </form>
