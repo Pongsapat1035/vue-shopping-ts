@@ -3,12 +3,22 @@
 import UserLayout from '../layout/UserLayout.vue'
 import ProductCard from '../components/client/ProductCard.vue'
 import { useAuthStore } from '../store/auth';
+import { useClientProductStore } from '../store/client/product';
 import { onMounted } from 'vue';
 
+
+const productStore = useClientProductStore()
 const authStore = useAuthStore()
 
 onMounted(async () => {
-    await authStore.checkAuth()
+    try {
+        await authStore.checkAuth()
+        await productStore.loadAllProducts()
+        console.log(productStore.productLists)
+    } catch (error) {
+        console.log('error : ', error)
+    }
+
 })
 
 </script>
@@ -29,10 +39,7 @@ onMounted(async () => {
         <div class="flex flex-col gap-10 ">
             <h1 class="font-bold text-5xl">Product lists</h1>
             <div class="flex gap-8">
-                <ProductCard></ProductCard>
-                <ProductCard></ProductCard>
-                <ProductCard></ProductCard>
-                <ProductCard></ProductCard>
+                <ProductCard v-for="product in productStore.productLists" :data="product"></ProductCard>
             </div>
             <RouterLink to="/user/all-product" class="btn btn-primary w-40 self-center">View more</RouterLink>
         </div>

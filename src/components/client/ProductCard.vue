@@ -1,15 +1,34 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
+defineProps<{
+    data: ProductData
+}>()
+
+interface CheckBoxOption {
+    name: string;
+    isCheck: boolean;
+}
+interface ProductData {
+    coverImg: string;
+    name: string;
+    quantity: number;
+    price: number;
+    detail: string;
+    colors: CheckBoxOption[];
+    sizes: CheckBoxOption[];
+    id: string;
+}
+
 </script>
 
 <template>
     <div class="card bg-base-100 w-90 shadow-sm">
         <figure>
-            <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="Shoes" />
+            <img :src="data.coverImg" :alt="data.name" />
         </figure>
         <div class="card-body">
             <div class="flex justify-between">
-                <h2 class="card-title">Card Title</h2>
+                <h2 class="card-title">{{ data.name }}</h2>
                 <button class="btn btn-square">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                         stroke="currentColor" class="size-[1.2em]">
@@ -18,11 +37,10 @@ import { RouterLink } from 'vue-router';
                     </svg>
                 </button>
             </div>
-            <p>This is description</p>
-            <p>40 $</p>
+            <p>{{ data.detail }}</p>
+            <p>{{ data.price }} $</p>
             <div class="card-actions justify-end gap-2">
-
-                <RouterLink to="/product/1" class="btn btn-primary">View detail</RouterLink>
+                <RouterLink :to="`/product/${data.id}`" class="btn btn-primary">View detail</RouterLink>
             </div>
         </div>
     </div>
