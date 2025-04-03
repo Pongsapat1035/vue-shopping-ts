@@ -34,11 +34,13 @@ interface ProductData extends FormData {
 export const useClientProductStore = defineStore("clientProductStore", {
   state: (): {
     productLists: ProductData[];
+    backupProduct: ProductData[];
     product: ProductData;
     filterState: boolean;
   } => ({
     productLists: [],
-    filterState: false,
+    backupProduct: [],
+    filterState: true,
     product: {
       id: "",
       coverImg: "",
@@ -77,6 +79,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
           products.push(convertData);
         });
         this.productLists = products;
+        this.backupProduct = products;
         // return products;
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
@@ -118,7 +121,19 @@ export const useClientProductStore = defineStore("clientProductStore", {
         return null;
       }
     },
-
-    
+    sortProductByName(type: string) {
+      if (type === "A - Z") {
+        this.productLists.sort((a, b) => a.name.localeCompare(b.name));
+      } else {
+        this.productLists.sort((a, b) => b.name.localeCompare(a.name));
+      }
+    },
+    sortProductByPrice(type: string) {
+      if (type === "Low to Hight") {
+        this.productLists.sort((a, b) => a.price - b.price);
+      } else {
+        this.productLists.sort((a, b) => b.price - a.price);
+      }
+    },
   },
 });

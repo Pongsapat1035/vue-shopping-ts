@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useClientProductStore } from "../../../store/client/product";
+const productStore = useClientProductStore();
+
 const priceSortState = ref<string>("Low to Hight");
 const nameSortState = ref<string>("A - Z");
 const handlePriceSortState = () => {
   priceSortState.value === "Low to Hight"
     ? (priceSortState.value = "High to Low")
     : (priceSortState.value = "Low to Hight");
+  // productStore.sortProductByName(priceSortState.value);
+  productStore.sortProductByPrice(priceSortState.value)
 };
 
 const handleNameSortState = () => {
   nameSortState.value === "A - Z"
     ? (nameSortState.value = "Z - A")
     : (nameSortState.value = "A - Z");
+  productStore.sortProductByName(nameSortState.value);
 };
 </script>
 <template>

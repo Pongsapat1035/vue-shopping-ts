@@ -36,6 +36,7 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
     product: FormData;
     colorsConfig: string[];
     sizesConfig: string[];
+    checkConfigLoaded: boolean;
   } => ({
     product: {
       coverImg: "",
@@ -49,6 +50,7 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
     },
     colorsConfig: [],
     sizesConfig: [],
+    checkConfigLoaded: false,
   }),
   actions: {
     async loadAllProducts(): Promise<ProductData[]> {
@@ -117,21 +119,31 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
 
     async setConfig() {
       try {
-        const colors = ["#F7374F", "#FCB454", "#27548A", "#77B254", "#A31D1D"];
-        const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-        const docRef = doc(db, "config", "productConfig");
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          console.log(docSnap.data());
-          const { colors, sizes } = docSnap.data();
-          this.colorsConfig = colors;
-          this.sizesConfig = sizes;
-        } else {
-          await setDoc(doc(db, "config", "productConfig"), {
-            colors,
-            sizes,
-          });
-          console.log("create config success");
+        if (!this.checkConfigLoaded) {
+          const colors = [
+            "#F7374F",
+            "#FCB454",
+            "#27548A",
+            "#77B254",
+            "#A31D1D",
+          ];
+          const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+          const docRef = doc(db, "config", "productConfig");
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            // console.log(docSnap.data());
+            const { colors, sizes } = docSnap.data();
+            this.colorsConfig = colors;
+            this.sizesConfig = sizes;
+          } else {
+            await setDoc(doc(db, "config", "productConfig"), {
+              colors,
+              sizes,
+            });
+            console.log("create config success");
+          }
+
+          this.checkConfigLoaded = true;
         }
       } catch (error) {
         console.log("error from set config");
