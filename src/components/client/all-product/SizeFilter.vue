@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { useSellerProductStore } from "../../../store/seller/product";
-import { ref, watch } from "vue";
+
 const sellerProductStore = useSellerProductStore();
+const value = defineModel<string[]>();
 
-const selectedSize = ref<string[]>([]);
-
-watch(selectedSize, () => {
-  console.log(selectedSize.value);
-});
 </script>
 <template>
   <fieldset
@@ -21,7 +17,7 @@ watch(selectedSize, () => {
           type="checkbox"
           class="w-0 h-0 opacity-0 absolute peer"
           :value="size"
-          v-model="selectedSize" />
+          v-model="value" />
         <div
           class="w-full h-full border-2 border-gray-100 peer-checked:border-gray-400 rounded-lg flex justify-center items-center font-semibold">
           {{ size }}
@@ -29,7 +25,7 @@ watch(selectedSize, () => {
       </label>
       <button
         class="w-8 h-8 border-2 border-gray-100 rounded-lg btn btn-square"
-        @click="selectedSize = []">
+        @click="value = []">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"

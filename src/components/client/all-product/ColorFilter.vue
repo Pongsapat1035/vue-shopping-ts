@@ -2,12 +2,16 @@
 import { useSellerProductStore } from "../../../store/seller/product";
 import { ref, watch } from "vue";
 
-const sellerProductStore = useSellerProductStore();
-const selectedColor = ref<string[]>([]);
+const value = defineModel<string[]>()
 
-watch(selectedColor, () => {
-  console.log(selectedColor.value);
-});
+// const emit = defineEmits(["update:value"]);
+const sellerProductStore = useSellerProductStore();
+// const selectedColor = ref<string[]>([]);
+
+// watch(selectedColor, () => {
+//   // console.log(selectedColor.value);
+//   emit("update:value", selectedColor.value);
+// });
 </script>
 <template>
   <fieldset
@@ -21,14 +25,14 @@ watch(selectedColor, () => {
           type="checkbox"
           class="w-0 h-0 opacity-0 absolute peer"
           :value="color"
-          v-model="selectedColor" />
+          v-model="value" />
         <div
           class="w-full h-full border-2 border-transparent peer-checked:border-black rounded-lg flex justify-center items-center font-semibold"
           :style="{ backgroundColor: color }"></div>
       </label>
       <button
         class="w-8 h-8 border-2 border-gray-100 rounded-lg btn btn-square"
-        @click="selectedColor = []">
+        @click="value = []">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 512 512"

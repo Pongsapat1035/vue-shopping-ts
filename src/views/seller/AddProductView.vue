@@ -51,7 +51,8 @@ watch(
       isCheck: false,
     }));
     sizeLists.value = convertSizes;
-  }
+  },
+  { immediate: true }
 );
 
 const inputError: InputValidate = reactive({

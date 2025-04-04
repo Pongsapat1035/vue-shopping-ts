@@ -2,6 +2,9 @@
 import { useClientProductStore } from "../../../store/client/product";
 
 const productStore = useClientProductStore();
+
+const searchText = defineModel<string>();
+
 </script>
 <template>
   <div class="w-full py-4 flex justify-between item-center">
@@ -22,7 +25,11 @@ const productStore = useClientProductStore();
             <path d="m21 21-4.3-4.3"></path>
           </g>
         </svg>
-        <input type="search" required placeholder="Search" />
+        <input
+          type="search"
+          required
+          placeholder="Search"
+          v-model="searchText" />
       </label>
       <div class="divider divider-horizontal"></div>
       <button
