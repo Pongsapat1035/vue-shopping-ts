@@ -50,27 +50,21 @@ export const useClientProductStore = defineStore("clientProductStore", {
     },
   }),
   getters: {
-    getColor: (state) => {
+    getColor(state): string[] {
       const filterColor = state.product.colors
         .filter((color) => color.isCheck === true)
         .map((color) => color.name);
       return filterColor;
     },
-    getSize: (state) => {
+    getSize(state): string[] {
       const filterColor = state.product.sizes
         .filter((size) => size.isCheck === true)
         .map((size) => size.name);
       return filterColor;
     },
-    getMaxPrice: (state) => {
-      let maxPrice: number = 0;
-      for (let i = 1; i < state.backupProduct.length; i++) {
-        if (state.backupProduct[i].price > state.backupProduct[i - 1].price) {
-          maxPrice = state.backupProduct[i].price;
-        } else {
-          maxPrice = state.backupProduct[i - 1].price;
-        }
-      }
+    getMaxPrice(state): number {
+      const productPrices = state.backupProduct.map((product) => product.price);
+      const maxPrice = Math.max(...productPrices);
       return maxPrice;
     },
   },
@@ -83,8 +77,10 @@ export const useClientProductStore = defineStore("clientProductStore", {
         response.forEach((doc) => {
           const convertData = doc.data();
           convertData.id = doc.id;
+          convertData.price = parseInt(convertData.price);
           products.push(convertData);
         });
+        console.log(products);
         this.productLists = products;
         this.backupProduct = products;
       } catch (error) {

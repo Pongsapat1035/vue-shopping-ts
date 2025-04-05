@@ -4,6 +4,8 @@ import ProductListCart from "../../components/client/cart/ProductListCart.vue";
 import UserLayout from "../../layout/UserLayout.vue";
 import { useCartStore } from "../../store/client/cart";
 const cartStore = useCartStore();
+
+
 </script>
 
 <template>
@@ -13,7 +15,7 @@ const cartStore = useCartStore();
         <div class="w-3/4 p-5">
           <h1 class="font-bold text-2xl">Product lists</h1>
           <ProductListCart
-            v-for="product in cartStore.cartItems"></ProductListCart>
+            v-for="(product, index) in cartStore.cartItems" :data="product" :index="index"></ProductListCart>
         </div>
         <div class="w-2/4 p-5">
           <h1 class="font-bold text-2xl">Summary</h1>
