@@ -5,7 +5,7 @@ import ProductCard from '../components/client/ProductCard.vue'
 import { useAuthStore } from '../store/auth';
 import { useClientProductStore } from '../store/client/product';
 import { onMounted } from 'vue';
-
+import AlertBadge from '../components/AlertBadge.vue';
 
 const productStore = useClientProductStore()
 const authStore = useAuthStore()
@@ -43,5 +43,6 @@ onMounted(async () => {
             </div>
             <RouterLink to="/user/all-product" class="btn btn-primary w-40 self-center">View more</RouterLink>
         </div>
+       
     </UserLayout>
 </template>

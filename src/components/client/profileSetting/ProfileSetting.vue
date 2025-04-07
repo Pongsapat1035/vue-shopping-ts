@@ -54,7 +54,7 @@ const handleFileSubmit = async (e: Event) => {
           class="file-input file-input-ghost"
           @change="handleFileSubmit" />
         <button class="btn btn-secondary" @click="profileImg = ''">
-          Delete picture
+          Remove picture
         </button>
       </div>
     </div>

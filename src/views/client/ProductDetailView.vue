@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, type Ref } from "vue";
+import { onMounted, ref } from "vue";
 import UserLayout from "../../layout/UserLayout.vue";
 import ProductColor from "../../components/client/product-detail/ProductColor.vue";
 import ProductSize from "../../components/client/product-detail/ProductSize.vue";
@@ -8,8 +8,14 @@ import ProductImg from "../../components/client/product-detail/ProductImg.vue";
 import { useClientProductStore } from "../../store/client/product";
 import { useRoute } from "vue-router";
 import { useCartStore } from "../../store/client/cart";
+import { useAuthStore } from "../../store/auth";
+import { useAlertStore } from "../../store/alert";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const authStore = useAuthStore();
+const alertStore = useAlertStore();
 const productStore = useClientProductStore();
-const cartStore = useCartStore()
+const cartStore = useCartStore();
 const route = useRoute();
 const productId = Array.isArray(route.params.id)
   ? route.params.id[0]
@@ -57,36 +63,40 @@ onMounted(async () => {
 
 interface ProductCart {
   id: string;
-  quantity: number | null;
-  color?: string | null;
-  size?: string | null;
+  quantity: number | 0;
+  color: string | "";
+  size: string | "";
 }
 
 const handleSubmit = (e: Event) => {
+  if (!authStore.userId) {
+    router.push({ name: "auth-login" });
+  }
   const target = e.target as HTMLFormElement;
   const data = new FormData(target);
 
-  const color = data.get("color") ? String(data.get("color")) : null;
-  const quantity = data.get("quantity") ? Number(data.get("quantity")) : null;
-  const size = data.get("size") ? String(data.get("size")) : null;
-
-  if (productStore.getSize.length > 0 && !size) {
-    console.log("please enter size");
-    return;
-  }
+  const color = data.get("color") ? String(data.get("color")) : "";
+  const quantity = data.get("quantity") ? Number(data.get("quantity")) : 0;
+  const size = data.get("size") ? String(data.get("size")) : "";
 
   if (productStore.getColor.length > 0 && !color) {
-    console.log("please enter color");
+    alertStore.toggleAlert("Error", "please enter color");
     return;
   }
+  if (productStore.getSize.length > 0 && !size) {
+    alertStore.toggleAlert("Error", "please select size");
+    return;
+  }
+
   const productData: ProductCart = {
     id: product.value.id,
     quantity,
     color,
     size,
   };
-  cartStore.addItemToCart(productData)
+  cartStore.addItemToCart(productData);
   console.log("add to cart : ", productData);
+  alertStore.toggleAlert("success", "Add item to cart success");
 };
 </script>
 

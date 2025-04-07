@@ -38,19 +38,24 @@ const sizeLists: Ref<CheckBoxOption[]> = ref([]);
 watch(
   () => productStore.colorsConfig,
   () => {
-    const colorsConfig = productStore.colorsConfig;
-    const convertColors = colorsConfig.map((color) => ({
-      name: color,
-      isCheck: false,
-    }));
-    colorLists.value = convertColors;
+    if (
+      productStore.colorsConfig.length > 0 ||
+      productStore.sizesConfig.length > 0
+    ) {
+      const colorsConfig = productStore.colorsConfig;
+      const convertColors = colorsConfig.map((color) => ({
+        name: color,
+        isCheck: false,
+      }));
+      colorLists.value = convertColors;
 
-    const sizesConfig = productStore.sizesConfig;
-    const convertSizes = sizesConfig.map((size) => ({
-      name: size,
-      isCheck: false,
-    }));
-    sizeLists.value = convertSizes;
+      const sizesConfig = productStore.sizesConfig;
+      const convertSizes = sizesConfig.map((size) => ({
+        name: size,
+        isCheck: false,
+      }));
+      sizeLists.value = convertSizes;
+    }
   },
   { immediate: true }
 );

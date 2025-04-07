@@ -32,6 +32,7 @@ interface UserInfo {
   name: string;
   email: string;
   profileImg: string;
+  role: string;
   addressInfo: AddressInfo;
 }
 
@@ -47,6 +48,7 @@ export const useAuthStore = defineStore("authStore", {
       name: "",
       email: "",
       profileImg: "",
+      role: "",
       addressInfo: {
         name: "",
         tel: "",
@@ -65,7 +67,7 @@ export const useAuthStore = defineStore("authStore", {
             const uid = user.uid;
             this.userInfo.name = user.displayName || "";
             this.userInfo.email = user.email || "";
-            console.log("check user : ", user);
+            // console.log("check user : ", user);
             const docRef = doc(db, "users", uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -106,10 +108,11 @@ export const useAuthStore = defineStore("authStore", {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           console.log(docSnap.data());
-          const { name, profileImg, addressInfo } = docSnap.data();
+          const { name, profileImg, addressInfo, role } = docSnap.data();
           this.userInfo.name = name;
           this.userInfo.profileImg = profileImg;
           this.userInfo.addressInfo = addressInfo;
+          this.userInfo.role = role;
         }
       } catch (error) {
         console.log("error from load user info : ", error);
@@ -164,6 +167,7 @@ export const useAuthStore = defineStore("authStore", {
     async signout() {
       try {
         await signOut(auth);
+        window.location.reload();
         console.log("signout success !!");
       } catch (error) {
         console.log("error from signout : ", error);

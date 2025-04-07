@@ -26,7 +26,7 @@ const routes: RouteRecordRaw[] = [
   { path: "/auth/login", name: "auth-login", component: LoginView },
   { path: "/auth/register", name: "auth-register", component: RegisterView },
   { path: "/user/cart", name: "user-cart", component: CartView },
-  { path: "/user/checkout", name: "user-checkout", component: CheckoutView },
+  { path: "/user/checkout/:id", name: "user-checkout", component: CheckoutView },
   {
     path: "/user/all-product",
     name: "user-products",

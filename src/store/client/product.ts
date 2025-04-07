@@ -80,7 +80,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
           convertData.price = parseInt(convertData.price);
           products.push(convertData);
         });
-        console.log(products);
+        // console.log(products);
         this.productLists = products;
         this.backupProduct = products;
       } catch (error) {

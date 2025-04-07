@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useClientProductStore } from "../../../store/client/product";
-const productStore = useClientProductStore();
+import { onMounted, ref, watch } from "vue";
+import { useCartStore } from "../../../store/client/cart";
+
+const cartStore = useCartStore()
+const props = defineProps<{
+    remainQuantity: number
+    currentQuantity: number
+    index: number
+}>()
 
 const quantity = ref<number>(1);
-
-
 
 const handleQuantity = (e: Event) => {
   const target = e.currentTarget as HTMLInputElement;
@@ -13,7 +17,7 @@ const handleQuantity = (e: Event) => {
     const targetName = target.name;
     if (
       targetName === "increase" &&
-      quantity.value < productStore.product.remainQuantity
+      quantity.value < props.remainQuantity
     ) {
       quantity.value++;
     } else if (targetName === "decrease" && quantity.value > 1) {
@@ -21,6 +25,15 @@ const handleQuantity = (e: Event) => {
     }
   }
 };
+onMounted(()=>{
+    quantity.value = props.currentQuantity
+})
+watch(quantity, ()=>{
+    // console.log("quantity change")
+    // console.log('check index : ', props.index)
+    // console.log("check quantity : ", quantity.value)
+    cartStore.updateQuantity(props.index, quantity.value)
+})
 </script>
 
 <template>
@@ -44,7 +57,7 @@ const handleQuantity = (e: Event) => {
         type="number"
         name="quantity"
         :value="quantity"
-        :max="productStore.product.remainQuantity"
+        :max="remainQuantity"
         disabled
         disableAppearance
         class="w-full disableAppearance text-center" />
@@ -64,7 +77,7 @@ const handleQuantity = (e: Event) => {
       </svg>
     </button>
     <div class="text-xs text-gray-400 ml-4">
-      Stock : {{ productStore.product.remainQuantity }}
+      Stock : {{ remainQuantity }}
     </div>
   </div>
 </template>

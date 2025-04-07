@@ -5,7 +5,6 @@ const props = defineProps<{
     enable: boolean
 }>()
 
-
 type CheckBoxOption = { name: string, isCheck: boolean }
 
 const emit = defineEmits(['update:value', 'update:enable'])
@@ -18,12 +17,10 @@ const handleEnable = (e: Event) => {
     emit('update:enable', target.checked)
 }
 
-
 const handleCheck = (e: Event) => {
     const target = e.target as HTMLInputElement
     const value = target.value
     const isChecked = target.checked
-
     const sizeIndex = props.sizes.findIndex(size => size.name === value)
     props.sizes[sizeIndex].isCheck = isChecked ? true : false
     emit('update:value', props.sizes)
@@ -38,7 +35,6 @@ const handleCheck = (e: Event) => {
             <input type="checkbox" class="checkbox" @change="handleEnable" :checked="enable" />
             Enable size
         </label>
-        <!-- <button class="btn btn-primary w-20">Add</button> -->
         <div v-if="enable" class="flex gap-2 flex-wrap">
             <label v-for="size in sizes" class="w-8 h-8 relative">
                 <input type="checkbox" class="w-0 h-0 opacity-0 absolute peer" :value="size.name" @change="handleCheck"

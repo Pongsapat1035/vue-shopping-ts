@@ -2,10 +2,17 @@
 import { onMounted } from "vue";
 import Navbar from "../components/client/layout/Navbar.vue";
 import { useSellerProductStore } from "../store/seller/product";
+import { useCartStore } from "../store/client/cart";
+import AlertBadge from "../components/AlertBadge.vue";
+import { useAuthStore } from "../store/auth";
+const cartStore = useCartStore()
 const sellerProductStore = useSellerProductStore();
+const authStore = useAuthStore()
 onMounted(async () => {
   try {
+    await cartStore.loadCart()
     await sellerProductStore.setConfig();
+    await authStore.loadUserInfo()
   } catch (error) {
     console.log(error);
   }
@@ -23,5 +30,6 @@ onMounted(async () => {
         <span class="text-">Created by : Mart</span>
       </div>
     </div>
+    <AlertBadge></AlertBadge>
   </div>
 </template>
