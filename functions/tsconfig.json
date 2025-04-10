@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "esModuleInterop": true,
-    "moduleResolution": "nodenext",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "lib",
+    "module": "ESNext", // Use ESNext for the latest ES Module support
+    "target": "ES2020", // Target modern JavaScript
+    "moduleResolution": "node", // Resolve modules in Node.js style
+    "esModuleInterop": true, // Enable compatibility with CommonJS modules
+    "outDir": "lib", // Output directory for compiled files
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "noImplicitReturns": true,
+    "noUnusedLocals": true
   },
   "compileOnSave": true,
   "include": [

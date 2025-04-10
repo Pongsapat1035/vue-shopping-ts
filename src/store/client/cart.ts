@@ -26,6 +26,7 @@ interface OrderDetail {
   status: string;
   createdDate: Date
   products: ProductData[];
+  userId: string
 }
 export const useCartStore = defineStore("cartStore", {
   state: (): {
@@ -149,11 +150,12 @@ export const useCartStore = defineStore("cartStore", {
           totalPrice: this.getTotalPrice,
           products: this.productLists,
           status: "Pending",
-          createdDate: new Date()
+          createdDate: new Date(),
+          userId: this.user
         };
-        const docRef = collection(db, "orders", this.user, "orderLists");
+        const docRef = collection(db, "orders");
         const docSnapshot = await addDoc(docRef, orderDetail);
-        console.log(docSnapshot);
+        // console.log(docSnapshot);
         this.removeAllItem();
         return docSnapshot.id;
       } catch (error) {

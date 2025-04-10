@@ -8,9 +8,11 @@ import CoverPicture from "../../components/seller/product/CoverPicture.vue";
 import { reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useSellerProductStore } from "../../store/seller/product";
+import { useAlertStore } from "../../store/alert";
 import { ref, type Ref } from "vue";
 
 const productStore = useSellerProductStore();
+const alertStore = useAlertStore()
 const router = useRouter();
 
 type CheckBoxOption = { name: string; isCheck: boolean };
@@ -91,8 +93,11 @@ const handleSubmit = async () => {
     }
 
     await productStore.addProduct(formData);
+    alertStore.toggleAlert("success", "Create new product success !");
+
     router.push({ name: "seller-products" });
-    alert("create product success !");
+    // alert("create product success !");
+    
   } catch (error) {
     console.log("error : ", error);
   }

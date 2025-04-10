@@ -2,7 +2,7 @@
 import UserLayout from "../../layout/UserLayout.vue";
 import { useOrderStore } from "../../store/client/order";
 import { onMounted, reactive } from "vue";
-import { useRoute, RouterLink } from "vue-router";
+import { useRoute, RouterLink, useRouter } from "vue-router";
 import { useAuthStore } from "../../store/auth";
 import StatusBadge from "../../components/StatusBadge.vue";
 import AddressWarpper from "../../components/client/checkout/AddressWarpper.vue";
@@ -17,13 +17,21 @@ const orderId: string = Array.isArray(route.params.id)
 onMounted(async () => {
   try {
     await orderStore.loadOrder(orderId);
+    // console.log(Omise)
+    //   OmiseCard.configure({
+    //   publicKey: "OMISE_PUBLIC_KEY"
+    // });
   } catch (error) {
     console.log(error);
   }
 });
 
-const handlePayment = () => {
-  console.log(orderStore.orderDetail);
+const handlePayment = async () => {
+  // console.log(orderStore.orderDetail);
+  const paymentUrl: string | null = await orderStore.payment();
+  if (paymentUrl) {
+    location.href = paymentUrl;
+  }
 };
 </script>
 

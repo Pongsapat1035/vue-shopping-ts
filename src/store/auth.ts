@@ -101,13 +101,13 @@ export const useAuthStore = defineStore("authStore", {
       });
     },
     async loadUserInfo() {
-      console.log("load user");
+      // console.log("load user");
       try {
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log(docSnap.data());
+          // console.log(docSnap.data());
           const { name, profileImg, addressInfo, role } = docSnap.data();
           this.userInfo.name = name;
           this.userInfo.profileImg = profileImg;

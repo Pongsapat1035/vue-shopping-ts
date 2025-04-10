@@ -73,9 +73,7 @@ const handleSubmit = async () => {
               <p>Total price</p>
               <p>{{ cartStore.getTotalPrice }}$</p>
             </div>
-            <Button @click="handleSubmit" class="btn btn-primary"
-              >Checkout</Button
-            >
+            <Button @click="handleSubmit" class="btn btn-primary">Checkout</Button>
             <RouterLink to="/" class="btn">Shopping more</RouterLink>
           </div>
         </div>

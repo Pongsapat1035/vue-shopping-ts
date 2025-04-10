@@ -10,6 +10,7 @@ import {
   deleteDoc,
   setDoc,
 } from "firebase/firestore";
+import { useAlertStore } from "../alert";
 
 interface CheckBoxOption {
   name: string;
@@ -91,6 +92,7 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
         data.remainQuantity = data.quantity;
         const response = await addDoc(colRef, data);
         console.log(response);
+        const alertStore = useAlertStore();
       } catch (error) {
         console.log("error from add product : ", error);
       }

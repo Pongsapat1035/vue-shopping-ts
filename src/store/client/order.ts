@@ -1,7 +1,15 @@
 import { defineStore } from "pinia";
 import { db } from "../../firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import { useAuthStore } from "../auth";
+import axios from "axios";
 
 interface Product {
   id: string;
@@ -25,6 +33,28 @@ interface OrderDetail {
   createdDate: Date;
   products: ProductData[];
 }
+
+Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY);
+
+const createSource = (amount: number) => {
+  return new Promise((resolve, reject) => {
+    // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
+    Omise.createSource(
+      "rabbit_linepay",
+      {
+        amount: amount * 100,
+        currency: "THB",
+      },
+      (statusCode, response) => {
+        if (statusCode !== 200) {
+          // get error
+          return reject(response);
+        }
+        resolve(response);
+      }
+    );
+  });
+};
 
 export const useOrderStore = defineStore("orderStore", {
   state: (): {
@@ -50,17 +80,12 @@ export const useOrderStore = defineStore("orderStore", {
   actions: {
     async loadOrder(orderId: string) {
       try {
-        const docRef = doc(db, "orders", this.user, "orderLists", orderId);
+        const docRef = doc(db, "orders", orderId);
         const docSnapshot = await getDoc(docRef);
         if (docSnapshot.exists()) {
-          // const recievedData = { ...(docSnapshot.data() as OrderDetail) }
-          // convertData.createdDate = convertData.createdDate.seconds
-          // const recievedData:OrderDetail = docSnapshot.data() as OrderDetail
-          // recievedData.createdDate = recievedData.createdDate.seconds
-          const recievedData = docSnapshot.data() ;
-          recievedData.createdDate = recievedData.createdDate.toDate()
-          console.log('check data : ', recievedData)
-          // console.log(recievedData)
+          const recievedData = docSnapshot.data();
+          recievedData.createdDate = recievedData.createdDate.toDate();
+          recievedData.id = docSnapshot.id;
           this.orderDetail = { ...(recievedData as OrderDetail) };
         }
       } catch (error) {
@@ -69,7 +94,11 @@ export const useOrderStore = defineStore("orderStore", {
     },
     async loadAllOrders() {
       try {
-        const docRef = collection(db, "orders", this.user, "orderLists");
+        const docRef = query(
+          collection(db, "orders"),
+          where("userId", "==", this.user)
+        );
+        // const docRef = collection(db, "orders", this.user, "orderLists");
         const docSnapshot = await getDocs(docRef);
         const result: any[] = [];
         docSnapshot.forEach((doc) => {
@@ -82,6 +111,30 @@ export const useOrderStore = defineStore("orderStore", {
         console.log(error);
       }
     },
-    getOrderDetail() {},
+    async payment(): Promise<string | null> {
+      // const test = { m: "1233", b: "556" };
+      try {
+        const omiseResponse: any = await createSource(
+          this.orderDetail.totalPrice
+        );
+        interface CheckoutDetail {
+          sourceId: string;
+          checkout: OrderDetail;
+        }
+        const sourceId = omiseResponse.id;
+        const checkOutDetail: CheckoutDetail = {
+          sourceId,
+          checkout: this.orderDetail,
+        };
+
+        // console.log("check response : ", omiseResponse);
+        const response = await axios.post("/api/payment", checkOutDetail);
+        // console.log("check url : ", response.data);
+        return response.data.paymentUrl;
+      } catch (error) {
+        console.log(error);
+        return null;
+      }
+    },
   },
 });
