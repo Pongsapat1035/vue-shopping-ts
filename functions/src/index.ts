@@ -1,4 +1,5 @@
 import { onRequest } from "firebase-functions/v2/https";
+import { db } from "../firebase";
 import express from "express";
 import Omise from "omise";
 
@@ -28,12 +29,10 @@ const createCharge = (source: string, amount: number, orderId: string) => {
 
 const app = express();
 
-
-
 app.post("/payment", async (req, res) => {
   try {
     const { sourceId, checkout } = req.body;
-    const orderId = checkout.id
+    const orderId = checkout.id;
     type PaymentUrl = { authorize_uri: string };
 
     // check stock
@@ -55,7 +54,7 @@ app.post("/webhook", (req, res) => {
   console.log("webhook body : ", req.body);
   const event: any = req.body;
   const status = event.data.status;
-  if(event.key === "charge.complete") {
+  if (event.key === "charge.complete") {
     if (status === "successful") {
       console.log("payment success !!!");
       // set status to success
@@ -63,7 +62,7 @@ app.post("/webhook", (req, res) => {
       console.log("Payment fail");
     }
   }
- 
+
   res.json({ message: "ok" });
 });
 
