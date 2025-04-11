@@ -5,7 +5,13 @@ import { realtimeDB, db } from "../../firebase";
 import { ref, onValue, set, type DatabaseReference } from "firebase/database";
 import { useAlertStore } from "../alert";
 import { useSellerProductStore } from "../seller/product";
-import {  collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 interface Product {
   id: string;
   color: string | "";
@@ -24,9 +30,9 @@ interface OrderDetail {
   totalShippingPrice: number;
   totalPrice: number;
   status: string;
-  createdDate: Date
+  createdDate: Date;
   products: ProductData[];
-  userId: string
+  userId: string;
 }
 export const useCartStore = defineStore("cartStore", {
   state: (): {
@@ -151,11 +157,18 @@ export const useCartStore = defineStore("cartStore", {
           products: this.productLists,
           status: "Pending",
           createdDate: new Date(),
-          userId: this.user
+          userId: this.user,
         };
         const docRef = collection(db, "orders");
         const docSnapshot = await addDoc(docRef, orderDetail);
         // console.log(docSnapshot);
+        for (const product of this.productLists) {
+          const productDocRef = doc(db, "products", product.id);
+          await updateDoc(productDocRef, {
+            quantityServe: increment(product.quantity),
+            remainQuantity: increment(-product.quantity),
+          });
+        }
         this.removeAllItem();
         return docSnapshot.id;
       } catch (error) {

@@ -1,5 +1,5 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { db } from "../firebase";
+import { db } from "./firebaseConfig.js";
 import express from "express";
 import Omise from "omise";
 
@@ -7,6 +7,8 @@ const omise = Omise({
   secretKey: process.env.OMISE_SECRET_KEY,
   omiseVersion: "2019-05-29",
 });
+
+const app = express();
 
 const createCharge = (source: string, amount: number, orderId: string) => {
   return new Promise((reslove, reject) => {
@@ -16,6 +18,9 @@ const createCharge = (source: string, amount: number, orderId: string) => {
         currency: "thb",
         return_uri: `${process.env.REDIRECT_URL_HOST}/user/checkout/${orderId}`,
         source,
+        metadata:{
+          orderId
+        }
       },
       function (error, charge) {
         if (error) {
@@ -27,7 +32,17 @@ const createCharge = (source: string, amount: number, orderId: string) => {
   });
 };
 
-const app = express();
+interface ProductData {
+  id: string;
+  color: string | "";
+  size: string | "";
+  quantity: number;
+  name: string;
+  price: number;
+  totalPrice: number;
+  remainQuantity: number;
+  coverImg: string;
+}
 
 app.post("/payment", async (req, res) => {
   try {
@@ -35,7 +50,27 @@ app.post("/payment", async (req, res) => {
     const orderId = checkout.id;
     type PaymentUrl = { authorize_uri: string };
 
-    // check stock
+    type ProductId = { id: string; quantity: number };
+    const productsIdLists: ProductId[] = checkout.products.map(
+      (product: any) => ({
+        id: product.id,
+        quantity: product.quantity,
+      })
+    );
+
+    for (const product of productsIdLists) {
+      const docRef = db.collection("products").doc(product.id);
+      const docSnap = await docRef.get();
+
+      const productData = docSnap.data() as ProductData;
+      if (
+        docSnap.exists &&
+        product.quantity > Number(productData.remainQuantity)
+      ) {
+        console.log('item out of stock')
+        throw new Error(`${productData.name} out of stock`);
+      }
+    };
 
     const { authorize_uri } = (await createCharge(
       sourceId,
@@ -45,21 +80,27 @@ app.post("/payment", async (req, res) => {
 
     res.json({ paymentUrl: authorize_uri });
   } catch (error) {
-    console.log(error);
-    res.json(error);
+    if(error instanceof Error){
+      console.log("trigger")
+      res.status(500).json({
+        message: error.message || 'Something went wrong',
+      });
+    }
   }
 });
 
 app.post("/webhook", (req, res) => {
-  console.log("webhook body : ", req.body);
   const event: any = req.body;
   const status = event.data.status;
   if (event.key === "charge.complete") {
     if (status === "successful") {
       console.log("payment success !!!");
       // set status to success
+      // decrease quantityServe 
+      // db.collection("orders").doc()
     } else {
-      console.log("Payment fail");
+      console.log("Payment fail"); 
+      
     }
   }
 

@@ -98,7 +98,7 @@ export const useOrderStore = defineStore("orderStore", {
           collection(db, "orders"),
           where("userId", "==", this.user)
         );
-        // const docRef = collection(db, "orders", this.user, "orderLists");
+
         const docSnapshot = await getDocs(docRef);
         const result: any[] = [];
         docSnapshot.forEach((doc) => {
@@ -112,7 +112,6 @@ export const useOrderStore = defineStore("orderStore", {
       }
     },
     async payment(): Promise<string | null> {
-      // const test = { m: "1233", b: "556" };
       try {
         const omiseResponse: any = await createSource(
           this.orderDetail.totalPrice
@@ -130,9 +129,14 @@ export const useOrderStore = defineStore("orderStore", {
         // console.log("check response : ", omiseResponse);
         const response = await axios.post("/api/payment", checkOutDetail);
         // console.log("check url : ", response.data);
+        console.log("check response : ", response);
+        
         return response.data.paymentUrl;
       } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+          console.log(error);
+        }
+
         return null;
       }
     },

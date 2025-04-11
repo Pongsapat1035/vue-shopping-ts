@@ -21,6 +21,7 @@ interface FormData {
   coverImg: string;
   name: string;
   quantity: number;
+  quantityServe: number;
   remainQuantity?: number;
   price: number;
   detail: string;
@@ -43,6 +44,7 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
       coverImg: "",
       name: "",
       quantity: 0,
+      quantityServe: 0,
       remainQuantity: 0,
       price: 0,
       detail: "",
@@ -89,10 +91,11 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
     async addProduct(data: FormData) {
       try {
         const colRef = collection(db, "products");
-        data.remainQuantity = data.quantity;
+        data.remainQuantity = Number(data.quantity);
+        data.quantity = Number(data.quantity);
+        data.quantityServe = 0;
         const response = await addDoc(colRef, data);
         console.log(response);
-        const alertStore = useAlertStore();
       } catch (error) {
         console.log("error from add product : ", error);
       }
