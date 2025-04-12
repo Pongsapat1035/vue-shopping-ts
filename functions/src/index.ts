@@ -2,6 +2,7 @@ import { onRequest } from "firebase-functions/v2/https";
 import { db } from "./firebaseConfig.js";
 import express from "express";
 import Omise from "omise";
+import { FieldValue } from "firebase-admin/firestore";
 
 const omise = Omise({
   secretKey: process.env.OMISE_SECRET_KEY,
@@ -18,9 +19,9 @@ const createCharge = (source: string, amount: number, orderId: string) => {
         currency: "thb",
         return_uri: `${process.env.REDIRECT_URL_HOST}/user/checkout/${orderId}`,
         source,
-        metadata:{
-          orderId
-        }
+        metadata: {
+          orderId,
+        },
       },
       function (error, charge) {
         if (error) {
@@ -33,44 +34,36 @@ const createCharge = (source: string, amount: number, orderId: string) => {
 };
 
 interface ProductData {
-  id: string;
-  color: string | "";
-  size: string | "";
-  quantity: number;
   name: string;
   price: number;
   totalPrice: number;
   remainQuantity: number;
   coverImg: string;
+  id: string;
+  color: string | "";
+  size: string | "";
+  quantity: number;
 }
+
+interface OrderDetail {
+  id: string;
+  totalProductPrice: number;
+  totalShippingPrice: number;
+  totalPrice: number;
+  status: string;
+  createdDate: Date;
+  products: ProductData[];
+}
+
+app.get("/checkConnect", (req, res) => {
+  res.status(200).json({ message: "ok" });
+});
 
 app.post("/payment", async (req, res) => {
   try {
     const { sourceId, checkout } = req.body;
     const orderId = checkout.id;
     type PaymentUrl = { authorize_uri: string };
-
-    type ProductId = { id: string; quantity: number };
-    const productsIdLists: ProductId[] = checkout.products.map(
-      (product: any) => ({
-        id: product.id,
-        quantity: product.quantity,
-      })
-    );
-
-    for (const product of productsIdLists) {
-      const docRef = db.collection("products").doc(product.id);
-      const docSnap = await docRef.get();
-
-      const productData = docSnap.data() as ProductData;
-      if (
-        docSnap.exists &&
-        product.quantity > Number(productData.remainQuantity)
-      ) {
-        console.log('item out of stock')
-        throw new Error(`${productData.name} out of stock`);
-      }
-    };
 
     const { authorize_uri } = (await createCharge(
       sourceId,
@@ -80,28 +73,50 @@ app.post("/payment", async (req, res) => {
 
     res.json({ paymentUrl: authorize_uri });
   } catch (error) {
-    if(error instanceof Error){
-      console.log("trigger")
+    if (error instanceof Error) {
+      console.log("trigger");
       res.status(500).json({
-        message: error.message || 'Something went wrong',
+        message: error.message || "Something went wrong",
       });
     }
   }
 });
 
-app.post("/webhook", (req, res) => {
+app.post("/webhook", async (req, res) => {
   const event: any = req.body;
   const status = event.data.status;
-  if (event.key === "charge.complete") {
-    if (status === "successful") {
-      console.log("payment success !!!");
-      // set status to success
-      // decrease quantityServe 
-      // db.collection("orders").doc()
-    } else {
-      console.log("Payment fail"); 
-      
+  const orderId = event.data.metadata.orderId;
+
+  try {
+    if (event.key === "charge.complete") {
+      if (status === "successful") {
+        const orderRef = db.collection("orders").doc(orderId);
+        await db.runTransaction(async (transection) => {
+          const orderSnapshot = await transection.get(orderRef);
+          if (!orderSnapshot.exists) {
+            throw "Order does not exists";
+          }
+
+          const orderData = orderSnapshot.data() as OrderDetail;
+          const products: ProductData[] = orderData.products;
+
+          for (const product of products) {
+            const productRef = db.collection("products").doc(product.id);
+            transection.update(productRef, {
+              quantityServe: FieldValue.increment(-product.quantity),
+            });
+          }
+
+          transection.update(orderRef, {
+            status: "Success",
+          });
+        });
+      } else {
+        console.log("Payment fail");
+      }
     }
+  } catch (error) {
+    console.log(error);
   }
 
   res.json({ message: "ok" });

@@ -26,7 +26,7 @@ onMounted(async () => {
 const handlePayment = async () => {
   const paymentUrl: string | null = await orderStore.payment();
   if (paymentUrl) {
-    // location.href = paymentUrl;
+    location.href = paymentUrl;
   }
 };
 </script>
@@ -49,7 +49,7 @@ const handlePayment = async () => {
         </li>
         <li class="flex gap-5 items-center">
           <h1 class="text-xl font-semibold">Status :</h1>
-          <StatusBadge type="Pending"></StatusBadge>
+          <StatusBadge v-model:type="orderStore.orderDetail.status"></StatusBadge>
         </li>
       </ul>
       <AddressWarpper

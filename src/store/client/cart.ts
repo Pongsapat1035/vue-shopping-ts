@@ -11,6 +11,7 @@ import {
   doc,
   updateDoc,
   increment,
+  getDoc,
 } from "firebase/firestore";
 interface Product {
   id: string;
@@ -159,6 +160,19 @@ export const useCartStore = defineStore("cartStore", {
           createdDate: new Date(),
           userId: this.user,
         };
+
+        // check stock
+        for (const product of this.productLists) {
+          const docRef = doc(db, "products", product.id);
+          const docSnap = await getDoc(docRef);
+
+          const productData = docSnap.data() as ProductData;
+          if (product.quantity > Number(productData.remainQuantity)) {
+            // console.log("item out of stock");
+            throw new Error(`${productData.name} out of stock`);
+          }
+        }
+
         const docRef = collection(db, "orders");
         const docSnapshot = await addDoc(docRef, orderDetail);
         // console.log(docSnapshot);
