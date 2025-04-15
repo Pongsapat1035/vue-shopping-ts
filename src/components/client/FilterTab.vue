@@ -24,9 +24,9 @@ const filterData = defineModel<FilterProduct>({
 </script>
 
 <template>
-  <div
+  <div 
     :class="productStore.filterState ? 'block' : 'hidden'"
-    class="w-1/4 max-w-[350px] flex flex-col gap-5 px-5 py-8 border border-gray-200 rounded-2xl overflow-hidden">
+    class="w-1/4 max-w-[350px] h-max sticky top-5  flex flex-col gap-5 px-5 py-8 border border-gray-200 rounded-2xl overflow-hidden">
     <SortTab v-model="filterData.sortBy" :toggleSort="toggleSort"></SortTab>
     <h1 class="text-3xl font-semibold">Filter</h1>
     <ColorFilter v-model="filterData.colorFilter"></ColorFilter>

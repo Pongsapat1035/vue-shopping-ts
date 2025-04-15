@@ -1,8 +1,9 @@
 import { onRequest } from "firebase-functions/v2/https";
-import { db } from "./firebaseConfig.js";
+import { db, realtimeDB } from "./firebaseConfig.js";
 import express from "express";
 import Omise from "omise";
 import { FieldValue } from "firebase-admin/firestore";
+import { onDocumentUpdated } from "firebase-functions/v2/firestore";
 
 const omise = Omise({
   secretKey: process.env.OMISE_SECRET_KEY,
@@ -86,40 +87,70 @@ app.post("/webhook", async (req, res) => {
   const event: any = req.body;
   const status = event.data.status;
   const orderId = event.data.metadata.orderId;
-
   try {
     if (event.key === "charge.complete") {
-      if (status === "successful") {
+      if (status) {
         const orderRef = db.collection("orders").doc(orderId);
+
         await db.runTransaction(async (transection) => {
           const orderSnapshot = await transection.get(orderRef);
           if (!orderSnapshot.exists) {
             throw "Order does not exists";
           }
-
           const orderData = orderSnapshot.data() as OrderDetail;
           const products: ProductData[] = orderData.products;
 
+          // update all
           for (const product of products) {
             const productRef = db.collection("products").doc(product.id);
-            transection.update(productRef, {
-              quantityServe: FieldValue.increment(-product.quantity),
+            console.log("check status");
+            if (status === "successful") {
+              transection.update(productRef, {
+                quantityServe: FieldValue.increment(-product.quantity),
+              });
+            } else {
+              console.log("payment fail");
+              transection.update(productRef, {
+                remainQuantity: FieldValue.increment(product.quantity),
+                quantityServe: FieldValue.increment(-product.quantity),
+              });
+              console.log("restore stock success !! ");
+            }
+            transection.update(orderRef, {
+              status: status === "successful" ? "Success" : "Failue",
             });
           }
-
-          transection.update(orderRef, {
-            status: "Success",
-          });
         });
-      } else {
-        console.log("Payment fail");
       }
     }
   } catch (error) {
     console.log(error);
   }
-
-  res.json({ message: "ok" });
 });
 
 export const api = onRequest(app);
+
+export const orderUpdate = onDocumentUpdated(
+  "orders/{docId}",
+  async (event) => {
+    const newData = event.data?.after.data() as OrderDetail;
+    const status = newData.status;
+    const orderStatRef = realtimeDB.ref("stats/order");
+
+    if (newData && status === "Success") {
+      const products = newData.products;
+      await db.runTransaction(async (transection) => {
+        for (const product of products) {
+          const productRef = db.collection("products").doc(product.id);
+          transection.update(productRef, {
+            usedQuantity: FieldValue.increment(product.quantity),
+          });
+        }
+      });
+      // update total price
+      await orderStatRef.transaction((currentVal) => {
+        return currentVal + newData.totalPrice;
+      });
+    }
+  }
+);

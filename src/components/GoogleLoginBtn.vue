@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/auth";
 import { useRouter } from "vue-router";
 import { useAlertStore } from "../store/alert";
 import AlertBadge from "./AlertBadge.vue";
+
 const alertStore = useAlertStore();
 const authStore = useAuthStore();
 const router = useRouter();

@@ -6,7 +6,7 @@ const type = defineModel("type");
 const containerColor = computed(() => {
   return type.value === "Success"
     ? "bg-green-100 text-green-600"
-    : type.value === "Error"
+    : type.value === "Failue"
     ? "bg-red-100 text-red-600"
     : "bg-blue-100 text-blue-600";
 });
@@ -14,7 +14,7 @@ const containerColor = computed(() => {
 const iconBg = computed(() => {
   return type.value === "Success"
     ? "bg-green-600"
-    : type.value === "Error"
+    : type.value === "Failue"
     ? "bg-red-600"
     : "bg-blue-600";
 });
@@ -36,7 +36,7 @@ const iconBg = computed(() => {
           d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z" />
       </svg>
       <svg
-        v-else-if="type === 'Error'"
+        v-else-if="type === 'Failue'"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 384 512">
         <path

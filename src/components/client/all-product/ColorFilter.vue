@@ -1,17 +1,10 @@
 <script setup lang="ts">
-import { useSellerProductStore } from "../../../store/seller/product";
-import { ref, watch } from "vue";
+import { useAdminProductStore } from "../../../store/admin/product";
 
 const value = defineModel<string[]>()
 
-// const emit = defineEmits(["update:value"]);
-const sellerProductStore = useSellerProductStore();
-// const selectedColor = ref<string[]>([]);
+const sellerProductStore = useAdminProductStore();
 
-// watch(selectedColor, () => {
-//   // console.log(selectedColor.value);
-//   emit("update:value", selectedColor.value);
-// });
 </script>
 <template>
   <fieldset

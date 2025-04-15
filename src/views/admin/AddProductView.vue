@@ -7,25 +7,15 @@ import CoverPicture from "../../components/seller/product/CoverPicture.vue";
 
 import { reactive, watch } from "vue";
 import { useRouter } from "vue-router";
-import { useSellerProductStore } from "../../store/seller/product";
+import { useAdminProductStore } from "../../store/admin/product";
 import { useAlertStore } from "../../store/alert";
 import { ref, type Ref } from "vue";
-
-const productStore = useSellerProductStore();
-const alertStore = useAlertStore()
+import type { AdminProductFormData } from "../../types";
+const productStore = useAdminProductStore();
+const alertStore = useAlertStore();
 const router = useRouter();
 
 type CheckBoxOption = { name: string; isCheck: boolean };
-
-interface FormData {
-  coverImg: string;
-  name: string;
-  quantity: number;
-  price: number;
-  detail: string;
-  colors: CheckBoxOption[];
-  sizes: CheckBoxOption[];
-}
 
 interface InputValidate {
   name: string;
@@ -69,7 +59,7 @@ const inputError: InputValidate = reactive({
   description: "",
 });
 
-const formData: FormData = reactive({
+const formData: AdminProductFormData = reactive({
   coverImg: "",
   name: "",
   quantity: 0,
@@ -80,8 +70,6 @@ const formData: FormData = reactive({
 });
 
 const handleSubmit = async () => {
-  console.log(formData);
-
   try {
     const validateInput =
       inputError.name ||
@@ -89,15 +77,12 @@ const handleSubmit = async () => {
       inputError.price ||
       inputError.description;
     if (validateInput) {
-      throw new Error("input error ");
+      throw new Error(`input error ${inputError}`);
     }
 
     await productStore.addProduct(formData);
     alertStore.toggleAlert("success", "Create new product success !");
-
     router.push({ name: "seller-products" });
-    // alert("create product success !");
-    
   } catch (error) {
     console.log("error : ", error);
   }

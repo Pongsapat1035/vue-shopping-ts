@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useSellerProductStore } from "../../../store/seller/product";
+import { useAdminProductStore } from "../../../store/admin/product";
 
-const sellerProductStore = useSellerProductStore();
+const sellerProductStore = useAdminProductStore();
 const value = defineModel<string[]>();
 
 </script>

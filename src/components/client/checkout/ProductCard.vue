@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import { useCartStore } from "../../../store/client/cart";
-// import ProductQuantity from "./ProductQuantity.vue";
-
-const cartStore = useCartStore();
 
 interface ProductData {
   id: string;
@@ -51,7 +47,7 @@ defineProps<{
         </div>
       </div>
       <div class="flex gap-5 justify-between items-center">
-          <span class="text-semibold">Quantity : {{ data.quantity }}</span>
+          <span class="font-light text-neutral-400">Qty : {{ data.quantity }}</span>
         <span class="text-semibold">{{ data.price }}$</span>
       </div>
     </div>

@@ -14,11 +14,11 @@ import AllProductListView from "./views/client/AllProductListView.vue";
 import ProfileView from "./views/client/ProfileView.vue";
 import OrderView from "./views/client/OrderView.vue";
 // seller view
-import DashboardView from "./views/seller/DashboardView.vue";
-import OrderManangeView from "./views/seller/OrderManangeView.vue";
-import ProductManageView from "./views/seller/ProductManageView.vue";
-import AddProductView from "./views/seller/AddProductView.vue";
-import EditProductView from "./views/seller/EditProductView.vue";
+import DashboardView from "./views/admin/DashboardView.vue";
+import OrderManangeView from "./views/admin/OrderManangeView.vue";
+import ProductManageView from "./views/admin/ProductManageView.vue";
+import AddProductView from "./views/admin/AddProductView.vue";
+import EditProductView from "./views/admin/EditProductView.vue";
 
 
 const routes: RouteRecordRaw[] = [

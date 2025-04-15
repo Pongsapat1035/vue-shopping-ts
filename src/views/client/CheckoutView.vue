@@ -33,8 +33,19 @@ const handlePayment = async () => {
 
 <template>
   <UserLayout>
+    <div class="breadcrumbs text-md px-7 my-5">
+      <ul>
+        <li>
+          <RouterLink
+            :to="{ name: 'user-order' }"
+            class="text-neutral-400 font-light"
+            >Order lists</RouterLink
+          >
+        </li>
+        <li>Order Detail</li>
+      </ul>
+    </div>
     <div class="flex flex-col gap-3 mx-auto w-2/3 mt-10">
-      <h1 class="text-3xl font-semibold mb-5">Order Summary</h1>
       <ul
         class="flex-auto flex flex-col gap-3 justify-between p-5 border border-gray-200 rounded-2xl">
         <li class="flex gap-5 items-center">
@@ -49,7 +60,8 @@ const handlePayment = async () => {
         </li>
         <li class="flex gap-5 items-center">
           <h1 class="text-xl font-semibold">Status :</h1>
-          <StatusBadge v-model:type="orderStore.orderDetail.status"></StatusBadge>
+          <StatusBadge
+            v-model:type="orderStore.orderDetail.status"></StatusBadge>
         </li>
       </ul>
       <AddressWarpper
@@ -72,14 +84,15 @@ const handlePayment = async () => {
             {{ orderStore.orderDetail.totalShippingPrice }} $
           </p>
         </div>
-        <!-- <div class="divider"></div> -->
         <div class="flex justify-between">
           <p>Total price</p>
           <p class="font-semibold">{{ orderStore.orderDetail.totalPrice }} $</p>
         </div>
       </div>
       <div class="divider"></div>
-      <div class="flex justify-end items-center gap-5 mt-4">
+      <div
+        v-if="orderStore.orderDetail.status === 'Pending'"
+        class="flex justify-end items-center gap-5 mt-4">
         <RouterLink :to="{ name: 'user-order' }">Back</RouterLink>
         <button class="btn btn-primary rounded-xl w-30" @click="handlePayment">
           Payment

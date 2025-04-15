@@ -5,6 +5,7 @@ import { useCartStore } from "../../../store/client/cart";
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
+
 </script>
 <template>
   <div class="navbar bg-base-100">
@@ -50,7 +51,7 @@ const cartStore = useCartStore();
             <span class="text-lg font-bold"
               >{{ cartStore.getTotalItem }} Items</span
             >
-            <span class="text-info"
+            <span class="text-neutral-700"
               >Subtotal: ${{ cartStore.getTotalProductPrice }}</span
             >
             <div class="card-actions">

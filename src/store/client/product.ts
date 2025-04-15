@@ -1,23 +1,15 @@
 import { defineStore } from "pinia";
 import { db } from "../../firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
-
-type CheckBoxOption = { name: string; isCheck: boolean };
-
-interface FormData {
-  coverImg: string;
-  name: string;
-  quantity: number;
-  remainQuantity: number;
-  price: number;
-  detail: string;
-  colors: CheckBoxOption[];
-  sizes: CheckBoxOption[];
-}
-
-interface ProductData extends FormData {
-  id: string;
-}
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  limit,
+  query,
+  where,
+} from "firebase/firestore";
+import type {  ClientProductCard, AdminProductData } from "../../types";
 
 interface QueryProduct {
   searchText: string;
@@ -29,9 +21,9 @@ interface QueryProduct {
 
 export const useClientProductStore = defineStore("clientProductStore", {
   state: (): {
-    productLists: ProductData[];
-    backupProduct: ProductData[];
-    product: ProductData;
+    productLists: AdminProductData[];
+    backupProduct: AdminProductData[];
+    product: AdminProductData;
     filterState: boolean;
   } => ({
     productLists: [],
@@ -71,7 +63,10 @@ export const useClientProductStore = defineStore("clientProductStore", {
   actions: {
     async loadAllProducts() {
       try {
-        const docRef = collection(db, "products");
+        const docRef = query(
+          collection(db, "products"),
+          where("status", "==", true)
+        );
         const response = await getDocs(docRef);
         const products: any[] = [];
         response.forEach((doc) => {
@@ -80,20 +75,41 @@ export const useClientProductStore = defineStore("clientProductStore", {
           convertData.price = parseInt(convertData.price);
           products.push(convertData);
         });
-        // console.log(products);
         this.productLists = products;
         this.backupProduct = products;
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }
     },
-
+    async loadHomeProduct() :Promise<ClientProductCard[]>  {
+      try {
+        const docRef = query(
+          collection(db, "products"),
+          where("status", "==", true), limit(4)
+        );
+        const response = await getDocs(docRef);
+        const products: any[] = [];
+        response.forEach((doc) => {
+          const data = doc.data();
+          const convertData: ClientProductCard = {
+            id: doc.id,
+            name: data.name,
+            coverImg: data.coverImg,
+            detail: data.detail,
+            price: data.price
+          }
+          products.push(convertData);
+        });
+        return products
+      } catch (error) {
+        throw new Error(error instanceof Error ? error.message : String(error));
+      }
+    },
     async loadProduct(productId: string) {
       try {
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          // console.log(docSnap.data());
           const {
             coverImg,
             name,
@@ -132,7 +148,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
 
     queryProduct(query: QueryProduct) {
       console.log("check query : ", query);
-      let queryProduct = <ProductData[]>[...this.backupProduct];
+      let queryProduct = <AdminProductData[]>[...this.backupProduct];
 
       if (query.sortBy === "A - Z") {
         queryProduct.sort((a, b) => a.name.localeCompare(b.name));

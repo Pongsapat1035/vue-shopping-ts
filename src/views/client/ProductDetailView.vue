@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 import UserLayout from "../../layout/UserLayout.vue";
 import ProductColor from "../../components/client/product-detail/ProductColor.vue";
 import ProductSize from "../../components/client/product-detail/ProductSize.vue";
@@ -11,6 +11,7 @@ import { useCartStore } from "../../store/client/cart";
 import { useAuthStore } from "../../store/auth";
 import { useAlertStore } from "../../store/alert";
 import { useRouter } from "vue-router";
+
 const router = useRouter();
 const authStore = useAuthStore();
 const alertStore = useAlertStore();
@@ -21,41 +22,9 @@ const productId = Array.isArray(route.params.id)
   ? route.params.id[0]
   : route.params.id;
 
-interface CheckBoxOption {
-  name: string;
-  isCheck: boolean;
-}
-
-interface ProductData {
-  id: string;
-  coverImg: string;
-  name: string;
-  quantity: number;
-  remainQuantity: number;
-  price: number;
-  detail: string;
-  colors: CheckBoxOption[];
-  sizes: CheckBoxOption[];
-}
-
-const product = ref<ProductData>({
-  id: "",
-  coverImg: "",
-  name: "",
-  quantity: 0,
-  remainQuantity: 0,
-  price: 0,
-  detail: "",
-  colors: [],
-  sizes: [],
-});
-
 onMounted(async () => {
   try {
     await productStore.loadProduct(productId);
-    if (productStore.product) {
-      product.value = productStore.product;
-    }
   } catch (error) {
     console.log(error);
   }
@@ -89,21 +58,32 @@ const handleSubmit = (e: Event) => {
   }
 
   const productData: ProductCart = {
-    id: product.value.id,
+    id: productStore.product.id,
     quantity,
     color,
     size,
   };
   cartStore.addItemToCart(productData);
-  console.log("add to cart : ", productData);
   alertStore.toggleAlert("success", "Add item to cart success");
 };
 </script>
 
 <template>
   <UserLayout>
-    <div class="w-4/5 mx-auto mt-20 flex">
-      <ProductImg :coverImg="product.coverImg"></ProductImg>
+    <div class="breadcrumbs text-md px-7 my-5">
+      <ul>
+        <li>
+          <RouterLink
+            :to="{ name: 'user-products' }"
+            class="text-neutral-400 font-light"
+            >Product lists</RouterLink
+          >
+        </li>
+        <li>{{ productStore.product.name }}</li>
+      </ul>
+    </div>
+    <div class="w-4/5 mx-auto mt-10 flex">
+      <ProductImg :coverImg="productStore.product.coverImg"></ProductImg>
       <form
         class="flex-auto w-1/2 p-8 flex flex-col gap-5"
         @submit.prevent="handleSubmit">
@@ -111,8 +91,8 @@ const handleSubmit = (e: Event) => {
           <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
           <h1 class="font-semibold">Shop.name</h1>
         </div>
-        <h1 class="text-3xl font-semibold">{{ product.name }}</h1>
-        <p class="text-5xl">{{ product.price }}$</p>
+        <h1 class="text-3xl font-semibold">{{ productStore.product.name }}</h1>
+        <p class="text-5xl">{{ productStore.product.price }}$</p>
         <ProductColor></ProductColor>
         <ProductSize></ProductSize>
         <ProductQuantity></ProductQuantity>

@@ -67,7 +67,6 @@ export const useAuthStore = defineStore("authStore", {
             const uid = user.uid;
             this.userInfo.name = user.displayName || "";
             this.userInfo.email = user.email || "";
-            // console.log("check user : ", user);
             const docRef = doc(db, "users", uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -101,13 +100,11 @@ export const useAuthStore = defineStore("authStore", {
       });
     },
     async loadUserInfo() {
-      // console.log("load user");
       try {
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          // console.log(docSnap.data());
           const { name, profileImg, addressInfo, role } = docSnap.data();
           this.userInfo.name = name;
           this.userInfo.profileImg = profileImg;
@@ -123,7 +120,7 @@ export const useAuthStore = defineStore("authStore", {
       try {
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
-        const response = await setDoc(docRef, userData);
+        await setDoc(docRef, userData);
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }

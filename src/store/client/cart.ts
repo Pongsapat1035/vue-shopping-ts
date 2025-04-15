@@ -4,7 +4,7 @@ import { realtimeDB, db } from "../../firebase";
 
 import { ref, onValue, set, type DatabaseReference } from "firebase/database";
 import { useAlertStore } from "../alert";
-import { useSellerProductStore } from "../seller/product";
+import { useAdminProductStore } from "../admin/product";
 import {
   collection,
   addDoc,
@@ -34,6 +34,7 @@ interface OrderDetail {
   createdDate: Date;
   products: ProductData[];
   userId: string;
+  name: string
 }
 export const useCartStore = defineStore("cartStore", {
   state: (): {
@@ -50,6 +51,9 @@ export const useCartStore = defineStore("cartStore", {
   getters: {
     user(): string {
       return useAuthStore().userId;
+    },
+    customerName():string{
+      return useAuthStore().userInfo.name
     },
     cartRef(): DatabaseReference {
       return ref(realtimeDB, `carts/${this.user}`);
@@ -76,7 +80,7 @@ export const useCartStore = defineStore("cartStore", {
   actions: {
     async loadCart() {
       if (this.user) {
-        const productStore = useSellerProductStore();
+        const productStore = useAdminProductStore();
         onValue(this.cartRef, async (snapShot) => {
           const data = snapShot.val();
           this.cartItems = data || [];
@@ -159,6 +163,7 @@ export const useCartStore = defineStore("cartStore", {
           status: "Pending",
           createdDate: new Date(),
           userId: this.user,
+          name: this.customerName
         };
 
         // check stock

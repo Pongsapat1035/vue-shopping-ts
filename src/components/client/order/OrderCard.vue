@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { computed } from "vue";
 import StatusBadge from "../../StatusBadge.vue";
 import { RouterLink } from "vue-router";
-type Status = { status: "Pending" | "Success" | "Fail" };
 
 interface OrderData {
   id: string;

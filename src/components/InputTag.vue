@@ -7,7 +7,6 @@ const props = defineProps<{
     value?: string | number
     error?: string
     placeHolderText?: string
-
 }>()
 
 const errorMsg = ref('')

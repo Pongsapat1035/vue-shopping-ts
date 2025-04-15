@@ -107,6 +107,7 @@ export const useOrderStore = defineStore("orderStore", {
           result.push(docData);
         });
         this.orderLists = result;
+  
       } catch (error) {
         console.log(error);
       }

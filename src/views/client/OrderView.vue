@@ -33,7 +33,6 @@ watch(
         return convertOrder;
       });
       ordersData.value = orderLists;
-      // console.log("check orders : ", ordersData.value);
     }
   }
 );

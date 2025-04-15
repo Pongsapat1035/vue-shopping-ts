@@ -8,7 +8,7 @@ defineProps<{
     <div class="p-5">
       <img :src="coverImg" />
     </div>
-    <div class="flex gap-2 p-5">
+    <!-- <div class="flex gap-2 p-5">
       <img src="https://placehold.co/128x100" />
       <img src="https://placehold.co/128x100" />
       <img src="https://placehold.co/128x100" />
@@ -26,6 +26,6 @@ defineProps<{
           3
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>

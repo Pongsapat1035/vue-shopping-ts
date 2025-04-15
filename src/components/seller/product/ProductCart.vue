@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { useSellerProductStore } from '../../../store/seller/product';
+import { useAdminProductStore } from '../../../store/admin/product';
 defineProps<{
     data: ProductData
 }>()
 
-const productStore = useSellerProductStore()
+const productStore = useAdminProductStore()
 type CheckBoxOption = { name: string, isCheck: boolean }
 interface ProductData {
     coverImg: string;

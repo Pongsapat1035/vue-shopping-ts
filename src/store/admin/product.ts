@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { db } from "../../firebase";
-
+import type { AdminProductData, AdminProductFormData } from "../../types";
 import {
   collection,
   addDoc,
@@ -9,36 +9,24 @@ import {
   getDocs,
   deleteDoc,
   setDoc,
+  updateDoc,
+  increment,
 } from "firebase/firestore";
 import { useAlertStore } from "../alert";
 
-interface CheckBoxOption {
-  name: string;
-  isCheck: boolean;
-}
 
-interface FormData {
-  coverImg: string;
-  name: string;
-  quantity: number;
-  quantityServe: number;
-  remainQuantity?: number;
-  price: number;
-  detail: string;
-  colors: CheckBoxOption[];
-  sizes: CheckBoxOption[];
-}
+type ProductData = Pick<
+  AdminProductData,
+  "id" | "coverImg" | "name" | "remainQuantity" | "status"
+>;
 
-interface ProductData extends FormData {
-  id: string;
-}
-
-export const useSellerProductStore = defineStore("sellerProductStore", {
+export const useAdminProductStore = defineStore("adminProductStore", {
   state: (): {
-    product: FormData;
+    product: AdminProductFormData;
     colorsConfig: string[];
     sizesConfig: string[];
     checkConfigLoaded: boolean;
+    productLists: ProductData[];
   } => ({
     product: {
       coverImg: "",
@@ -47,6 +35,7 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
       quantityServe: 0,
       remainQuantity: 0,
       price: 0,
+      status: true,
       detail: "",
       colors: [],
       sizes: [],
@@ -54,9 +43,10 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
     colorsConfig: [],
     sizesConfig: [],
     checkConfigLoaded: false,
+    productLists: [],
   }),
   actions: {
-    async loadAllProducts(): Promise<ProductData[]> {
+    async loadAllProducts() {
       try {
         const docRef = collection(db, "products");
         const response = await getDocs(docRef);
@@ -66,19 +56,17 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
           convertData.id = doc.id;
           products.push(convertData);
         });
-        return products;
+        this.productLists = products;
       } catch (error) {
-        throw new Error(error instanceof Error ? error.message : String(error));
+        // throw new Error(error instanceof Error ? error.message : String(error));
+        console.log(error);
       }
     },
-
     async loadProduct(productId: string) {
       try {
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          // console.log(docSnap.data());
-
           return docSnap.data();
         } else {
           throw new Error("Not found doc");
@@ -87,41 +75,67 @@ export const useSellerProductStore = defineStore("sellerProductStore", {
         console.log(error);
       }
     },
-
-    async addProduct(data: FormData) {
+    async addProduct(data: AdminProductFormData) {
       try {
         const colRef = collection(db, "products");
         data.remainQuantity = Number(data.quantity);
         data.quantity = Number(data.quantity);
         data.quantityServe = 0;
-        const response = await addDoc(colRef, data);
-        console.log(response);
+        data.usedQuantity = 0;
+        await addDoc(colRef, data);
       } catch (error) {
         console.log("error from add product : ", error);
       }
     },
-
-    async updateProduct(productId: string, data: FormData) {
-      console.log("recieved id : ", productId);
-      console.log("data : ", data);
+    async updateProduct(productId: string, data: AdminProductFormData) {
       try {
         const docRef = doc(db, "products", productId);
-        const response = await setDoc(docRef, data);
-        console.log(response);
+        await setDoc(docRef, data);
       } catch (error) {
         console.log(error);
       }
     },
-
     async deleteProduct(productId: string) {
       try {
         await deleteDoc(doc(db, "products", productId));
-        console.log("delete success !!");
       } catch (error) {
         console.log(error);
       }
     },
-
+    async toggleProductStatus(id: string, prevStatus: boolean) {
+      try {
+        const docRef = doc(db, "products", id);
+        await updateDoc(docRef, {
+          status: prevStatus,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateQuantity(id: string, newQuantity: number, mode: string) {
+      try {
+        const docRef = doc(db, "products", id);
+        const convertQuantity = mode === 'Add' ? newQuantity : -newQuantity
+        if(mode === 'Remove') {
+          
+        }
+        updateDoc(docRef, {
+          quantity: increment(convertQuantity),
+          remainQuantity: increment(convertQuantity),
+        });
+        const productIndex = this.productLists.findIndex(
+          (product) => product.id === id
+        );
+        if (this.productLists[productIndex].remainQuantity) {
+          this.productLists[productIndex].remainQuantity += Number(convertQuantity);
+        }
+        const alertStore = useAlertStore()
+        alertStore.toggleAlert("success", `${mode} quantity success`)
+      
+      } catch (error) {
+        console.log("add quantity error : ", error);
+      }
+    },
     async setConfig() {
       try {
         if (!this.checkConfigLoaded) {

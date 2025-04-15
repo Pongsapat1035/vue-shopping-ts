@@ -20,9 +20,9 @@ defineProps<{
   data: ProductData;
   index: number;
 }>();
-
 </script>
 <template>
+  <div v-if="index != 0" class="divider"></div>
   <div class="flex gap-5 h-40">
     <div class="w-1/3 h-full">
       <img

@@ -7,7 +7,7 @@ const searchText = defineModel<string>();
 
 </script>
 <template>
-  <div class="w-full py-4 flex justify-between item-center">
+  <div class="w-full py-4 flex justify-between item-center sticky top-0 z-10 bg-white">
     <h1 class="font-bold text-2xl">Welcome back</h1>
     <div class="flex gap-4">
       <label class="input w-96">

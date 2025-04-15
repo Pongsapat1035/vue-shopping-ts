@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import Navbar from "../components/client/layout/Navbar.vue";
-import { useSellerProductStore } from "../store/seller/product";
+import { useAdminProductStore } from "../store/admin/product";
 import { useCartStore } from "../store/client/cart";
 import AlertBadge from "../components/AlertBadge.vue";
 import { useAuthStore } from "../store/auth";
 const cartStore = useCartStore()
-const sellerProductStore = useSellerProductStore();
+const sellerProductStore = useAdminProductStore();
 const authStore = useAuthStore()
 onMounted(async () => {
   try {

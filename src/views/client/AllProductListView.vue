@@ -3,24 +3,10 @@ import UserLayout from "../../layout/UserLayout.vue";
 import ProductCard from "../../components/client/ProductCard.vue";
 import SearchWrapper from "../../components/client/all-product/SearchWrapper.vue";
 import FilterTab from "../../components/client/FilterTab.vue";
-import { onMounted, ref, watch, reactive } from "vue";
+import { onMounted, watch, reactive } from "vue";
 import { useClientProductStore } from "../../store/client/product";
 
 const productStore = useClientProductStore();
-
-type CheckBoxOption = { name: string; isCheck: boolean };
-
-interface ProductData {
-  id: string;
-  coverImg: string;
-  name: string;
-  quantity: number;
-  remainQuantity: number;
-  price: number;
-  detail: string;
-  colors: CheckBoxOption[];
-  sizes: CheckBoxOption[];
-}
 
 interface FilterProduct {
   searchText: string;
@@ -30,7 +16,6 @@ interface FilterProduct {
   priceFilter: string;
 }
 
-const productLists = ref<ProductData[]>([]);
 const filterData = reactive<FilterProduct>({
   searchText: "",
   sortBy: "A - Z",
@@ -45,13 +30,6 @@ watch(
     productStore.queryProduct(filterData);
   },
   { deep: true }
-);
-
-watch(
-  () => productStore.productLists,
-  () => {
-    productLists.value = productStore.productLists;
-  }
 );
 
 const toggleSort = () =>
@@ -72,15 +50,15 @@ onMounted(async () => {
   <UserLayout>
     <div
       class="bg-gray-400 rounded-lg h-70 w-full mb-8 flex justify-center items-center text-3xl font-bold">
-      Badge {{ productStore.getMaxPrice }}
+      Baner
     </div>
-    <div class="flex gap-5">
+    <div class="flex gap-5 relative">
       <FilterTab v-model="filterData" :toggleSort="toggleSort"></FilterTab>
-      <div class="flex-auto flex flex-col gap-4">
+      <div class="flex-auto flex flex-col gap-4 relative">
         <SearchWrapper v-model="filterData.searchText"></SearchWrapper>
-        <div class="grid grid-cols-3 gap-10 w-full">
+        <div class="flex flex-wrap justify-between gap-y-8 w-full">
           <ProductCard
-            v-for="product in productLists"
+            v-for="product in productStore.productLists"
             :data="product"></ProductCard>
         </div>
       </div>
