@@ -13,7 +13,7 @@ export const useAlertStore = defineStore("alertStore", {
     alertType: "",
   }),
   actions: {
-    toggleAlert(type: string,message: string,  alertTime?: number) {
+    toggleAlert(type: string, message: string, alertTime?: number) {
       this.alertMessage = message;
       this.alertType = type;
       const time: number = alertTime ? alertTime : this.alertTime;

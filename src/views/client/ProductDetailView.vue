@@ -82,7 +82,7 @@ const handleSubmit = (e: Event) => {
         <li>{{ productStore.product.name }}</li>
       </ul>
     </div>
-    <div class="w-4/5 mx-auto mt-10 flex">
+    <div class="w-4/5 mx-auto mt-10 flex h-[600px]">
       <ProductImg :coverImg="productStore.product.coverImg"></ProductImg>
       <form
         class="flex-auto w-1/2 p-8 flex flex-col gap-5"

@@ -21,8 +21,8 @@ interface QueryProduct {
 
 export const useClientProductStore = defineStore("clientProductStore", {
   state: (): {
-    productLists: AdminProductData[];
-    backupProduct: AdminProductData[];
+    productLists: ClientProductCard[];
+    backupProduct: ClientProductCard[];
     product: AdminProductData;
     filterState: boolean;
   } => ({
@@ -96,7 +96,8 @@ export const useClientProductStore = defineStore("clientProductStore", {
             name: data.name,
             coverImg: data.coverImg,
             detail: data.detail,
-            price: data.price
+            price: data.price,
+            remainQuantity: data.remainQuantity
           }
           products.push(convertData);
         });
@@ -148,7 +149,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
 
     queryProduct(query: QueryProduct) {
       console.log("check query : ", query);
-      let queryProduct = <AdminProductData[]>[...this.backupProduct];
+      let queryProduct = <ClientProductCard[]>[...this.backupProduct];
 
       if (query.sortBy === "A - Z") {
         queryProduct.sort((a, b) => a.name.localeCompare(b.name));
@@ -160,7 +161,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
         // convert to set for use method has()
         const colorFilter = new Set(query.colorFilter);
         const productFilterByColor = queryProduct.filter((product) => {
-          return product.colors.some(
+          return product.colors?.some(
             (color) => colorFilter.has(color.name) && color.isCheck
           );
         });
@@ -170,7 +171,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
       if (query.sizeFilter.length > 0) {
         const sizeFilter = new Set(query.sizeFilter);
         const productFilterBySize = queryProduct.filter((product) => {
-          return product.sizes.some(
+          return product.sizes?.some(
             (size) => sizeFilter.has(size.name) && size.isCheck
           );
         });

@@ -95,16 +95,6 @@ const handleSubmit = async () => {
           type="text"
           placeHolderText="name"
           v-model:value="productData.name"></InputTag>
-        <!-- <div class="flex gap-5"> -->
-          <!-- <div class="flex-auto">
-            <InputTag
-              title="Quality"
-              name="quantity"
-              type="number"
-              placeHolderText="quantity"
-              v-model:value="productData.quantity"
-              v-model:error="inputError.quantity"></InputTag>
-          </div> -->
           <div class="flex-auto">
             <InputTag
               title="Price"

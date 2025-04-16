@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import type { ClientProductCard } from '../../types'
+import type { ClientProductCard } from "../../types";
 
 defineProps<{
   data: ClientProductCard;
 }>();
-
 </script>
 
 <template>
@@ -13,7 +12,7 @@ defineProps<{
     <figure class="h-80">
       <img class="h-full" :src="data.coverImg" :alt="data.name" />
     </figure>
-    <div class="card-body">
+    <div class="card-body flex flex-col gap-3">
       <div class="flex justify-between">
         <h2 class="card-title">{{ data.name }}</h2>
         <button class="btn btn-square">
@@ -31,9 +30,9 @@ defineProps<{
           </svg>
         </button>
       </div>
-      <p>{{ data.detail }}</p>
-      <p>{{ data.price }} $</p>
-      <div class="card-actions justify-end gap-2">
+      <p class="font-light">{{ data.detail }}</p>
+      <div class="card-actions justify-between items-center gap-2">
+        <p class="font-semibold text-lg">{{ data.price.toLocaleString() }} THB</p>
         <RouterLink :to="`/product/${data.id}`" class="btn btn-primary"
           >View detail</RouterLink
         >

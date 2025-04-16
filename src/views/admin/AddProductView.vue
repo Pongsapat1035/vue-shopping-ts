@@ -10,12 +10,11 @@ import { useRouter } from "vue-router";
 import { useAdminProductStore } from "../../store/admin/product";
 import { useAlertStore } from "../../store/alert";
 import { ref, type Ref } from "vue";
-import type { AdminProductFormData } from "../../types";
+import type { AdminProductFormData, ProductCheckBoxOption } from "../../types";
+
 const productStore = useAdminProductStore();
 const alertStore = useAlertStore();
 const router = useRouter();
-
-type CheckBoxOption = { name: string; isCheck: boolean };
 
 interface InputValidate {
   name: string;
@@ -24,8 +23,8 @@ interface InputValidate {
   description: string;
 }
 
-const colorLists: Ref<CheckBoxOption[]> = ref([]);
-const sizeLists: Ref<CheckBoxOption[]> = ref([]);
+const colorLists: Ref<ProductCheckBoxOption[]> = ref([]);
+const sizeLists: Ref<ProductCheckBoxOption[]> = ref([]);
 
 watch(
   () => productStore.colorsConfig,
@@ -81,10 +80,11 @@ const handleSubmit = async () => {
     }
 
     await productStore.addProduct(formData);
-    alertStore.toggleAlert("success", "Create new product success !");
+    alertStore.toggleAlert("Success", "Create new product success !");
     router.push({ name: "seller-products" });
   } catch (error) {
-    console.log("error : ", error);
+    console.log("add product error : ", error);
+    alertStore.toggleAlert("Error", error instanceof Error ? error.message : String(error));
   }
 };
 const checkColorState: Ref<boolean> = ref(false);

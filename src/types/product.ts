@@ -19,6 +19,7 @@ export interface ClientProductCard  {
   name: string;
   price: number;
   detail: string;
+  remainQuantity: number
   colors?: ProductCheckBoxOption[];
   sizes?: ProductCheckBoxOption[];
 }

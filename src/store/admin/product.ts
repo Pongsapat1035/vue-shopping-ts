@@ -82,6 +82,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         data.quantity = Number(data.quantity);
         data.quantityServe = 0;
         data.usedQuantity = 0;
+        data.status = true
         await addDoc(colRef, data);
       } catch (error) {
         console.log("error from add product : ", error);
@@ -90,7 +91,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     async updateProduct(productId: string, data: AdminProductFormData) {
       try {
         const docRef = doc(db, "products", productId);
-        await setDoc(docRef, data);
+        await updateDoc(docRef, data as Partial<AdminProductData>);
       } catch (error) {
         console.log(error);
       }

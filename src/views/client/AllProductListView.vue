@@ -56,7 +56,7 @@ onMounted(async () => {
       <FilterTab v-model="filterData" :toggleSort="toggleSort"></FilterTab>
       <div class="flex-auto flex flex-col gap-4 relative">
         <SearchWrapper v-model="filterData.searchText"></SearchWrapper>
-        <div class="flex flex-wrap justify-between gap-y-8 w-full">
+        <div class="flex flex-wrap gap-8 w-full">
           <ProductCard
             v-for="product in productStore.productLists"
             :data="product"></ProductCard>

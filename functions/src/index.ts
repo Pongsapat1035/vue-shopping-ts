@@ -44,6 +44,7 @@ interface ProductData {
   color: string | "";
   size: string | "";
   quantity: number;
+  status: boolean;
 }
 
 interface OrderDetail {
@@ -150,6 +151,23 @@ export const orderUpdate = onDocumentUpdated(
       // update total price
       await orderStatRef.transaction((currentVal) => {
         return currentVal + newData.totalPrice;
+      });
+    }
+  }
+);
+
+export const productUpdate = onDocumentUpdated(
+  "products/{docId}",
+  async (event) => {
+    const newData = event.data?.after.data() as ProductData;
+    const oldData = event.data?.before.data() as ProductData;
+    console.log("check event : ", event);
+    const productId = event.params.docId;
+    const { remainQuantity, status } = newData;
+    if (newData && newData !== oldData && remainQuantity === 0 && !status) {
+      const productRef = db.collection("products").doc(productId);
+      productRef.update({
+        status: false,
       });
     }
   }
