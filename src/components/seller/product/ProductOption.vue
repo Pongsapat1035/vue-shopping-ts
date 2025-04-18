@@ -1,0 +1,64 @@
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import { onMounted, onUnmounted, ref } from "vue";
+
+const router = useRouter();
+const props = defineProps<{
+  modalState: boolean;
+  productId: string;
+  toggleAdd: Function;
+  toggleRemove: Function;
+  closeModal: Function
+}>();
+const boxRef = ref<HTMLElement | null>(null);
+
+const handleClickOutside = (event: Event) => {
+  const target = event.target as HTMLElement;
+  if (boxRef.value && !boxRef.value.contains(target)) {
+    // editState.value = false;
+    props.closeModal()
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+</script>
+<template>
+  <ul
+    @click.stop
+    v-if="modalState"
+    ref="boxRef"
+    class="absolute rounded-lg bg-white z-10 border border-neutral-200 p-1">
+    <li
+      class="px-4 py-2 cursor-pointer hover:bg-gray-200 rounded-lg transition-all"
+      @click="
+        () =>
+          router.push({
+            name: 'seller-editproduct',
+            params: { id: productId },
+          })
+      ">
+      Edit
+    </li>
+    <li
+      class="px-4 py-2 cursor-pointer hover:bg-gray-200 rounded-lg transition-all"
+      @click="toggleAdd()">
+      Add Stock
+    </li>
+    <li
+      class="px-4 py-2 cursor-pointer hover:bg-gray-200 rounded-lg transition-all"
+      @click="toggleRemove()">
+      Remove Stock
+    </li>
+    <div class="divider my-0"></div>
+    <li
+      class="px-4 py-2 cursor-pointer hover:bg-red-200 rounded-lg text-red-500 transition-all font-semibold">
+      Delete
+    </li>
+  </ul>
+</template>

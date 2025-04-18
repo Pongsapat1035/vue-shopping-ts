@@ -1,49 +1,64 @@
 <script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router';
-import InputTag from '../InputTag.vue';
-import PasswordInput from '../PasswordInput.vue';
-import GoogleLoginBtn from '../GoogleLoginBtn.vue';
-import { useAuthStore } from '../../store/auth';
-import { onMounted, reactive } from 'vue';
+import {  useRouter } from "vue-router";
+import InputTag from "../InputTag.vue";
+import PasswordInput from "../PasswordInput.vue";
+import GoogleLoginBtn from "../GoogleLoginBtn.vue";
+import { useAuthStore } from "../../store/auth";
+import { onMounted, reactive } from "vue";
 
+const authStore = useAuthStore();
+const router = useRouter();
 
-const authStore = useAuthStore()
-const router = useRouter()
+defineProps<{
+  changeState: Function;
+}>();
 
 interface FormData {
-    email: string
-    password: string
+  email: string;
+  password: string;
 }
 
 const formData: FormData = reactive({
-    email: '',
-    password: ''
-})
+  email: "",
+  password: "",
+});
 
 onMounted(() => {
-    authStore.checkAuth()
-})
+  authStore.checkAuth();
+});
 
 const handleSubmit = async () => {
-    // console.log(formData)
-    try {
-        const { email, password } = formData
-        await authStore.signIn(email, password)
-        router.push({ name: 'home' })
-    } catch (error) {
-        console.log(error)
-    }
-}
-
+  try {
+    const { email, password } = formData;
+    await authStore.signIn(email, password);
+    router.push({ name: "home" });
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
 <template>
-    <form class="flex flex-col p-10 gap-5 w-1/3 max-w-[480px]" @submit.prevent="handleSubmit">
-        <h1 class="font-bold text-5xl mb-5">Login</h1>
-        <InputTag title="E-mail" type="email" name="email" v-model:value="formData.email"
-            placeHolderText="example@mail.com"></InputTag>
-        <PasswordInput title="Password" name="password" v-model:value="formData.password"></PasswordInput>
-        <button type="submit" class="btn btn-primary mt-5">Login</button>
-        <GoogleLoginBtn></GoogleLoginBtn>
-        <RouterLink to="/auth/register" class="font-semibold cursor-pointer self-center">Create new account</RouterLink>
-    </form>
+  <form
+    class="flex flex-col p-10 gap-5 w-1/3 max-w-[480px] bg-white rounded-2xl"
+    @submit.prevent="handleSubmit">
+    <h1 class="font-bold text-5xl mb-5">Login</h1>
+    <InputTag
+      title="E-mail"
+      type="email"
+      name="email"
+      v-model:value="formData.email"
+      placeHolderText="example@mail.com"></InputTag>
+    <PasswordInput
+      title="Password"
+      name="password"
+      v-model:value="formData.password"></PasswordInput>
+    <button type="submit" class="btn btn-primary mt-5">Login</button>
+    <GoogleLoginBtn></GoogleLoginBtn>
+    <button
+      type="button"
+      @click="changeState()"
+      class="font-semibold cursor-pointer self-center">
+      Create new account
+    </button>
+  </form>
 </template>

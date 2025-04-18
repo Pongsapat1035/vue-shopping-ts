@@ -11,7 +11,7 @@ const router = useRouter();
 const handleClick = async () => {
   try {
     await authStore.signInWithGoogle();
-    alertStore.toggleAlert("success", "login success");
+    alertStore.toggleAlert("Success", "login success");
     setTimeout(() => {
       router.push({ name: "home" });
     }, 1000);

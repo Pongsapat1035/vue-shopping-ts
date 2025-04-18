@@ -116,7 +116,6 @@ export const useAuthStore = defineStore("authStore", {
       }
     },
     async updateUserInfo(userData: UserInfo) {
-      console.log("Update user : ", userData);
       try {
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
@@ -129,7 +128,6 @@ export const useAuthStore = defineStore("authStore", {
       const provider = new GoogleAuthProvider();
       try {
         await signInWithPopup(auth, provider);
-        console.log("Login success : ");
       } catch (error) {
         console.log("error login google: ", error);
       }

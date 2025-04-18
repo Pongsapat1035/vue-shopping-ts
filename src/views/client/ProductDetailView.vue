@@ -87,33 +87,33 @@ const handleSubmit = (e: Event) => {
       <form
         class="flex-auto w-1/2 p-8 flex flex-col gap-5"
         @submit.prevent="handleSubmit">
-        <div class="flex gap-3 items-center">
-          <div class="w-10 h-10 bg-gray-200 rounded-full"></div>
-          <h1 class="font-semibold">Shop.name</h1>
+        <div class="flex justify-between items-center">
+          <h1 class="text-3xl font-semibold">
+            {{ productStore.product.name }}
+          </h1>
+          <div
+            v-if="productStore.product.remainQuantity === 0"
+            class="bg-red-200 rounded-2xl py-1 px-2 text-sm text-red-800 font-semibold h-max">
+            Out of stock
+          </div>
         </div>
-        <h1 class="text-3xl font-semibold">{{ productStore.product.name }}</h1>
         <p class="text-5xl">{{ productStore.product.price }}$</p>
         <ProductColor></ProductColor>
         <ProductSize></ProductSize>
-        <ProductQuantity></ProductQuantity>
+        <ProductQuantity
+          v-if="productStore.product.remainQuantity !== 0"></ProductQuantity>
         <div class="flex gap-5">
-          <button type="submit" class="flex-auto btn btn-primary">
+          <button
+            type="submit"
+            class="flex-auto btn btn-primary"
+            :disabled="productStore.product.remainQuantity === 0">
             Add to cart
           </button>
-          <button type="button" class="btn btn-square">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-              stroke="currentColor"
-              class="size-[1.2em]">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-            </svg>
-          </button>
+        </div>
+        <div class="rounded-xl bg-neutral-100/70 p-5 mt-2">
+          <h1 class="font-semibold text-xl">Description</h1>
+          <div class="divider"></div>
+          <p class="font-light text-neutral-500">{{ productStore.product.detail }}</p>
         </div>
       </form>
     </div>

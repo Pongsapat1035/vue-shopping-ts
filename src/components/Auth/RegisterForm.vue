@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
 import InputTag from '../InputTag.vue';
 import PasswordInput from '../PasswordInput.vue';
 import GoogleLoginBtn from '../GoogleLoginBtn.vue';
@@ -12,7 +11,9 @@ interface Formdata {
     password: string
     confirmPassword: string
 }
-
+defineProps<{
+    changeState: Function
+}>()
 const formData: Formdata = reactive({
     email: '',
     name: '',
@@ -64,6 +65,6 @@ const handleSubmit = async () => {
         </PasswordInput>
         <button type="submit" class="btn btn-primary mt-5">Register</button>
         <GoogleLoginBtn></GoogleLoginBtn>
-        <RouterLink to="/auth/login" class="font-semibold cursor-pointer self-center">Return to login</RouterLink>
+        <Button type="button"@click="changeState()"class="font-semibold cursor-pointer self-center">Return to login</Button>
     </form>
 </template>

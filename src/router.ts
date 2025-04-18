@@ -5,7 +5,7 @@ import { useAuthStore } from "./store/auth";
 
 // buyer view
 import HomeView from "./views/HomeView.vue";
-import LoginView from "./views/LoginView.vue";
+import AuthView from "./views/AuthView.vue";
 import RegisterView from "./views/RegisterView.vue";
 import CartView from "./views/client/CartView.vue";
 import CheckoutView from "./views/client/CheckoutView.vue";
@@ -20,13 +20,16 @@ import ProductManageView from "./views/admin/ProductManageView.vue";
 import AddProductView from "./views/admin/AddProductView.vue";
 import EditProductView from "./views/admin/EditProductView.vue";
 
-
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: HomeView },
-  { path: "/auth/login", name: "auth-login", component: LoginView },
+  { path: "/auth", name: "auth", component: AuthView },
   { path: "/auth/register", name: "auth-register", component: RegisterView },
   { path: "/user/cart", name: "user-cart", component: CartView },
-  { path: "/user/checkout/:id", name: "user-checkout", component: CheckoutView },
+  {
+    path: "/user/checkout/:id",
+    name: "user-checkout",
+    component: CheckoutView,
+  },
   {
     path: "/user/all-product",
     name: "user-products",
@@ -46,7 +49,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/seller/orders",
-    name: "seller-orders",
+    name: "admin-orders",
     component: OrderManangeView,
   },
   {
@@ -58,11 +61,12 @@ const routes: RouteRecordRaw[] = [
     path: "/seller/product/add",
     name: "seller-addProduct",
     component: AddProductView,
-  },{
-    path: '/seller/product/edit/:id',
+  },
+  {
+    path: "/seller/product/edit/:id",
     name: "seller-editproduct",
-    component: EditProductView
-  }
+    component: EditProductView,
+  },
 ];
 
 const router = createRouter({

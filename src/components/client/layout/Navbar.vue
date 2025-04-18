@@ -5,10 +5,9 @@ import { useCartStore } from "../../../store/client/cart";
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
-
 </script>
 <template>
-  <div class="navbar bg-base-100">
+  <div class="navbar bg-base-100 sticky top-0">
     <div class="flex-1">
       <RouterLink to="/" class="btn btn-ghost text-xl">Mart.shop</RouterLink>
     </div>
@@ -18,9 +17,6 @@ const cartStore = useCartStore();
         class="btn btn-primary"
         to="/auth/login"
         >Get started</RouterLink
-      >
-      <RouterLink class="btn btn-primary" to="/seller/dashboard"
-        >Seller</RouterLink
       >
     </div>
     <div v-if="authStore.userId" class="flex-none flex gap-3">
