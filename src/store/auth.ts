@@ -138,7 +138,7 @@ export const useAuthStore = defineStore("authStore", {
       try {
         const response = await createUserWithEmailAndPassword(
           auth,
-          email,
+          email.toLocaleLowerCase(),
           password
         );
         // update user name
@@ -146,24 +146,33 @@ export const useAuthStore = defineStore("authStore", {
           displayName: name,
         });
       } catch (error) {
-        console.log("error from signup : ", error);
+        if (error instanceof Error) {
+          console.log("error from signup : ", error);
+          const errMsg = error.message;
+          if (errMsg === "Firebase: Error (auth/email-already-in-use).") {
+            throw new Error("Email is already used");
+          }
+        }
       }
     },
-
     async signIn(email: string, password: string) {
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        console.log("login success !!");
       } catch (error) {
-        console.log("error from sign in : ", error);
+        if (error instanceof Error) {
+          const errMsg = error.message;
+          if (errMsg === "Firebase: Error (auth/user-not-found).") {
+            throw new Error("User does not exist");
+          }
+          throw new Error(error.message);
+        }
       }
     },
-
     async signout() {
       try {
         await signOut(auth);
         window.location.reload();
-        console.log("signout success !!");
+        // console.log("signout success !!");
       } catch (error) {
         console.log("error from signout : ", error);
       }

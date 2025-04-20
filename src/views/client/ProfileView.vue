@@ -70,7 +70,7 @@ const handleSubmit = async () => {
         v-model:profileImg="userInfo.profileImg"></ProfileSetting>
       <Address v-model="userInfo.addressInfo"></Address>
       <div class="self-end flex gap-5 mt-8">
-        <button class="btn">Clear</button>
+        <button class="btn btn-neutral">Clear</button>
         <button class="btn btn-primary" @click="handleSubmit">
           Update address
         </button>

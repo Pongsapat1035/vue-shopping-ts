@@ -15,7 +15,7 @@ defineProps<{
       <h1 class="font-semibold text-2xl">{{ title }}</h1>
       <p class="font-light text-neutral-500">{{ description }}</p>
       <div class="flex gap-5 justify-end mt-5">
-        <button class="btn btn-accent" @click="cancel()">Cancel</button>
+        <button class="btn btn-neutral" @click="cancel()">Cancel</button>
         <button class="btn btn-primary" @click="action()">Confirm</button>
       </div>
     </div>

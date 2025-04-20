@@ -1,12 +1,16 @@
 <script setup lang="ts">
-import {  useRouter } from "vue-router";
+import { onMounted, reactive } from "vue";
+import { useRouter } from "vue-router";
+
+import { useAuthStore } from "../../store/auth";
+import { useAlertStore } from "../../store/alert";
+
 import InputTag from "../InputTag.vue";
 import PasswordInput from "../PasswordInput.vue";
 import GoogleLoginBtn from "../GoogleLoginBtn.vue";
-import { useAuthStore } from "../../store/auth";
-import { onMounted, reactive } from "vue";
 
 const authStore = useAuthStore();
+const alertStore = useAlertStore();
 const router = useRouter();
 
 defineProps<{
@@ -23,17 +27,37 @@ const formData: FormData = reactive({
   password: "",
 });
 
+const errorMsg: FormData = reactive({
+  email: "",
+  password: "",
+});
+
 onMounted(() => {
   authStore.checkAuth();
 });
 
+const validateInput = (): boolean => {
+  for (const field in errorMsg) {
+    const key = field as keyof FormData;
+    if (errorMsg[key] !== "") {
+      return false;
+    }
+  }
+  return true;
+};
+
 const handleSubmit = async () => {
   try {
+    if (!validateInput()) throw new Error("Please fill all input currect format");
+
     const { email, password } = formData;
     await authStore.signIn(email, password);
     router.push({ name: "home" });
   } catch (error) {
-    console.log(error);
+    if (error instanceof Error) {
+      console.log("sign in error : ", error.message);
+      alertStore.toggleAlert("error", error.message);
+    }
   }
 };
 </script>
@@ -47,6 +71,8 @@ const handleSubmit = async () => {
       type="email"
       name="email"
       v-model:value="formData.email"
+      v-model:error="errorMsg.email"
+      validateWith="email"
       placeHolderText="example@mail.com"></InputTag>
     <PasswordInput
       title="Password"

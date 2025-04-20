@@ -6,7 +6,7 @@ import { useAuthStore } from "./store/auth";
 // buyer view
 import HomeView from "./views/HomeView.vue";
 import AuthView from "./views/AuthView.vue";
-import RegisterView from "./views/RegisterView.vue";
+
 import CartView from "./views/client/CartView.vue";
 import CheckoutView from "./views/client/CheckoutView.vue";
 import ProductDetailView from "./views/client/ProductDetailView.vue";
@@ -23,7 +23,6 @@ import EditProductView from "./views/admin/EditProductView.vue";
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: HomeView },
   { path: "/auth", name: "auth", component: AuthView },
-  { path: "/auth/register", name: "auth-register", component: RegisterView },
   { path: "/user/cart", name: "user-cart", component: CartView },
   {
     path: "/user/checkout/:id",

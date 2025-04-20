@@ -49,8 +49,8 @@ onMounted(async () => {
 <template>
   <UserLayout>
     <div
-      class="bg-gray-400 rounded-lg h-70 w-full mb-8 flex justify-center items-center text-3xl font-bold">
-      Baner
+      class="bg-primary rounded-lg h-70 w-full mb-8 flex justify-center items-center text-3xl font-bold">
+      <h1 class="text-white">Baner</h1>
     </div>
     <div class="flex gap-5 relative">
       <FilterTab v-model="filterData" :toggleSort="toggleSort"></FilterTab>
