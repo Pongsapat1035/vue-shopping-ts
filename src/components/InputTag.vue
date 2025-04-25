@@ -5,8 +5,9 @@ import {
   isNumber,
   isPhoneNumber,
   isNotEmpty,
-} from "../utils/validation";
-import type { ValidateResult } from "../utils/validation";
+  isPostCode
+} from "@/utils/validation.ts";
+import type { ValidateResult } from "@/utils/validation";
 
 const props = defineProps<{
   title: string;
@@ -34,13 +35,15 @@ const validateHandle = (input: string | number) => {
       errorMsg.value = !numberValidate.isValid ? numberValidate.message : "";
       break;
     case "phoneNumber":
-      const phoneNumberValidate: ValidateResult = isPhoneNumber(
-        input.toString()
-      );
+      const phoneNumberValidate: ValidateResult = isPhoneNumber(input.toString());
       errorMsg.value = !phoneNumberValidate.isValid
         ? phoneNumberValidate.message
         : "";
       break;
+    case "postcode":
+      const postcodeValidate: ValidateResult = isPostCode(input.toString());
+      errorMsg.value = !postcodeValidate.isValid ? postcodeValidate.message : "";
+    break
     case "isNotEmpty":
       const isEmptyValidate: ValidateResult = isNotEmpty(input.toString());
       errorMsg.value = !isEmptyValidate.isValid ? isEmptyValidate.message : "";

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { ClientProductCard } from "../types";
+import type { ProductCardDetail } from "@/types";
 
-import { useAuthStore } from "../store/auth";
-import { useClientProductStore } from "../store/client/product";
+import { useAuthStore } from "@/store/auth";
+import { useClientProductStore } from "@/store/client/product";
 
 import HeroSection from "@/components/HeroSection.vue";
 import UserLayout from "@/layout/UserLayout.vue";
@@ -11,12 +11,12 @@ import ProductCard from "@/components/client/ProductCard.vue";
 
 const productStore = useClientProductStore();
 const authStore = useAuthStore();
-const productLists = ref<ClientProductCard[]>([]);
+const productLists = ref<ProductCardDetail[]>([]);
 
 const fetchProductLists = async () => {
   try {
     await authStore.checkAuth();
-    const response: ClientProductCard[] = await productStore.loadHomeProduct();
+    const response: ProductCardDetail[] = await productStore.loadHomeProduct();
     productLists.value = response;
   } catch (error) {
     console.log("error : ", error);

@@ -2,12 +2,13 @@
 import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 
-import { useAuthStore } from "../../store/auth";
-import { useAlertStore } from "../../store/alert";
+import { useAuthStore } from "@/store/auth";
+import { useAlertStore } from "@/store/alert";
+import type { LoginFormData } from '@/types'
 
-import InputTag from "../InputTag.vue";
-import PasswordInput from "../PasswordInput.vue";
-import GoogleLoginBtn from "../GoogleLoginBtn.vue";
+import InputTag from "@/components/InputTag.vue";
+import PasswordInput from "@/components/auth/PasswordInput.vue";
+import GoogleLoginBtn from "@/components/auth/GoogleLoginBtn.vue";
 
 const authStore = useAuthStore();
 const alertStore = useAlertStore();
@@ -17,17 +18,12 @@ defineProps<{
   changeState: Function;
 }>();
 
-interface FormData {
-  email: string;
-  password: string;
-}
-
-const formData: FormData = reactive({
+const formData: LoginFormData = reactive({
   email: "",
   password: "",
 });
 
-const errorMsg: FormData = reactive({
+const errorMsg: LoginFormData = reactive({
   email: "",
   password: "",
 });
@@ -38,25 +34,33 @@ onMounted(() => {
 
 const validateInput = (): boolean => {
   for (const field in errorMsg) {
-    const key = field as keyof FormData;
+    const key = field as keyof LoginFormData;
     if (errorMsg[key] !== "") {
-      return false;
+      throw new Error("Please fill all input current format");
+    }
+    if (formData[key] === "") {
+      throw new Error("Please fill all input");
     }
   }
-  return true;
 };
 
 const handleSubmit = async () => {
   try {
-    if (!validateInput()) throw new Error("Please fill all input currect format");
-
+    validateInput();
     const { email, password } = formData;
+
     await authStore.signIn(email, password);
+    alertStore.toggleAlert("Success", "Login success !");
     router.push({ name: "home" });
   } catch (error) {
+    console.log(error)
     if (error instanceof Error) {
-      console.log("sign in error : ", error.message);
-      alertStore.toggleAlert("error", error.message);
+      const errorMsg = error.message;
+      const checkWarning =
+        errorMsg === "User does not exist" ||
+        errorMsg === "Please fill all input current format" ||
+        errorMsg === "Please fill all input";
+      alertStore.toggleAlert(checkWarning ? "Warning" : "Error", errorMsg);
     }
   }
 };

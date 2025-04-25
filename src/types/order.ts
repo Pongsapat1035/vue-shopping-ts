@@ -1,4 +1,4 @@
-import type { AdminProductData } from "./product";
+import type { ProductData } from "./product";
 
 export interface OrderDetail{
     id: string;
@@ -8,5 +8,5 @@ export interface OrderDetail{
     totalPrice: number;
     status: string;
     createdDate: Date;
-    products: AdminProductData[];
+    products: ProductData[];
 }

@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { useAuthStore } from "../store/auth";
 import { useRouter } from "vue-router";
-import { useAlertStore } from "../store/alert";
-import AlertBadge from "./AlertBadge.vue";
+
+import { useAuthStore } from "@/store/auth";
+import { useAlertStore } from "@/store/alert";
+
+import AlertBadge from "@/components/AlertBadge.vue";
 
 const alertStore = useAlertStore();
 const authStore = useAuthStore();
@@ -11,10 +13,8 @@ const router = useRouter();
 const handleClick = async () => {
   try {
     await authStore.signInWithGoogle();
-    alertStore.toggleAlert("Success", "login success");
-    setTimeout(() => {
-      router.push({ name: "home" });
-    }, 1000);
+    alertStore.toggleAlert("Success", "Login success");
+    router.push({ name: "home" });
   } catch (error) {
     console.log("error : ", error);
   }

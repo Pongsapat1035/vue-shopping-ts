@@ -1,26 +1,22 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
+import { useRouter } from "vue-router";
 
-import { useAuthStore } from "../../store/auth";
-import { useAlertStore } from "../../store/alert";
+import { useAuthStore } from "@/store/auth";
+import { useAlertStore } from "@/store/alert";
+import type { RegisterFormData } from "@/types";
 
 import InputTag from "@/components/InputTag.vue";
-import PasswordInput from "@/components/PasswordInput.vue";
-import GoogleLoginBtn from "@/components/GoogleLoginBtn.vue";
+import PasswordInput from "@/components/auth/PasswordInput.vue";
+import GoogleLoginBtn from "@/components/auth/GoogleLoginBtn.vue";
 
 defineProps<{
   changeState: Function;
 }>();
 
 const authStore = useAuthStore();
-const alertStore = useAlertStore()
-
-interface RegisterFormData {
-  email: string;
-  name: string;
-  password: string;
-  confirmPassword: string;
-}
+const alertStore = useAlertStore();
+const router = useRouter();
 
 const formData: RegisterFormData = reactive({
   email: "",
@@ -36,21 +32,30 @@ const errFormData: RegisterFormData = reactive({
   confirmPassword: "",
 });
 
+const validateInput = () => {
+  for (const prop in errFormData) {
+    const key = prop as keyof RegisterFormData;
+    if (errFormData[key] !== "" || formData[key] === "") {
+      throw new Error("Please check all input again");
+    }
+  }
+};
+
 const handleSubmit = async () => {
   try {
-    for (const prop in errFormData) {
-      const key = prop as keyof RegisterFormData;
-      if (errFormData[key] !== "" || formData[key] === "") {
-        throw new Error("Please check all input again");
-      }
-    }
-    // call create user
+    validateInput();
     await authStore.signUp(formData);
-    
+    alertStore.toggleAlert("Success", "Create new user success !");
+    router.push({ name: "home" });
   } catch (error) {
     console.log(error);
-    if(error instanceof Error) {
-        alertStore.toggleAlert("Error", error.message)
+    if (error instanceof Error) {
+      const errorMsg = error.message;
+      const checkWarning =
+        errorMsg === "Please check all input again" ||
+        errorMsg === "Email is already used";
+
+      alertStore.toggleAlert(checkWarning ? "Warning" : "Error", errorMsg);
     }
   }
 };

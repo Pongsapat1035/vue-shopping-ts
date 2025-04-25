@@ -14,7 +14,9 @@ onMounted(async () => {
   try {
     await cartStore.loadCart();
     await sellerProductStore.setConfig();
-    await authStore.loadUserInfo();
+    if(authStore.userId){
+      await authStore.loadUserInfo();
+    }
   } catch (error) {
     console.log(error);
   }

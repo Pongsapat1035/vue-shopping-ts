@@ -10,31 +10,8 @@ import {
   signOut,
 } from "firebase/auth";
 
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
-
-interface SignUpData {
-  email: string;
-  name: string;
-  password: string;
-  confirmPassword: string;
-}
-
-interface AddressInfo {
-  name: string;
-  tel: string;
-  address: string;
-  district: string;
-  province: string;
-  postcode: string;
-}
-
-interface UserInfo {
-  name: string;
-  email: string;
-  profileImg: string;
-  role: string;
-  addressInfo: AddressInfo;
-}
+import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import type { RegisterFormData, UserInfo } from "../types/user";
 
 export const useAuthStore = defineStore("authStore", {
   state: (): {
@@ -67,6 +44,7 @@ export const useAuthStore = defineStore("authStore", {
             const uid = user.uid;
             this.userInfo.name = user.displayName || "";
             this.userInfo.email = user.email || "";
+
             const docRef = doc(db, "users", uid);
             const docSnap = await getDoc(docRef);
             if (docSnap.exists()) {
@@ -117,9 +95,10 @@ export const useAuthStore = defineStore("authStore", {
     },
     async updateUserInfo(userData: UserInfo) {
       try {
+        console.log("check user data : ", userData)
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
-        await setDoc(docRef, userData);
+        await updateDoc(docRef, userData as Partial<UserInfo>);
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }
@@ -132,8 +111,7 @@ export const useAuthStore = defineStore("authStore", {
         console.log("error login google: ", error);
       }
     },
-
-    async signUp(data: SignUpData) {
+    async signUp(data: RegisterFormData) {
       const { email, password, name } = data;
       try {
         const response = await createUserWithEmailAndPassword(
@@ -172,7 +150,7 @@ export const useAuthStore = defineStore("authStore", {
       try {
         await signOut(auth);
         window.location.reload();
-        // console.log("signout success !!");
+
       } catch (error) {
         console.log("error from signout : ", error);
       }

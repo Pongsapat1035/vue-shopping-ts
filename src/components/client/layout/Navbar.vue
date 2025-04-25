@@ -65,7 +65,7 @@ const cartStore = useCartStore();
               alt="Tailwind CSS Navbar component"
               :src="
                 authStore.userInfo.profileImg ||
-                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
               " />
           </div>
         </div>

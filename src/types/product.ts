@@ -1,4 +1,4 @@
-export interface AdminProductData {
+export interface ProductData {
   id: string;
   coverImg: string;
   name: string;
@@ -13,7 +13,7 @@ export interface AdminProductData {
   sizes: ProductCheckBoxOption[];
 }
 
-export interface ClientProductCard  {
+export interface ProductCardDetail  {
   id: string;
   coverImg: string;
   name: string;

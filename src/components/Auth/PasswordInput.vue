@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import ValidatePasswordLists from "./Auth/ValidatePasswordLists.vue";
+import ValidatePasswordLists from "./ValidatePasswordLists.vue";
 
 const props = defineProps<{
   title: string;
@@ -28,7 +28,7 @@ const validateLists = ref([
   },
 ]);
 
-const passwordValidate = (password: string) => {
+const passwordValidate = (password: string): boolean =>  {
   const lengthCheck = /.{8,}/.test(password); // At least 9 characters
   const caseCheck = /(?=.*[A-Z])(?=.*[a-z])/.test(password); // At least one uppercase and one lowercase letter
   const specialCharCheck = /[@$!%*?&\-_]/.test(password); // must have special charactor
@@ -36,11 +36,8 @@ const passwordValidate = (password: string) => {
   validateLists.value[1].isValid = caseCheck;
   validateLists.value[2].isValid = specialCharCheck;
 
-  if (!lengthCheck || !caseCheck || !specialCharCheck) {
-    return true;
-  } else {
-    return false;
-  }
+  const checkValidateLists = !lengthCheck || !caseCheck || !specialCharCheck
+  return checkValidateLists
 };
 
 const handleInput = (event: Event) => {

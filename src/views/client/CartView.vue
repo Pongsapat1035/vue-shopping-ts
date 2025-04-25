@@ -44,7 +44,7 @@ watch(
               </div>
           </div>
         </div>
-        <SummaryPriceWarpper></SummaryPriceWarpper>
+        <SummaryPriceWarpper :isEmpty="productLists.length > 0"></SummaryPriceWarpper>
       </div>
     </div>
   </UserLayout>

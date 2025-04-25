@@ -3,6 +3,10 @@ import { useCartStore } from "../../../store/client/cart";
 import { useAlertStore } from "../../../store/alert";
 import { useRouter } from "vue-router";
 
+defineProps<{
+  isEmpty: Boolean;
+}>();
+
 const alertStore = useAlertStore();
 const cartStore = useCartStore();
 const router = useRouter();
@@ -33,7 +37,9 @@ const handleSubmit = async () => {
         <p>Total price</p>
         <p>{{ cartStore.getTotalPrice }}$</p>
       </div>
-      <Button @click="handleSubmit" class="btn btn-primary">Checkout</Button>
+      <Button @click="handleSubmit" class="btn btn-primary" :disabled="!isEmpty"
+        >Checkout</Button
+      >
       <RouterLink to="/" class="btn btn-neutral">Shopping more</RouterLink>
     </div>
   </div>
