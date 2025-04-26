@@ -1,16 +1,24 @@
 export interface ProductData {
-  id: string;
-  coverImg: string;
-  name: string;
-  quantity?: number;
-  quantityServe?: number;
-  usedQuantity?: number;
-  remainQuantity?: number;
-  price: number;
-  detail: string;
-  status?: boolean;
-  colors: ProductCheckBoxOption[];
-  sizes: ProductCheckBoxOption[];
+  id?: string;
+  productInfo : ProductInfo
+  totalQuantity?: TotalQuantity
+  status: boolean;
+  variantType: string;
+  variants?: ProductVariants[]
+}
+
+export interface ProductInfo {
+  coverImg:string
+  name: string
+  price: number
+  description: string
+}
+
+export interface TotalQuantity {
+  quantity: number
+  remainQty: number
+  serveQty?: number
+  usedQty?: number
 }
 
 export interface ProductCardDetail  {
@@ -20,8 +28,8 @@ export interface ProductCardDetail  {
   price: number;
   detail: string;
   remainQuantity: number
-  colors?: ProductCheckBoxOption[];
-  sizes?: ProductCheckBoxOption[];
+  colors?: ProductVariants[];
+  sizes?: ProductVariants[];
 }
 
 export interface AdminProductFormData {
@@ -31,14 +39,17 @@ export interface AdminProductFormData {
   quantityServe?: number;
   remainQuantity?: number;
   usedQuantity?: number;
+  variantType: string;
   price: number;
-  detail: string;
+  description: string;
   status?: boolean;
-  colors: ProductCheckBoxOption[];
-  sizes: ProductCheckBoxOption[];
+  colors: ProductVariants[];
+  sizes: ProductVariants[];
 }
 
-export interface ProductCheckBoxOption {
+export interface ProductVariants {
   name: string;
-  isCheck: boolean;
+  enable: boolean;
+  remainQuantity?: number;
+  quantity?: number;
 }

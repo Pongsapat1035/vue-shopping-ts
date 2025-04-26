@@ -2,9 +2,9 @@
 import { reactive, watch } from "vue";
 import { useRouter } from "vue-router";
 
-import { useAuthStore } from "@/store/auth";
-import { useAlertStore } from "@/store/alert";
-import type { RegisterFormData } from "@/types";
+import { useAuthStore } from "../../store/auth";
+import { useAlertStore } from "../../store/alert";
+import type { RegisterFormData } from "../../types";
 
 import InputTag from "@/components/InputTag.vue";
 import PasswordInput from "@/components/auth/PasswordInput.vue";

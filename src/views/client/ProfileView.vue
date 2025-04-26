@@ -4,7 +4,7 @@ import { onMounted, reactive } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { useAlertStore } from "../../store/alert";
 import type { UserInfo } from "../../types";
-import { allErrorEmpty, allInputIsFilled } from "../../utils/validation.ts";
+import { allErrorEmpty, allInputIsFilled } from "../../utils/validate.method";
 
 import UserLayout from "@/layout/UserLayout.vue";
 import Address from "@/components/client/profileSetting/Address.vue";

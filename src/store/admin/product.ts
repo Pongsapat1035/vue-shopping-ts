@@ -1,6 +1,10 @@
 import { defineStore } from "pinia";
 import { db } from "../../firebase";
-import type { AdminProductData, AdminProductFormData } from "../../types";
+import type {
+  ProductData,
+  AdminProductFormData,
+  ProductCheckBoxOption,
+} from "../../types";
 import {
   collection,
   addDoc,
@@ -14,9 +18,8 @@ import {
 } from "firebase/firestore";
 import { useAlertStore } from "../alert";
 
-
-type ProductData = Pick<
-  AdminProductData,
+type ProductDataLists = Pick<
+  ProductData,
   "id" | "coverImg" | "name" | "remainQuantity" | "status"
 >;
 
@@ -26,7 +29,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     colorsConfig: string[];
     sizesConfig: string[];
     checkConfigLoaded: boolean;
-    productLists: ProductData[];
+    productLists: ProductDataLists[];
   } => ({
     product: {
       coverImg: "",
@@ -36,7 +39,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
       remainQuantity: 0,
       price: 0,
       status: true,
-      detail: "",
+      variantType: "",
+      description: "",
       colors: [],
       sizes: [],
     },
@@ -45,6 +49,18 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     checkConfigLoaded: false,
     productLists: [],
   }),
+  getters: {
+    convertedConfig() {
+      return (lists: string[]) => {
+        const convertItem = lists.map((item) => ({
+          name: item,
+          enable: false,
+          remainQuantity: 0,
+        }));
+        return convertItem;
+      };
+    },
+  },
   actions: {
     async loadAllProducts() {
       try {
@@ -75,14 +91,10 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         console.log(error);
       }
     },
-    async addProduct(data: AdminProductFormData) {
+    async addProduct(data: ProductData) {
       try {
         const colRef = collection(db, "products");
-        data.remainQuantity = Number(data.quantity);
-        data.quantity = Number(data.quantity);
-        data.quantityServe = 0;
-        data.usedQuantity = 0;
-        data.status = true
+        console.log('check recieved data : ', data)
         await addDoc(colRef, data);
       } catch (error) {
         console.log("error from add product : ", error);
@@ -91,7 +103,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     async updateProduct(productId: string, data: AdminProductFormData) {
       try {
         const docRef = doc(db, "products", productId);
-        await updateDoc(docRef, data as Partial<AdminProductData>);
+        await updateDoc(docRef, data as Partial<ProductData>);
       } catch (error) {
         console.log(error);
       }
@@ -116,9 +128,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     async updateQuantity(id: string, newQuantity: number, mode: string) {
       try {
         const docRef = doc(db, "products", id);
-        const convertQuantity = mode === 'Add' ? newQuantity : -newQuantity
-        if(mode === 'Remove') {
-          
+        const convertQuantity = mode === "Add" ? newQuantity : -newQuantity;
+        if (mode === "Remove") {
         }
         updateDoc(docRef, {
           quantity: increment(convertQuantity),
@@ -128,11 +139,11 @@ export const useAdminProductStore = defineStore("adminProductStore", {
           (product) => product.id === id
         );
         if (this.productLists[productIndex].remainQuantity) {
-          this.productLists[productIndex].remainQuantity += Number(convertQuantity);
+          this.productLists[productIndex].remainQuantity +=
+            Number(convertQuantity);
         }
-        const alertStore = useAlertStore()
-        alertStore.toggleAlert("success", `${mode} quantity success`)
-      
+        const alertStore = useAlertStore();
+        alertStore.toggleAlert("success", `${mode} quantity success`);
       } catch (error) {
         console.log("add quantity error : ", error);
       }

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import type { ProductCardDetail } from "@/types";
+import type { ProductCardDetail } from "../types";
 
-import { useAuthStore } from "@/store/auth";
-import { useClientProductStore } from "@/store/client/product";
+import { useAuthStore } from "../store/auth";
+import { useClientProductStore } from "../store/client/product";
 
 import HeroSection from "@/components/HeroSection.vue";
 import UserLayout from "@/layout/UserLayout.vue";

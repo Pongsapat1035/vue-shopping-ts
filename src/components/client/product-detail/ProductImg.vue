@@ -5,9 +5,7 @@ defineProps<{
 </script>
 <template>
   <div class=" w-1/2 p-5 h-full overflow-hidden flex justify-center items-center">
-  
       <img :src="coverImg"  class="w-full h-full object-contain"/>
-   
     <!-- <div class="flex gap-2 p-5">
       <img src="https://placehold.co/128x100" />
       <img src="https://placehold.co/128x100" />

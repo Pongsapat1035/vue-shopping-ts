@@ -1,48 +1,62 @@
 <script setup lang="ts">
+import { watch, ref } from "vue";
+import type { ProductVariants } from "../../../types";
+import InputTag from "../../InputTag.vue";
 
-const props = defineProps<{
-    sizes: CheckBoxOption[]
-    enable: boolean
-}>()
+const sizes = defineModel<ProductVariants[]>("sizes", {
+  default: () => [{ enable: false, name: "", quantity: 0 }],
+});
+const sizeEnableLists = ref<ProductVariants[]>([]);
+const errMsg = ref<string>("");
 
-type CheckBoxOption = { name: string, isCheck: boolean }
-
-const emit = defineEmits(['update:value', 'update:enable'])
-
-const handleEnable = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    if (!target.checked) {
-        props.sizes.forEach(size => size.isCheck = false)
-    }
-    emit('update:enable', target.checked)
-}
-
-const handleCheck = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    const value = target.value
-    const isChecked = target.checked
-    const sizeIndex = props.sizes.findIndex(size => size.name === value)
-    props.sizes[sizeIndex].isCheck = isChecked ? true : false
-    emit('update:value', props.sizes)
-}
-
+watch(
+  () => sizes,
+  () => {
+    sizeEnableLists.value = sizes.value.filter((size) => size.enable === true);
+  },
+  { deep: true }
+);
 </script>
 
 <template>
-    <fieldset class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-64">
-        <legend class="fieldset-legend">Size</legend>
-        <label class="fieldset-label">
-            <input type="checkbox" class="checkbox" @change="handleEnable" :checked="enable" />
-            Enable size
+  <fieldset
+    class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-64">
+    <legend class="fieldset-legend">Size</legend>
+    <div  class="flex flex-col gap-2">
+      <div class="flex gap-2 flex-wrap">
+        <label v-for="size in sizes" class="w-8 h-8 relative">
+          <input
+            type="checkbox"
+            class="w-0 h-0 opacity-0 absolute peer"
+            :value="size.name"
+            v-model="size.enable" />
+          <div
+            class="w-full h-full border-2 border-gray-100 peer-checked:border-gray-400 rounded-lg flex justify-center items-center font-semibold">
+            {{ size.name }}
+          </div>
         </label>
-        <div v-if="enable" class="flex gap-2 flex-wrap">
-            <label v-for="size in sizes" class="w-8 h-8 relative">
-                <input type="checkbox" class="w-0 h-0 opacity-0 absolute peer" :value="size.name" @change="handleCheck"
-                    :checked="size.isCheck">
-                <div class="w-full h-full border-2 border-gray-100 peer-checked:border-gray-400
-                     rounded-lg flex justify-center items-center font-semibold">
-                    {{ size.name }}</div>
-            </label>
+      </div>
+      <div v-if="sizeEnableLists.length > 0">
+        <div class="divider"></div>
+        <h1 class="font-semibold">Product quantity</h1>
+        <div class="flex flex-col gap-2">
+          <div v-for="size in sizeEnableLists" class="flex gap-3">
+            <div
+              class="mt-2 w-8 h-8 border-2 border-gray-100 peer-checked:border-gray-400 rounded-lg flex justify-center items-center font-semibold">
+              {{ size.name }}
+            </div>
+            <InputTag
+              title=""
+              name="price"
+              type="number"
+              placeHolderText="Qty"
+              validate-with="number"
+              :immediate="true"
+              v-model:value="size.quantity"
+              v-model:error="errMsg"></InputTag>
+          </div>
         </div>
-    </fieldset>
+      </div>
+    </div>
+  </fieldset>
 </template>

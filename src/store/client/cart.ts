@@ -13,12 +13,14 @@ import {
   increment,
   getDoc,
 } from "firebase/firestore";
+
 interface Product {
   id: string;
   color: string | "";
   size: string | "";
   quantity: number;
 }
+
 interface ProductData extends Product {
   name: string;
   price: number;

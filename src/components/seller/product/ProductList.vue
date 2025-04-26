@@ -2,19 +2,19 @@
 import ProductStatus from "./ProductStatus.vue";
 import ProductStockStatus from "./ProductStockStatus.vue";
 import { ref, onMounted } from "vue";
-import type { AdminProductData } from "../../../types";
+import type { ProductData } from "../../../types";
 import EditQuantityModal from "./EditQuantityModal.vue";
 import { useAdminProductStore } from "../../../store/admin/product";
 import { useAlertStore } from "../../../store/alert";
 import ProductOption from "./ProductOption.vue";
 
-type ProductData = Pick<
-  AdminProductData,
+type ProductListsData = Pick<
+  ProductData,
   "id" | "coverImg" | "name" | "remainQuantity" | "status"
 >;
 
 const props = defineProps<{
-  data: ProductData;
+  data: ProductListsData;
 }>();
 
 const productStore = useAdminProductStore();

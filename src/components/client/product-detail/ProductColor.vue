@@ -2,6 +2,7 @@
 import { useClientProductStore } from "../../../store/client/product";
 
 const productStore = useClientProductStore();
+
 </script>
 <template>
   <div>

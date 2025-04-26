@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useClientProductStore } from "../../../store/client/product";
+
 const productStore = useClientProductStore();
-
 const quantity = ref<number>(1);
-
-
 
 const handleQuantity = (e: Event) => {
   const target = e.currentTarget as HTMLInputElement;

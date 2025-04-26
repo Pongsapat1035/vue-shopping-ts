@@ -1,23 +1,25 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import UserLayout from "../../layout/UserLayout.vue";
-import ProductColor from "../../components/client/product-detail/ProductColor.vue";
-import ProductSize from "../../components/client/product-detail/ProductSize.vue";
-import ProductQuantity from "../../components/client/product-detail/ProductQuantity.vue";
-import ProductImg from "../../components/client/product-detail/ProductImg.vue";
+import { useRoute, useRouter } from "vue-router";
+
 import { useClientProductStore } from "../../store/client/product";
-import { useRoute } from "vue-router";
 import { useCartStore } from "../../store/client/cart";
 import { useAuthStore } from "../../store/auth";
 import { useAlertStore } from "../../store/alert";
-import { useRouter } from "vue-router";
 
-const router = useRouter();
+import UserLayout from "@/layout/UserLayout.vue";
+import ProductColor from "@/components/client/product-detail/ProductColor.vue";
+import ProductSize from "@/components/client/product-detail/ProductSize.vue";
+import ProductQuantity from "@/components/client/product-detail/ProductQuantity.vue";
+import ProductImg from "@/components/client/product-detail/ProductImg.vue";
+
 const authStore = useAuthStore();
 const alertStore = useAlertStore();
 const productStore = useClientProductStore();
 const cartStore = useCartStore();
 const route = useRoute();
+const router = useRouter();
+
 const productId = Array.isArray(route.params.id)
   ? route.params.id[0]
   : route.params.id;
@@ -38,33 +40,39 @@ interface ProductCart {
 }
 
 const handleSubmit = (e: Event) => {
-  if (!authStore.userId) {
-    router.push({ name: "auth-login" });
-  }
-  const target = e.target as HTMLFormElement;
-  const data = new FormData(target);
+  if (!authStore.userId) router.push({ name: "auth-login" });
 
-  const color = data.get("color") ? String(data.get("color")) : "";
-  const quantity = data.get("quantity") ? Number(data.get("quantity")) : 0;
-  const size = data.get("size") ? String(data.get("size")) : "";
+  try {
+    const target = e.target as HTMLFormElement;
+    const data = new FormData(target);
 
-  if (productStore.getColor.length > 0 && !color) {
-    alertStore.toggleAlert("Error", "please enter color");
-    return;
-  }
-  if (productStore.getSize.length > 0 && !size) {
-    alertStore.toggleAlert("Error", "please select size");
-    return;
-  }
+    const color = data.get("color") ? String(data.get("color")) : "";
+    const quantity = data.get("quantity") ? Number(data.get("quantity")) : 0;
+    const size = data.get("size") ? String(data.get("size")) : "";
 
-  const productData: ProductCart = {
-    id: productStore.product.id,
-    quantity,
-    color,
-    size,
-  };
-  cartStore.addItemToCart(productData);
-  alertStore.toggleAlert("success", "Add item to cart success");
+    // check size and color option
+    if (productStore.getColor.length > 0 && !color)
+      throw new Error("please select color");
+    if (productStore.getSize.length > 0 && !size)
+      throw new Error("please select size");
+
+    const productData: ProductCart = {
+      id: productStore.product.id,
+      quantity,
+      color,
+      size,
+    };
+    cartStore.addItemToCart(productData);
+    alertStore.toggleAlert("Success", "Add item to cart success");
+  } catch (error) {
+    console.log(error);
+    if (error instanceof Error) {
+      const errMsg = error.message;
+      const checkWarningMessage =
+        errMsg === "please select color" || errMsg === "please select size";
+      alertStore.toggleAlert(checkWarningMessage ? "Warning" : "Error", errMsg);
+    }
+  }
 };
 </script>
 
@@ -113,7 +121,9 @@ const handleSubmit = (e: Event) => {
         <div class="rounded-xl bg-neutral-100/70 p-5 mt-2">
           <h1 class="font-semibold text-xl">Description</h1>
           <div class="divider"></div>
-          <p class="font-light text-neutral-500">{{ productStore.product.detail }}</p>
+          <p class="font-light text-neutral-500">
+            {{ productStore.product.detail }}
+          </p>
         </div>
       </form>
     </div>
