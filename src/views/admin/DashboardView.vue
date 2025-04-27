@@ -10,6 +10,7 @@ import LastTransectionTable from "../../components/seller/dashboard/LastTransect
       <h1 class="text-3xl font-semibold">Good Morning, Mart</h1>
       <TotalBoxWarpper></TotalBoxWarpper>
       <OrderChartWarpper></OrderChartWarpper>
+      
       <LastTransectionTable></LastTransectionTable>
     </div>
   </SellerLayout>

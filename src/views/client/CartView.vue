@@ -1,25 +1,15 @@
 <script setup lang="ts">
+import { watch, ref } from "vue";
+import { useCartStore } from "../../store/client/cart";
+import type {  ProductCartDetail } from "../../types";
+
 import ProductListCart from "../../components/client/cart/ProductListCart.vue";
 import UserLayout from "../../layout/UserLayout.vue";
-import { useCartStore } from "../../store/client/cart";
-import { watch, ref } from "vue";
 import SummaryPriceWarpper from "../../components/client/cart/SummaryPriceWarpper.vue";
 
 const cartStore = useCartStore();
+const productLists = ref<ProductCartDetail[]>([]);
 
-interface ProductData {
-  id: string;
-  color?: string | null;
-  size?: string | null;
-  quantity: number;
-  name: string;
-  price: number;
-  totalPrice: number;
-  remainQuantity: number;
-  coverImg: string;
-}
-
-const productLists = ref<ProductData[]>([]);
 watch(
   () => cartStore.productLists,
   () => {

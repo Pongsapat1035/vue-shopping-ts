@@ -9,39 +9,21 @@ import {
   collection,
   addDoc,
   doc,
-  updateDoc,
   increment,
   getDoc,
+  runTransaction,
 } from "firebase/firestore";
+import type {
+  ProductData,
+  ProductCart,
+  ProductCartDetail,
+  OrderDetail,
+} from "../../types";
 
-interface Product {
-  id: string;
-  color: string | "";
-  size: string | "";
-  quantity: number;
-}
-
-interface ProductData extends Product {
-  name: string;
-  price: number;
-  totalPrice: number;
-  remainQuantity: number;
-  coverImg: string;
-}
-interface OrderDetail {
-  totalProductPrice: number;
-  totalShippingPrice: number;
-  totalPrice: number;
-  status: string;
-  createdDate: Date;
-  products: ProductData[];
-  userId: string;
-  name: string
-}
 export const useCartStore = defineStore("cartStore", {
   state: (): {
-    cartItems: Product[];
-    productLists: ProductData[];
+    cartItems: ProductCart[];
+    productLists: ProductCartDetail[];
     userId: string;
     shippingPrice: number;
   } => ({
@@ -54,8 +36,8 @@ export const useCartStore = defineStore("cartStore", {
     user(): string {
       return useAuthStore().userId;
     },
-    customerName():string{
-      return useAuthStore().userInfo.name
+    customerName(): string {
+      return useAuthStore().userInfo.name;
     },
     cartRef(): DatabaseReference {
       return ref(realtimeDB, `carts/${this.user}`);
@@ -68,7 +50,7 @@ export const useCartStore = defineStore("cartStore", {
     },
     getTotalProductPrice(): number {
       return this.productLists.reduce(
-        (acc, currentVal) => acc + (currentVal.totalPrice ?? 0),
+        (acc, currentVal) => acc + currentVal.totalPrice,
         0
       );
     },
@@ -76,60 +58,75 @@ export const useCartStore = defineStore("cartStore", {
       return this.shippingPrice * this.productLists.length;
     },
     getTotalPrice(): number {
-      return this.getTotalProductPrice + this.getTotalShipping;
+      return Number(this.getTotalProductPrice) + Number(this.getTotalShipping);
     },
   },
   actions: {
     async loadCart() {
-      if (this.user) {
-        const productStore = useAdminProductStore();
-        onValue(this.cartRef, async (snapShot) => {
-          const data = snapShot.val();
-          this.cartItems = data || [];
-          if (data) {
-            const promise = data.map(async (product: Product) => {
-              const recievedProduct = await productStore.loadProduct(
-                product.id
-              );
-              if (recievedProduct) {
-                const { price, name, remainQuantity, coverImg } =
-                  recievedProduct;
-                const convertPrice = parseInt(price);
-                const convertData: ProductData = {
-                  id: product.id,
-                  color: product.color,
-                  size: product.size,
-                  quantity: product.quantity,
-                  coverImg,
-                  name,
-                  price: convertPrice,
-                  totalPrice: convertPrice * (product.quantity || 0),
-                  remainQuantity: parseInt(remainQuantity),
-                };
-                return convertData;
-              }
-            });
-            const productLists = await Promise.all(promise);
-            this.productLists = productLists;
-          }
-        });
+      try {
+        if (this.user) {
+          const productStore = useAdminProductStore();
+
+          onValue(this.cartRef, async (snapShot) => {
+            const data = snapShot.val();
+            this.cartItems = data || [];
+            if (data) {
+              // have product on cart
+              const promise = data.map(async (product: ProductCart) => {
+                const recievedProduct = (await productStore.loadProduct(
+                  product.id
+                )) as ProductData;
+                if (recievedProduct) {
+                  // found product
+                  const { productInfo, variantType, totalQuantity, variants } =
+                    recievedProduct;
+                  const totalPrice =
+                    Number(productInfo.price) * product.quantity;
+                  const findVariant = variants?.find(
+                    (el) => el.name === product.variant
+                  );
+
+                  const productRemain = findVariant?.remainQuantity ?? 0;
+                  const remainQuantity =
+                    variantType === "none"
+                      ? totalQuantity?.remainQty
+                      : productRemain;
+
+                  const convertData: ProductCartDetail = {
+                    id: product.id,
+                    productInfo: productInfo,
+                    totalPrice,
+                    remainQuantity: remainQuantity || 0,
+                    quantity: product.quantity,
+                    variant: product.variant,
+                    variantType: product.variantType,
+                  };
+                  return convertData;
+                } else {
+                  console.log("check product id :", product.id);
+                  this.removeCart(product.id);
+                }
+              });
+              this.productLists = await Promise.all(promise);
+              console.log("check product lists : ", this.productLists);
+            }
+          });
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
-    addItemToCart(product: Product) {
+    addItemToCart(product: ProductCart) {
       const findProductIndex = this.cartItems.findIndex(
-        (item) =>
-          item.id === product.id &&
-          item.color === product.color &&
-          item.size === product.size
+        (item) => item.id === product.id && item.variant === product.variant
       );
       if (findProductIndex >= 0) {
         // item exits
-        const currentItem: Product = this.cartItems[findProductIndex];
+        const currentItem: ProductCart = this.cartItems[findProductIndex];
         this.updateQuantity(
           findProductIndex,
           (currentItem.quantity ?? 0) + (product.quantity ?? 0)
         );
-        return;
       } else {
         this.cartItems.push(product);
         set(this.cartRef, this.cartItems);
@@ -146,7 +143,7 @@ export const useCartStore = defineStore("cartStore", {
         );
         this.cartItems.splice(productIndex, 1);
         await set(this.cartRef, this.cartItems);
-        useAlertStore().toggleAlert("success", "Delete product success");
+        useAlertStore().toggleAlert("Success", "Delete product success");
       } catch (error) {
         console.log(error);
       }
@@ -155,8 +152,67 @@ export const useCartStore = defineStore("cartStore", {
       this.cartItems = [];
       set(this.cartRef, this.cartItems);
     },
+    async checkStock() {
+      for (const product of this.productLists) {
+        const docRef = doc(db, "products", product.id);
+        const docSnap = await getDoc(docRef);
+
+        const productData = docSnap.data() as ProductData;
+        const variantType = product.variantType;
+        let productRemainQuantity = 0;
+        if (variantType !== "none") {
+          const findVariant = productData.variants?.find(
+            (item) => item.name === product.variant
+          );
+          const remainQuantity = findVariant?.remainQuantity ?? 0;
+          productRemainQuantity = remainQuantity;
+        } else {
+          productRemainQuantity = Number(productData.totalQuantity?.remainQty);
+        }
+        if (product.quantity > productRemainQuantity) {
+          throw new Error(`${productData.productInfo.name} out of stock`);
+        }
+      }
+    },
+    async serveQuantity() {
+      for (const product of this.productLists) {
+        const productDocRef = doc(db, "products", product.id);
+
+        await runTransaction(db, async (transection) => {
+          const variantType = product.variantType;
+          if (variantType !== "none") {
+            const productSnap = await transection.get(productDocRef);
+            const productData = productSnap.data() as ProductData;
+            const variantIndex: number =
+              productData.variants?.findIndex(
+                (item) => item.name === product.variant
+              ) || 0;
+            const productVariants = productData.variants || [];
+
+            const prevQuantity = productVariants[variantIndex].remainQuantity;
+            const prevServe = productVariants[variantIndex].serveQuantity;
+
+            const newQuantity = (prevQuantity || 0) - product.quantity;
+            const newServe = (prevServe || 0) + product.quantity;
+
+            productVariants[variantIndex].remainQuantity = newQuantity;
+            productVariants[variantIndex].serveQuantity = newServe;
+
+            transection.update(productDocRef, {
+              variants: productVariants,
+            });
+          }
+          transection.update(productDocRef, {
+            "totalQuantity.serveQty": increment(product.quantity),
+            "totalQuantity.remainQty": increment(-product.quantity),
+          });
+        });
+      }
+    },
     async createOrder() {
       try {
+        await this.checkStock();
+
         const orderDetail: OrderDetail = {
           totalProductPrice: this.getTotalProductPrice,
           totalShippingPrice: this.getTotalShipping,
@@ -165,31 +221,14 @@ export const useCartStore = defineStore("cartStore", {
           status: "Pending",
           createdDate: new Date(),
           userId: this.user,
-          name: this.customerName
+          name: this.customerName,
         };
-
-        // check stock
-        for (const product of this.productLists) {
-          const docRef = doc(db, "products", product.id);
-          const docSnap = await getDoc(docRef);
-
-          const productData = docSnap.data() as ProductData;
-          if (product.quantity > Number(productData.remainQuantity)) {
-            // console.log("item out of stock");
-            throw new Error(`${productData.name} out of stock`);
-          }
-        }
+        console.log("order data : ", orderDetail);
 
         const docRef = collection(db, "orders");
         const docSnapshot = await addDoc(docRef, orderDetail);
-        // console.log(docSnapshot);
-        for (const product of this.productLists) {
-          const productDocRef = doc(db, "products", product.id);
-          await updateDoc(productDocRef, {
-            quantityServe: increment(product.quantity),
-            remainQuantity: increment(-product.quantity),
-          });
-        }
+
+        await this.serveQuantity();
         this.removeAllItem();
         return docSnapshot.id;
       } catch (error) {

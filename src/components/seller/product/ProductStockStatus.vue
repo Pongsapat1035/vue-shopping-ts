@@ -11,7 +11,6 @@ defineProps<{
     <span
       class="capitalize"
       :class="qty > 0 ? 'text-green-800' : 'text-red-800'"
-      >{{ qty > 0 ? "In stock" : "out of stock" }}</span
-    >
+      >{{ qty > 0 ? "In stock" : "out of stock" }}</span>
   </div>
 </template>

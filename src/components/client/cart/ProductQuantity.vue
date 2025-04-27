@@ -2,13 +2,13 @@
 import { onMounted, ref, watch } from "vue";
 import { useCartStore } from "../../../store/client/cart";
 
-const cartStore = useCartStore()
 const props = defineProps<{
     remainQuantity: number
     currentQuantity: number
     index: number
 }>()
 
+const cartStore = useCartStore()
 const quantity = ref<number>(1);
 
 const handleQuantity = (e: Event) => {
@@ -25,13 +25,12 @@ const handleQuantity = (e: Event) => {
     }
   }
 };
+
 onMounted(()=>{
     quantity.value = props.currentQuantity
 })
+
 watch(quantity, ()=>{
-    // console.log("quantity change")
-    // console.log('check index : ', props.index)
-    // console.log("check quantity : ", quantity.value)
     cartStore.updateQuantity(props.index, quantity.value)
 })
 </script>
@@ -76,9 +75,12 @@ watch(quantity, ()=>{
           d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 144L48 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l144 0 0 144c0 17.7 14.3 32 32 32s32-14.3 32-32l0-144 144 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-144 0 0-144z" />
       </svg>
     </button>
-    <div class="text-xs text-gray-400 ml-4">
-      Stock : {{ remainQuantity }}
-    </div>
+    <span  class="text-sm text-gray-400 ml-4">
+      stock : {{ remainQuantity }}
+    </span>
+    <span v-if="currentQuantity > remainQuantity" class="text-xs ml-4 p-1 bg-red-200 rounded-full text-red-800">
+      Stock insufficient
+    </span>
   </div>
 </template>
 

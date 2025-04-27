@@ -4,7 +4,6 @@ import type { ProductVariants } from "../../../types";
 
 import InputTag from "../../InputTag.vue";
 
-
 const colors = defineModel<ProductVariants[]>("colors", {
   default: () => [{ enable: false, name: "", quantity: 0 }],
 });

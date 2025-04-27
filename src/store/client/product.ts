@@ -9,7 +9,13 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import type {  ClientProductCard, AdminProductData } from "../../types";
+import type {
+  ProductData,
+  ProductInfo,
+  TotalQuantity,
+  ProductVariants,
+  ProductCardData,
+} from "../../types";
 
 interface QueryProduct {
   searchText: string;
@@ -21,38 +27,35 @@ interface QueryProduct {
 
 export const useClientProductStore = defineStore("clientProductStore", {
   state: (): {
-    productLists: ClientProductCard[];
-    backupProduct: ClientProductCard[];
-    product: AdminProductData;
+    productLists: ProductCardData[];
+    backupProduct: ProductCardData[];
+    product: ProductData;
     filterState: boolean;
   } => ({
     productLists: [],
     backupProduct: [],
     filterState: true,
     product: {
-      id: "",
-      coverImg: "",
-      name: "",
-      quantity: 0,
-      remainQuantity: 0,
-      price: 0,
-      detail: "",
-      colors: [],
-      sizes: [],
+      productInfo: {
+        name: "",
+        price: 0,
+        coverImg: "",
+        description: "",
+      },
+      totalQuantity: {
+        quantity: 0,
+        remainQty: 0,
+      },
+      status: false,
+      variantType: "",
     },
   }),
   getters: {
-    getColor(state): string[] {
-      const filterColor = state.product.colors
-        .filter((color) => color.isCheck === true)
-        .map((color) => color.name);
-      return filterColor;
-    },
-    getSize(state): string[] {
-      const filterColor = state.product.sizes
-        .filter((size) => size.isCheck === true)
-        .map((size) => size.name);
-      return filterColor;
+    getVariant(state) {
+      const selectedVariants = state.product.variants
+        ?.filter((item) => item.enable === true)
+        .map((item) => item.name);
+      return selectedVariants;
     },
     getMaxPrice(state): number {
       const productPrices = state.backupProduct.map((product) => product.price);
@@ -68,11 +71,18 @@ export const useClientProductStore = defineStore("clientProductStore", {
           where("status", "==", true)
         );
         const response = await getDocs(docRef);
-        const products: any[] = [];
+        const products: ProductCardData[] = [];
         response.forEach((doc) => {
-          const convertData = doc.data();
-          convertData.id = doc.id;
-          convertData.price = parseInt(convertData.price);
+          const data: Partial<ProductData> = doc.data();
+          const convertData: ProductCardData = {
+            id: doc.id,
+            name: data.productInfo?.name ?? "",
+            coverImg: data.productInfo?.coverImg ?? "",
+            description: data.productInfo?.description ?? "",
+            price: data.productInfo?.price ?? 0,
+            remainQuantity: data.totalQuantity?.remainQty ?? 0,
+            variants: data.variants ?? [],
+          };
           products.push(convertData);
         });
         this.productLists = products;
@@ -81,27 +91,30 @@ export const useClientProductStore = defineStore("clientProductStore", {
         throw new Error(error instanceof Error ? error.message : String(error));
       }
     },
-    async loadHomeProduct() :Promise<ClientProductCard[]>  {
+    async loadHomeProduct(): Promise<ProductCardData[]> {
       try {
         const docRef = query(
           collection(db, "products"),
-          where("status", "==", true), limit(4)
+          where("status", "==", true),
+          limit(4)
         );
         const response = await getDocs(docRef);
-        const products: any[] = [];
+        const products: ProductCardData[] = [];
         response.forEach((doc) => {
-          const data = doc.data();
-          const convertData: ClientProductCard = {
+          const data: Partial<ProductData> = doc.data();
+          console.log("check data : ", data);
+          const convertData: ProductCardData = {
             id: doc.id,
-            name: data.name,
-            coverImg: data.coverImg,
-            detail: data.detail,
-            price: data.price,
-            remainQuantity: data.remainQuantity
-          }
+            name: data.productInfo?.name ?? "",
+            coverImg: data.productInfo?.coverImg ?? "",
+            description: data.productInfo?.description ?? "",
+            price: data.productInfo?.price ?? 0,
+            remainQuantity: data.totalQuantity?.remainQty ?? 0,
+            variants: data.variants ?? [],
+          };
           products.push(convertData);
         });
-        return products
+        return products;
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }
@@ -111,33 +124,13 @@ export const useClientProductStore = defineStore("clientProductStore", {
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          const {
-            coverImg,
-            name,
-            quantity,
-            remainQuantity,
-            price,
-            detail,
-            colors,
-            sizes,
-          } = docSnap.data();
-          this.product = {
-            id: docSnap.id,
-            coverImg,
-            name,
-            quantity: parseInt(quantity),
-            price: parseInt(price),
-            remainQuantity: parseInt(remainQuantity),
-            detail,
-            colors,
-            sizes,
-          };
+          console.log("check product : ", docSnap.data());
+          this.product = docSnap.data() as ProductData;
         } else {
           throw new Error("Not found doc");
         }
       } catch (error) {
         console.log(error);
-        return null;
       }
     },
     searchByName(text: string) {

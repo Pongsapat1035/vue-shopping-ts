@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import SellerLayout from "../../layout/SellerLayout.vue";
-import ProductList from "../../components/seller/product/ProductList.vue";
 import { RouterLink } from "vue-router";
 import { onMounted } from "vue";
+
 import { useAdminProductStore } from "../../store/admin/product";
+
+import SellerLayout from "@/layout/SellerLayout.vue";
+import ProductList from "@/components/seller/product/ProductList.vue";
 
 const productStore = useAdminProductStore();
 

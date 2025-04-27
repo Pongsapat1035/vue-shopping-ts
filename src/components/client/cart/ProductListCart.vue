@@ -1,40 +1,31 @@
 <script setup lang="ts">
 import { useCartStore } from "../../../store/client/cart";
+import type { ProductCartDetail } from "../../../types";
+
 import ProductQuantity from "./ProductQuantity.vue";
 
 const cartStore = useCartStore();
 
-interface ProductData {
-  id: string;
-  color?: string | null;
-  size?: string | null;
-  quantity: number;
-  name: string;
-  price: number;
-  totalPrice: number;
-  remainQuantity: number;
-  coverImg: string;
-}
-
 defineProps<{
-  data: ProductData;
+  data: ProductCartDetail;
   index: number;
 }>();
+
 </script>
 <template>
   <div v-if="index != 0" class="divider"></div>
-  <div class="flex gap-5 h-40">
+  <div v-if="data.productInfo" class="flex gap-5 h-40">
     <div class="w-1/3 h-full">
       <img
-        :src="data.coverImg"
+        :src="data.productInfo.coverImg"
         class="w-full h-full rounded-lg object-scale-down" />
     </div>
     <div class="flex flex-col flex-auto p-2">
       <div class="flex justify-between">
         <h1 class="font-semibold text-xl">
-          {{ data.name }}
+          {{ data.productInfo.name }}
         </h1>
-        <button class="btn btn-circle" @click="cartStore.removeCart(data.id)">
+        <button class="btn btn-circle" @click="data.id && cartStore.removeCart(data.id)">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             stroke-width="2.5"
@@ -50,17 +41,14 @@ defineProps<{
       </div>
       <div class="flex-auto flex gap-2 items-start">
         <div class="flex gap-2">
-          <div v-if="data.color" class="flex gap-2 justify-center items-center">
-            <span class="text-sm text-neutral-400 font-light">Color : </span>
-            <div
+          <div v-if="data.variantType !== 'none'" class="flex gap-2 justify-center items-center">
+            <span class="text-sm text-neutral-400 font-light">{{ data.variantType.toUpperCase() }} : </span>
+            <div v-if="data.variantType ==='color'"
               class="w-4 h-4 rounded-full"
-              :style="{ backgroundColor: data.color }"></div>
-          </div>
-          <div v-if="data.size" class="flex gap-2 justify-center items-center">
-            <span class="text-sm text-neutral-400 font-light">Size : </span>
-            <div
+              :style="{ backgroundColor: data.variant }"></div>
+              <div v-else
               class="w-7 h-7 rounded-md border-1 border-gray-100 flex justify-center items-center text-xs">
-              {{ data.size }}
+              {{ data.variant }}
             </div>
           </div>
         </div>
@@ -70,7 +58,7 @@ defineProps<{
           :currentQuantity="data.quantity"
           :remainQuantity="data.remainQuantity"
           :index="index"></ProductQuantity>
-        <span class="text-semibold">{{ data.price }}$</span>
+        <span class="text-semibold">{{ data.totalPrice.toLocaleString() }} THB</span>
       </div>
     </div>
   </div>

@@ -17,7 +17,6 @@ watch(
   { deep: true }
 );
 </script>
-
 <template>
   <fieldset
     class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-64">

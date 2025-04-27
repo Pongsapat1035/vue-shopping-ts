@@ -2,8 +2,9 @@ import { defineStore } from "pinia";
 import { db } from "../../firebase";
 import type {
   ProductData,
-  AdminProductFormData,
-  ProductCheckBoxOption,
+ 
+  ProductInfo,
+  TotalQuantity,
 } from "../../types";
 import {
   collection,
@@ -15,21 +16,20 @@ import {
   setDoc,
   updateDoc,
   increment,
+  query,
+  where,
 } from "firebase/firestore";
 import { useAlertStore } from "../alert";
 
-type ProductDataLists = Pick<
-  ProductData,
-  "id" | "coverImg" | "name" | "remainQuantity" | "status"
->;
+type ProductListsData = Pick<ProductData, "id" | "status"> & Pick<ProductInfo, "coverImg" | "name"> & Pick<TotalQuantity, "remainQty">;
 
 export const useAdminProductStore = defineStore("adminProductStore", {
   state: (): {
-    product: AdminProductFormData;
+    product: ProductData;
     colorsConfig: string[];
     sizesConfig: string[];
     checkConfigLoaded: boolean;
-    productLists: ProductDataLists[];
+    productLists: ProductListsData[];
   } => ({
     product: {
       coverImg: "",
@@ -66,16 +66,21 @@ export const useAdminProductStore = defineStore("adminProductStore", {
       try {
         const docRef = collection(db, "products");
         const response = await getDocs(docRef);
-        const products: any[] = [];
+        const products: ProductListsData[] = [];
         response.forEach((doc) => {
-          const convertData = doc.data();
-          convertData.id = doc.id;
+          const docData = doc.data() as ProductData;
+          const convertData = {
+            id: doc.id,
+            name: docData.productInfo.name,
+            coverImg: docData.productInfo.coverImg,
+            remainQty: Number(docData.totalQuantity?.quantity),
+            status: docData.status
+          };
           products.push(convertData);
         });
         this.productLists = products;
       } catch (error) {
-        // throw new Error(error instanceof Error ? error.message : String(error));
-        console.log(error);
+        console.log("load product error : ", error);
       }
     },
     async loadProduct(productId: string) {
@@ -89,15 +94,27 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
       } catch (error) {
         console.log(error);
+        return null
       }
     },
     async addProduct(data: ProductData) {
       try {
+        const productName = data.productInfo.name;
+
         const colRef = collection(db, "products");
-        console.log('check recieved data : ', data)
+        const querySnap = query(
+          colRef,
+          where("productInfo.name", "==", productName)
+        );
+        const response = await getDocs(querySnap);
+        if (!response.empty) throw new Error("Name is already used");
+
         await addDoc(colRef, data);
       } catch (error) {
         console.log("error from add product : ", error);
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
       }
     },
     async updateProduct(productId: string, data: AdminProductFormData) {
@@ -138,8 +155,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         const productIndex = this.productLists.findIndex(
           (product) => product.id === id
         );
-        if (this.productLists[productIndex].remainQuantity) {
-          this.productLists[productIndex].remainQuantity +=
+        if (this.productLists[productIndex].remainQty) {
+          this.productLists[productIndex].remainQty +=
             Number(convertQuantity);
         }
         const alertStore = useAlertStore();

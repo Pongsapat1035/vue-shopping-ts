@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import type { ClientProductCard } from "../../types";
+import type { ProductCardData } from "../../types";
 
 defineProps<{
-  data: ClientProductCard;
+  data: ProductCardData;
 }>();
+
 </script>
 
 <template>
@@ -22,7 +23,7 @@ defineProps<{
           Out of stock
         </div>
       </div>
-      <p class="font-light text-neutral-500">{{ data.detail }}</p>
+      <p class="font-light text-neutral-500">{{ data.description }}</p>
       <div class="card-actions justify-between items-center gap-2">
         <p class="font-semibold text-lg">
           {{ data.price.toLocaleString() }} THB

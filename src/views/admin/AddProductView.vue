@@ -75,12 +75,11 @@ const validateQuantity = () => {
     );
     if (selectedVariants.length > 0) {
       // have selected variants
-      const checkQty = (value: ProductVariants) =>
-        (value.quantity ?? 0) > 0;
+      const checkQty = (value: ProductVariants) => (value.quantity ?? 0) > 0;
 
       const result = selectedVariants.every(checkQty);
       if (!result) throw new Error("Quantity can less than 0");
-      selectedVariants.forEach(item => item.remainQuantity = item.quantity)
+      selectedVariants.forEach((item) => (item.remainQuantity = item.quantity));
     } else {
       throw new Error("Please select at least one variants");
     }
@@ -101,8 +100,12 @@ const handleSubmit = async () => {
 
     validateQuantity();
 
-    const totalVariantsQty = variants.value.reduce((acc, currentValue) => acc + (currentValue.quantity ?? 0),0);
-    const totalQty = variantType.value === "none" ? productQty.value : totalVariantsQty;
+    const totalVariantsQty = variants.value.reduce(
+      (acc, currentValue) => acc + (currentValue.quantity ?? 0),
+      0
+    );
+    const totalQty =
+      variantType.value === "none" ? productQty.value : totalVariantsQty;
 
     const productData: ProductData = {
       productInfo,
@@ -112,9 +115,9 @@ const handleSubmit = async () => {
         quantity: totalQty,
         remainQty: totalQty,
         usedQty: 0,
-        serveQty: 0
+        serveQty: 0,
       },
-      status: true
+      status: true,
     };
     await productStore.addProduct(productData);
     alertStore.toggleAlert("Success", "Create new product success !");
@@ -135,7 +138,6 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
 <template>
   <SellerLayout>

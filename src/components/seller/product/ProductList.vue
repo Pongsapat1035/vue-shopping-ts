@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import ProductStatus from "./ProductStatus.vue";
-import ProductStockStatus from "./ProductStockStatus.vue";
 import { ref, onMounted } from "vue";
-import type { ProductData } from "../../../types";
-import EditQuantityModal from "./EditQuantityModal.vue";
+
 import { useAdminProductStore } from "../../../store/admin/product";
 import { useAlertStore } from "../../../store/alert";
+import type { ProductData, TotalQuantity, ProductInfo } from "../../../types";
+
+import ProductStatus from "./ProductStatus.vue";
+import ProductStockStatus from "./ProductStockStatus.vue";
+import EditQuantityModal from "./EditQuantityModal.vue";
 import ProductOption from "./ProductOption.vue";
 
-type ProductListsData = Pick<
-  ProductData,
-  "id" | "coverImg" | "name" | "remainQuantity" | "status"
->;
+type ProductListsData = Pick<ProductData, "id" | "status"> &
+  Pick<ProductInfo, "coverImg" | "name"> &
+  Pick<TotalQuantity, "remainQty">;
 
 const props = defineProps<{
   data: ProductListsData;
@@ -26,11 +27,11 @@ const editState = ref<boolean>(false);
 const productStatus = ref<boolean | undefined>(false);
 
 const updateQuantity = (newQuantity: number) => {
-  const { id, remainQuantity } = props.data;
+  const { id, remainQty } = props.data;
   if (
     quantityModalMode.value === "Remove" &&
-    remainQuantity &&
-    remainQuantity < newQuantity
+    remainQty &&
+    remainQty < newQuantity
   ) {
     alertStore.toggleAlert(
       "Error",
@@ -39,7 +40,7 @@ const updateQuantity = (newQuantity: number) => {
     quantityModalState.value = false;
     return;
   }
-  productStore.updateQuantity(id, newQuantity, quantityModalMode.value);
+  productStore.updateQuantity(id ?? "", newQuantity, quantityModalMode.value);
   quantityModalState.value = false;
 };
 
@@ -63,13 +64,13 @@ onMounted(() => {
       <img :src="data.coverImg" class="w-full h-full object-contain" />
     </div>
     <div class="text-xs uppercase font-semibold">{{ data.name }}</div>
-    <div class="text-xs uppercase font-semibold">{{ data.remainQuantity }}</div>
+    <div class="text-xs uppercase font-semibold">{{ data.remainQty }}</div>
     <div class="text-xs uppercase font-semibold">
-      <ProductStockStatus :qty="data.remainQuantity"></ProductStockStatus>
+      <ProductStockStatus :qty="data.remainQty"></ProductStockStatus>
     </div>
     <div class="text-xs uppercase font-semibold">
       <ProductStatus
-        :id="data.id"
+        :id="data.id ?? ''"
         v-model:status="productStatus"></ProductStatus>
     </div>
     <div class="relative">
@@ -84,7 +85,7 @@ onMounted(() => {
       </button>
       <ProductOption
         :modalState="editState"
-        :productId="data.id"
+        :productId="data.id ?? ''"
         :toggleAdd="toggleAddStockModal"
         :toggleRemove="toggleRemoveStockModal"
         :closeModal="() => (editState = false)"></ProductOption>

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useClientProductStore } from "../../../store/client/product";
 
-const productStore = useClientProductStore();
 const quantity = ref<number>(1);
+const props = defineProps<{
+  maxQuantity: number
+}>()
 
 const handleQuantity = (e: Event) => {
   const target = e.currentTarget as HTMLInputElement;
@@ -11,7 +12,7 @@ const handleQuantity = (e: Event) => {
     const targetName = target.name;
     if (
       targetName === "increase" &&
-      quantity.value < productStore.product.remainQuantity
+      quantity.value < props.maxQuantity
     ) {
       quantity.value++;
     } else if (targetName === "decrease" && quantity.value > 1) {
@@ -42,7 +43,7 @@ const handleQuantity = (e: Event) => {
         type="number"
         name="quantity"
         :value="quantity"
-        :max="productStore.product.remainQuantity"
+        :max="maxQuantity"
         disabled
         disableAppearance
         class="w-full disableAppearance text-center" />
@@ -62,7 +63,7 @@ const handleQuantity = (e: Event) => {
       </svg>
     </button>
     <div class="text-xs text-gray-400 ml-4">
-      Stock : {{ productStore.product.remainQuantity }}
+      In Stock : {{ maxQuantity || "" }}
     </div>
   </div>
 </template>

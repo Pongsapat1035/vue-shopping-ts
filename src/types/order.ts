@@ -1,12 +1,13 @@
-import type { ProductData } from "./product";
+import type { ProductData, ProductCardData, ProductCartDetail } from "./product";
 
 export interface OrderDetail{
-    id: string;
+    id?: string;
     name: string;
+    userId: string;
     totalProductPrice: number;
     totalShippingPrice: number;
     totalPrice: number;
     status: string;
     createdDate: Date;
-    products: ProductData[];
+    products: ProductCartDetail[];
 }

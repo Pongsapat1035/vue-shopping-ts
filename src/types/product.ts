@@ -32,24 +32,31 @@ export interface ProductCardDetail  {
   sizes?: ProductVariants[];
 }
 
-export interface AdminProductFormData {
-  coverImg: string;
-  name: string;
-  quantity?: number;
-  quantityServe?: number;
-  remainQuantity?: number;
-  usedQuantity?: number;
+
+export type ProductCardData = ProductInfo & {
+  id:string
+  remainQuantity: number
+  variants: ProductVariants[]
+}
+
+export interface ProductCart {
+  id: string;
+  quantity: number | 0;
+  variant: string | "";
   variantType: string;
-  price: number;
-  description: string;
-  status?: boolean;
-  colors: ProductVariants[];
-  sizes: ProductVariants[];
+}
+
+export interface ProductCartDetail extends ProductCart {
+  productInfo?: ProductInfo;
+  totalPrice: number;
+  remainQuantity: number;
 }
 
 export interface ProductVariants {
   name: string;
   enable: boolean;
   remainQuantity?: number;
+  serveQuantity?: number
+  usedQuantity?: number
   quantity?: number;
 }
