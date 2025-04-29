@@ -6,19 +6,14 @@ const productStore = useAdminProductStore();
 const props = defineProps<{
   id: string;
   status: boolean | undefined;
-  
-}>();
-
-const emit = defineEmits<{
-  'update:status': [value: boolean]
 }>();
 
 const toggleProductStatus = () => {
   const { id, status } = props;
   const newStatus = !status
-  emit('update:status', newStatus);
   productStore.toggleProductStatus(id, newStatus)
 };
+
 </script>
 <template>
   <div

@@ -15,10 +15,7 @@ const props = defineProps<{
 }>();
 
 const value = defineModel<any>("value");
-
-
 const emit = defineEmits(["update:error"]);
-
 
 watch(
   () => value.value,

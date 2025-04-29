@@ -1,31 +1,14 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import { computed } from "vue";
-interface AddressInfo {
-  name: string;
-  tel: string;
-  address: string;
-  district: string;
-  province: string;
-  postcode: string;
-}
 
-const props = defineProps<{
+import type { AddressInfo } from "../../../types";
+import { allInputIsFilled } from "../../../utils/validate.method";
+
+defineProps<{
   address: AddressInfo;
 }>();
 
-const checkAddress = computed(() => {
-  // check if have some field null
-  const data = props.address;
-  return (
-    data.name &&
-    data.tel &&
-    data.address &&
-    data.district &&
-    data.province &&
-    data.postcode
-  );
-});
+
 </script>
 <template>
   <div
@@ -42,7 +25,7 @@ const checkAddress = computed(() => {
         >Change address</RouterLink
       >
     </div>
-    <div v-if="checkAddress" class="flex flex-col gap-2">
+    <div v-if="allInputIsFilled(address)" class="flex flex-col gap-2">
       <h1 class="text-md text-neutral-500 font-light">
         {{ address.name }} Tel. {{ address.tel }}
       </h1>

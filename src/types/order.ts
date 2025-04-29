@@ -1,8 +1,8 @@
-import type { ProductData, ProductCardData, ProductCartDetail } from "./product";
+import type { ProductCartDetail } from "./product";
 
 export interface OrderDetail{
     id?: string;
-    name: string;
+    customerName: string;
     userId: string;
     totalProductPrice: number;
     totalShippingPrice: number;

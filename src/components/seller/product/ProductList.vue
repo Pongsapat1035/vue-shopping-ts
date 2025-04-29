@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 
 import { useAdminProductStore } from "../../../store/admin/product";
 import { useAlertStore } from "../../../store/alert";
@@ -24,7 +24,6 @@ const alertStore = useAlertStore();
 const quantityModalState = ref<boolean>(false);
 const quantityModalMode = ref<string>("Add");
 const editState = ref<boolean>(false);
-const productStatus = ref<boolean | undefined>(false);
 
 const updateQuantity = (newQuantity: number) => {
   const { id, remainQty } = props.data;
@@ -53,10 +52,7 @@ const toggleRemoveStockModal = () => {
   quantityModalState.value = true;
   quantityModalMode.value = "Remove";
 };
-onMounted(() => {
-  const { status } = props.data;
-  productStatus.value = status;
-});
+
 </script>
 <template>
   <li class="list-row grid grid-cols-6 items-center">
@@ -71,7 +67,7 @@ onMounted(() => {
     <div class="text-xs uppercase font-semibold">
       <ProductStatus
         :id="data.id ?? ''"
-        v-model:status="productStatus"></ProductStatus>
+        v-model:status="data.status"></ProductStatus>
     </div>
     <div class="relative">
       <button class="cursor-pointer p-1" @click.stop="() => (editState = true)">

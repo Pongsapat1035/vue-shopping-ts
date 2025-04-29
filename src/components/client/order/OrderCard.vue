@@ -1,20 +1,19 @@
 <script setup lang="ts">
 import StatusBadge from "../../StatusBadge.vue";
 import { RouterLink } from "vue-router";
+import type { OrderDetail } from "../../../types";
 
-interface OrderData {
-  id: string;
-  status: string;
-  products: string[];
+type OrderList = Pick<OrderDetail, "id" | "status"> & {
+  products?: string[]
 }
 
 const props = defineProps<{
-  orderData: OrderData;
+  orderData: OrderList;
   index: number;
 }>();
 
 const convertedProductName = () => {
-  return props.orderData.products.join(", ");
+  return props.orderData.products?.join(", ");
 };
 const convertIndex = () => {
   const newIndex = props.index + 1;

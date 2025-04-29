@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { watch, ref } from "vue";
 import type { ProductVariants } from "../../../types";
-import InputTag from "../../InputTag.vue";
+
+import InputTag from "@/components/InputTag.vue";
 
 const sizes = defineModel<ProductVariants[]>("sizes", {
-  default: () => [{ enable: false, name: "", quantity: 0 }],
+  default: () => [{ enable: false, name: "", remainQuantity: 0 }],
 });
+
 const sizeEnableLists = ref<ProductVariants[]>([]);
-const errMsg = ref<string>("");
+const errMsg = ref<string[]>([]);
 
 watch(
   () => sizes,
@@ -39,7 +41,7 @@ watch(
         <div class="divider"></div>
         <h1 class="font-semibold">Product quantity</h1>
         <div class="flex flex-col gap-2">
-          <div v-for="size in sizeEnableLists" class="flex gap-3">
+          <div v-for="(size, index) in sizeEnableLists" class="flex gap-3">
             <div
               class="mt-2 w-8 h-8 border-2 border-gray-100 peer-checked:border-gray-400 rounded-lg flex justify-center items-center font-semibold">
               {{ size.name }}
@@ -51,8 +53,8 @@ watch(
               placeHolderText="Qty"
               validate-with="number"
               :immediate="true"
-              v-model:value="size.quantity"
-              v-model:error="errMsg"></InputTag>
+              v-model:value="size.remainQuantity"
+              v-model:error="errMsg[index]"></InputTag>
           </div>
         </div>
       </div>

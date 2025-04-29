@@ -96,7 +96,6 @@ export const allErrorEmpty = (obj: any) => {
 };
 
 export const allInputIsFilled = (obj: any) => {
-  console.log("check obj : ", obj);
   if (typeof obj !== "object" || obj === null) {
     return obj !== "";
   }

@@ -10,31 +10,14 @@ import {
 } from "firebase/firestore";
 import { useAuthStore } from "../auth";
 import axios from "axios";
-
-interface Product {
-  id: string;
-  color: string | "";
-  size: string | "";
-  quantity: number;
-}
-interface ProductData extends Product {
-  name: string;
-  price: number;
-  totalPrice: number;
-  remainQuantity: number;
-  coverImg: string;
-}
-interface OrderDetail {
-  id: string;
-  totalProductPrice: number;
-  totalShippingPrice: number;
-  totalPrice: number;
-  status: string;
-  createdDate: Date;
-  products: ProductData[];
-}
+import type { OrderDetail } from "../../types";
 
 Omise.setPublicKey(import.meta.env.VITE_OMISE_PUBLIC_KEY);
+
+type OrderList = Pick<OrderDetail, "id" | "status"> & {
+  products: string[]
+}
+
 
 const createSource = (amount: number) => {
   return new Promise((resolve, reject) => {
@@ -47,7 +30,6 @@ const createSource = (amount: number) => {
       },
       (statusCode, response) => {
         if (statusCode !== 200) {
-          // get error
           return reject(response);
         }
         resolve(response);
@@ -58,7 +40,7 @@ const createSource = (amount: number) => {
 
 export const useOrderStore = defineStore("orderStore", {
   state: (): {
-    orderLists: OrderDetail[];
+    orderLists: OrderList[];
     orderDetail: OrderDetail;
   } => ({
     orderLists: [],
@@ -67,6 +49,8 @@ export const useOrderStore = defineStore("orderStore", {
       totalPrice: 0,
       totalProductPrice: 0,
       totalShippingPrice: 0,
+      userId: '',
+      customerName: '',
       products: [],
       status: "",
       createdDate: new Date(),
@@ -98,16 +82,22 @@ export const useOrderStore = defineStore("orderStore", {
           collection(db, "orders"),
           where("userId", "==", this.user)
         );
-
         const docSnapshot = await getDocs(docRef);
-        const result: any[] = [];
+        const result: OrderList[] = [];
         docSnapshot.forEach((doc) => {
-          const docData = doc.data();
-          docData.id = doc.id;
-          result.push(docData);
+          const docData:Partial<OrderDetail> = doc.data();
+          const productName: string[] = (docData.products ?? []).map(product => (product.productInfo?.name ?? ""))
+       
+          const orderData: OrderList = {
+            id: doc.id,
+            status: docData.status ?? "",
+            products: productName
+          }
+          
+          result.push(orderData);
         });
         this.orderLists = result;
-  
+        console.log('order lists : ', this.orderLists)
       } catch (error) {
         console.log(error);
       }
@@ -131,7 +121,7 @@ export const useOrderStore = defineStore("orderStore", {
         const response = await axios.post("/api/payment", checkOutDetail);
         // console.log("check url : ", response.data);
         console.log("check response : ", response);
-        
+
         return response.data.paymentUrl;
       } catch (error) {
         if (error instanceof Error) {

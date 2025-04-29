@@ -16,7 +16,7 @@ const handleSubmit = async () => {
   try {
     const orderId: string = await cartStore.createOrder();
     alertStore.toggleAlert("success", "Create order success !");
-    // router.push({ name: "user-checkout", params: { id: orderId } });
+    router.push({ name: "user-checkout", params: { id: orderId } });
   } catch (error) {
     console.log(error);
   }

@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { db } from "../../firebase";
 import type {
   ProductData,
- 
   ProductInfo,
   TotalQuantity,
 } from "../../types";
@@ -25,25 +24,13 @@ type ProductListsData = Pick<ProductData, "id" | "status"> & Pick<ProductInfo, "
 
 export const useAdminProductStore = defineStore("adminProductStore", {
   state: (): {
-    product: ProductData;
+    
     colorsConfig: string[];
     sizesConfig: string[];
     checkConfigLoaded: boolean;
     productLists: ProductListsData[];
   } => ({
-    product: {
-      coverImg: "",
-      name: "",
-      quantity: 0,
-      quantityServe: 0,
-      remainQuantity: 0,
-      price: 0,
-      status: true,
-      variantType: "",
-      description: "",
-      colors: [],
-      sizes: [],
-    },
+  
     colorsConfig: [],
     sizesConfig: [],
     checkConfigLoaded: false,
@@ -69,32 +56,36 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         const products: ProductListsData[] = [];
         response.forEach((doc) => {
           const docData = doc.data() as ProductData;
+          const totalQuantity = (docData.totalQuantity?.remainQty || 0) + (docData.totalQuantity?.soldQty || 0)
           const convertData = {
             id: doc.id,
             name: docData.productInfo.name,
             coverImg: docData.productInfo.coverImg,
-            remainQty: Number(docData.totalQuantity?.quantity),
+            remainQty: totalQuantity,
             status: docData.status
           };
           products.push(convertData);
         });
+        console.log('check product : ', products)
         this.productLists = products;
       } catch (error) {
         console.log("load product error : ", error);
       }
     },
-    async loadProduct(productId: string) {
+    async loadProduct(productId: string) : Promise<ProductData | undefined>  {
       try {
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          return docSnap.data();
+          return docSnap.data() as ProductData;
         } else {
           throw new Error("Not found doc");
         }
       } catch (error) {
         console.log(error);
-        return null
+        if(error instanceof Error) {
+          throw new Error(error.message)
+        }
       }
     },
     async addProduct(data: ProductData) {
@@ -117,7 +108,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
       }
     },
-    async updateProduct(productId: string, data: AdminProductFormData) {
+    async updateProduct(productId: string, data: ProductData) {
       try {
         const docRef = doc(db, "products", productId);
         await updateDoc(docRef, data as Partial<ProductData>);
@@ -132,11 +123,13 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         console.log(error);
       }
     },
-    async toggleProductStatus(id: string, prevStatus: boolean) {
+    async toggleProductStatus(id: string, newStatus: boolean) {
       try {
+        const productIndex = this.productLists.findIndex(product => product.id === id)
+        this.productLists[productIndex].status = newStatus
         const docRef = doc(db, "products", id);
         await updateDoc(docRef, {
-          status: prevStatus,
+          status: newStatus,
         });
       } catch (error) {
         console.log(error);

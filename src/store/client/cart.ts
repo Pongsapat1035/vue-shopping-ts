@@ -73,18 +73,13 @@ export const useCartStore = defineStore("cartStore", {
             if (data) {
               // have product on cart
               const promise = data.map(async (product: ProductCart) => {
-                const recievedProduct = (await productStore.loadProduct(
-                  product.id
-                )) as ProductData;
+                const recievedProduct = (await productStore.loadProduct(product.id)) as ProductData;
+
                 if (recievedProduct) {
                   // found product
-                  const { productInfo, variantType, totalQuantity, variants } =
-                    recievedProduct;
-                  const totalPrice =
-                    Number(productInfo.price) * product.quantity;
-                  const findVariant = variants?.find(
-                    (el) => el.name === product.variant
-                  );
+                  const { productInfo, variantType, totalQuantity, variants } = recievedProduct;
+                  const totalPrice = Number(productInfo.price) * product.quantity;
+                  const findVariant = variants?.find((el) => el.name === product.variant);
 
                   const productRemain = findVariant?.remainQuantity ?? 0;
                   const remainQuantity =
@@ -221,9 +216,8 @@ export const useCartStore = defineStore("cartStore", {
           status: "Pending",
           createdDate: new Date(),
           userId: this.user,
-          name: this.customerName,
+          customerName: this.customerName,
         };
-        console.log("order data : ", orderDetail);
 
         const docRef = collection(db, "orders");
         const docSnapshot = await addDoc(docRef, orderDetail);

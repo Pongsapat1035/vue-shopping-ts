@@ -15,10 +15,9 @@ export interface ProductInfo {
 }
 
 export interface TotalQuantity {
-  quantity: number
   remainQty: number
   serveQty?: number
-  usedQty?: number
+  soldQty?: number
 }
 
 export interface ProductCardDetail  {
@@ -31,7 +30,6 @@ export interface ProductCardDetail  {
   colors?: ProductVariants[];
   sizes?: ProductVariants[];
 }
-
 
 export type ProductCardData = ProductInfo & {
   id:string
@@ -55,8 +53,7 @@ export interface ProductCartDetail extends ProductCart {
 export interface ProductVariants {
   name: string;
   enable: boolean;
-  remainQuantity?: number;
+  remainQuantity: number;
   serveQuantity?: number
-  usedQuantity?: number
-  quantity?: number;
+  soldQuantity?: number
 }

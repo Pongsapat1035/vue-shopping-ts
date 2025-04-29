@@ -5,8 +5,9 @@ import type { ProductVariants } from "../../../types";
 import InputTag from "../../InputTag.vue";
 
 const colors = defineModel<ProductVariants[]>("colors", {
-  default: () => [{ enable: false, name: "", quantity: 0 }],
+  default: () => [{ enable: false, name: "", remainQuantity: 0 }],
 });
+
 const colorEnableLists = ref<ProductVariants[]>([]);
 const errMsg = ref<string[]>([])
 
@@ -17,7 +18,7 @@ watch(
       (color) => color.enable === true
     );
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 </script>
 <template>
@@ -53,7 +54,7 @@ watch(
               placeHolderText="Qty"
               validate-with="number"
               :immediate="true"
-              v-model:value="color.quantity"
+              v-model:value="color.remainQuantity"
               v-model:error="errMsg[index]"></InputTag>
           </div>
         </div>

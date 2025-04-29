@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import UserLayout from "../../layout/UserLayout.vue";
-import { useOrderStore } from "../../store/client/order";
 import { onMounted } from "vue";
 import { useRoute, RouterLink } from "vue-router";
+
+import { useOrderStore } from "../../store/client/order";
 import { useAuthStore } from "../../store/auth";
+import { allInputIsFilled } from "../../utils/validate.method";
+import { useAlertStore } from "../../store/alert";
+
+import UserLayout from "../../layout/UserLayout.vue";
 import StatusBadge from "../../components/StatusBadge.vue";
 import AddressWarpper from "../../components/client/checkout/AddressWarpper.vue";
 import ProductCard from "../../components/client/checkout/ProductCard.vue";
@@ -11,6 +15,7 @@ import ProductCard from "../../components/client/checkout/ProductCard.vue";
 const route = useRoute();
 const orderStore = useOrderStore();
 const authStore = useAuthStore();
+const alertStore = useAlertStore();
 const orderId: string = Array.isArray(route.params.id)
   ? route.params.id[0]
   : route.params.id;
@@ -24,9 +29,20 @@ onMounted(async () => {
 });
 
 const handlePayment = async () => {
-  const paymentUrl: string | null = await orderStore.payment();
-  if (paymentUrl) {
-    location.href = paymentUrl;
+  try {
+    if (!allInputIsFilled(authStore.userInfo.addressInfo))
+      throw new Error("Please set your address");
+    console.log("call payment");
+
+    // const paymentUrl: string | null = await orderStore.payment();
+    // if (paymentUrl) {
+    //   location.href = paymentUrl;
+    // }
+  } catch (error) {
+    console.log(error);
+    if (error instanceof Error) {
+      alertStore.toggleAlert("Error", error.message);
+    }
   }
 };
 </script>
