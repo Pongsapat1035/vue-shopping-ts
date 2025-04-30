@@ -1,8 +1,6 @@
 <script setup lang="ts">
-
 import { watch } from "vue";
 import validateHandle from "../utils/validation";
-
 
 const props = defineProps<{
   title: string;

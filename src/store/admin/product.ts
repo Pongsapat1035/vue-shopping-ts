@@ -24,16 +24,12 @@ type ProductListsData = Pick<ProductData, "id" | "status"> & Pick<ProductInfo, "
 
 export const useAdminProductStore = defineStore("adminProductStore", {
   state: (): {
-    
     colorsConfig: string[];
     sizesConfig: string[];
-    checkConfigLoaded: boolean;
     productLists: ProductListsData[];
   } => ({
-  
     colorsConfig: [],
     sizesConfig: [],
-    checkConfigLoaded: false,
     productLists: [],
   }),
   getters: {
@@ -72,7 +68,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         console.log("load product error : ", error);
       }
     },
-    async loadProduct(productId: string) : Promise<ProductData | undefined>  {
+    async loadProduct(productId: string): Promise<ProductData | undefined> {
       try {
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
@@ -83,7 +79,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
       } catch (error) {
         console.log(error);
-        if(error instanceof Error) {
+        if (error instanceof Error) {
           throw new Error(error.message)
         }
       }
@@ -158,9 +154,24 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         console.log("add quantity error : ", error);
       }
     },
+    async loadConfig() {
+      try {
+        const docRef = doc(db, "config", "productConfig");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          // console.log(docSnap.data());
+          const { colors, sizes } = docSnap.data();
+          this.colorsConfig = colors;
+          this.sizesConfig = sizes;
+        }
+      } catch (error) {
+        console.log('load config error : ', error)
+      }
+
+    },
     async setConfig() {
       try {
-        if (!this.checkConfigLoaded) {
+       
           const colors = [
             "#F7374F",
             "#FCB454",
@@ -169,23 +180,12 @@ export const useAdminProductStore = defineStore("adminProductStore", {
             "#A31D1D",
           ];
           const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-          const docRef = doc(db, "config", "productConfig");
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            // console.log(docSnap.data());
-            const { colors, sizes } = docSnap.data();
-            this.colorsConfig = colors;
-            this.sizesConfig = sizes;
-          } else {
-            await setDoc(doc(db, "config", "productConfig"), {
-              colors,
-              sizes,
-            });
-            console.log("create config success");
-          }
-
-          this.checkConfigLoaded = true;
-        }
+          await setDoc(doc(db, "config", "productConfig"), {
+            colors,
+            sizes,
+          });
+          console.log("testing : create config success");
+        
       } catch (error) {
         console.log("error from set config");
       }

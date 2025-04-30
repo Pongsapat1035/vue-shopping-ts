@@ -6,8 +6,6 @@ const router = useRouter();
 const props = defineProps<{
   modalState: boolean;
   productId: string;
-  toggleAdd: Function;
-  toggleRemove: Function;
   closeModal: Function
 }>();
 const boxRef = ref<HTMLElement | null>(null);
@@ -44,16 +42,6 @@ onUnmounted(() => {
           })
       ">
       Edit
-    </li>
-    <li
-      class="px-4 py-2 cursor-pointer hover:bg-gray-200 rounded-lg transition-all"
-      @click="toggleAdd()">
-      Add Stock
-    </li>
-    <li
-      class="px-4 py-2 cursor-pointer hover:bg-gray-200 rounded-lg transition-all"
-      @click="toggleRemove()">
-      Remove Stock
     </li>
     <div class="divider my-0"></div>
     <li

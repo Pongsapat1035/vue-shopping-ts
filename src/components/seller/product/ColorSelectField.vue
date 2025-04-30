@@ -23,7 +23,7 @@ watch(
 </script>
 <template>
   <fieldset
-    class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box ">
+    class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-full">
     <legend class="fieldset-legend">Colors</legend>
     <div  class="flex flex-col gap-2">
       <div class="flex gap-2 flex-wrap">

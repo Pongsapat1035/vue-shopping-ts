@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
 import type { ProductInfo, ProductVariants } from "../../../types";
 
 import InputTag from "../../InputTag.vue";
@@ -12,6 +11,10 @@ interface InputValidate {
   description: string;
   quantity: string;
 }
+
+defineProps<{
+  mode: string
+}>()
 
 const productInfo = defineModel<ProductInfo>("productInfo", {
   default: {
@@ -51,10 +54,6 @@ const radioVariantData = [
   },
 ];
 
-
-// onMounted(()=>{
-//     console.log('check form data : ', variants)
-// })
 </script>
 <template>
   <div class="flex-1 flex flex-col gap-5">
@@ -98,7 +97,7 @@ const radioVariantData = [
           v-model="productInfo.description"></textarea>
       </div>
     </fieldset>
-    <div class="flex gap-5">
+    <div v-if="mode === 'create'" class="flex gap-5">
       <h1 class="font-semibold">Variant</h1>
       <div class="flex gap-4">
         <label
@@ -113,6 +112,9 @@ const radioVariantData = [
           {{ item.label }}
         </label>
       </div>
+    </div>
+    <div v-else-if="mode ==='edit' && variantType !=='none'">
+      <h1 class="text-2xl font-semibold">Variants quantity</h1>
     </div>
     <ColorSelectField v-if="variantType === 'color'" v-model:colors="variants">
     </ColorSelectField>

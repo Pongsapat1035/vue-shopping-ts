@@ -9,9 +9,6 @@ import { allInputIsFilled, allErrorEmpty } from "../../utils/validate.method";
 
 import ProductForm from "../../components/seller/product/ProductForm.vue";
 import SellerLayout from "@/layout/SellerLayout.vue";
-import InputTag from "@/components/InputTag.vue";
-import ColorSelectField from "@/components/seller/product/ColorSelectField.vue";
-import SizeSelectField from "@/components/seller/product/SizeSelectField.vue";
 import CoverPicture from "@/components/seller/product/CoverPicture.vue";
 
 interface InputValidate {
@@ -46,9 +43,14 @@ const productInfo: ProductInfo = reactive({
   description: "",
 });
 
+type VariantConfig = { size: ProductVariants[]; color: ProductVariants[] };
+const variantConfig = reactive<VariantConfig>({
+  size: [],
+  color: [],
+});
+
 const variantType = ref<string>("none");
 const variants = ref<ProductVariants[]>([]);
-const prevVariants = ref<ProductVariants[]>([])
 const productQty = ref<number>(0);
 
 const validateQuantity = () => {
@@ -125,7 +127,7 @@ const handleSubmit = async () => {
     }
 
     alertStore.toggleAlert("Success", "Create new product success !");
-    // router.push({ name: "seller-products" });
+    router.push({ name: "seller-products" });
   } catch (error) {
     console.log("add product error : ", error);
     alertStore.toggleAlert(
@@ -135,24 +137,26 @@ const handleSubmit = async () => {
   }
 };
 
-const loadDefaultOptions = (type: string) => {
+const loadDefaultOptions = async () => {
+  await productStore.loadConfig();
   if (
     productStore.colorsConfig.length > 0 ||
     productStore.sizesConfig.length > 0
   ) {
-    const variantsConfig =
-      type === "color" ? productStore.colorsConfig : productStore.sizesConfig;
-    variants.value = productStore.convertedConfig(variantsConfig);
+    variantConfig.color = productStore.convertedConfig(
+      productStore.colorsConfig
+    );
+    variantConfig.size = productStore.convertedConfig(productStore.sizesConfig);
   }
 };
 
 watch(
   () => variantType.value,
   () => {
-    loadDefaultOptions(variantType.value);
-    console.log('change')
-  },
-  { immediate: true }
+    const type = variantType.value;
+    if (type === "size" || type === "color")
+      variants.value = variantConfig[type];
+  }
 );
 
 const fetchProduct = async (productId: string) => {
@@ -160,16 +164,20 @@ const fetchProduct = async (productId: string) => {
     const response = await productStore.loadProduct(productId);
     Object.assign(productInfo, response?.productInfo);
     variantType.value = response?.variantType ?? "";
-    variants.value = response?.variants ?? [];
-    prevVariants.value = response?.variants ?? []
+
+    if (variantType.value === "size" || variantType.value === "color") {
+      variantConfig[variantType.value] = response?.variants ?? [];
+    }
+
     productQty.value = response?.totalQuantity?.remainQty ?? 0;
   } catch (error) {
     console.log(error);
   }
 };
 
-
 onMounted(() => {
+  loadDefaultOptions();
+
   if (productId) {
     formMode.value = "edit";
     fetchProduct(productId);
@@ -196,7 +204,8 @@ onMounted(() => {
           v-model:errMsg="productInfoErrMsg"
           v-model:variantType="variantType"
           v-model:variants="variants"
-          v-model:productQuantity="productQty"></ProductForm>
+          v-model:productQuantity="productQty"
+          :mode="formMode"></ProductForm>
       </div>
     </form>
   </SellerLayout>

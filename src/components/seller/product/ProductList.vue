@@ -43,16 +43,6 @@ const updateQuantity = (newQuantity: number) => {
   quantityModalState.value = false;
 };
 
-const toggleAddStockModal = () => {
-  quantityModalState.value = true;
-  quantityModalMode.value = "Add";
-};
-
-const toggleRemoveStockModal = () => {
-  quantityModalState.value = true;
-  quantityModalMode.value = "Remove";
-};
-
 </script>
 <template>
   <li class="list-row grid grid-cols-6 items-center">
@@ -82,8 +72,6 @@ const toggleRemoveStockModal = () => {
       <ProductOption
         :modalState="editState"
         :productId="data.id ?? ''"
-        :toggleAdd="toggleAddStockModal"
-        :toggleRemove="toggleRemoveStockModal"
         :closeModal="() => (editState = false)"></ProductOption>
     </div>
   </li>

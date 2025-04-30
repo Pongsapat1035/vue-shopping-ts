@@ -15,13 +15,14 @@ watch(
   () => sizes,
   () => {
     sizeEnableLists.value = sizes.value.filter((size) => size.enable === true);
+    console.log('check enable list : ', sizeEnableLists.value)
   },
-  { deep: true }
+  { immediate: true,deep: true }
 );
 </script>
 <template>
   <fieldset
-    class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-64">
+    class="fieldset flex-auto flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-full">
     <legend class="fieldset-legend">Size</legend>
     <div  class="flex flex-col gap-2">
       <div class="flex gap-2 flex-wrap">

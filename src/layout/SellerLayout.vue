@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import { onMounted, ref } from "vue";
-import { useAdminProductStore } from "../store/admin/product";
+import { ref } from "vue";
 import { useAuthStore } from "../store/auth";
 import AlertBadge from "../components/AlertBadge.vue";
 import NavLink from "../components/seller/layout/NavLink.vue";
 import ConfirmModal from "../components/ConfirmModal.vue";
 
-const productStore = useAdminProductStore();
 const confirmState = ref<boolean>(false);
 const authStore = useAuthStore();
 
@@ -26,9 +24,7 @@ const navData = [
   },
 ];
 
-onMounted(async () => {
-  await productStore.setConfig();
-});
+
 </script>
 <template>
   <div class="container mx-auto flex gap-5 relative h-max min-h-screen">
