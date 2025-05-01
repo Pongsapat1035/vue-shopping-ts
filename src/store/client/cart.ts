@@ -98,7 +98,6 @@ export const useCartStore = defineStore("cartStore", {
                   };
                   return convertData;
                 } else {
-                  console.log("check product id :", product.id);
                   this.removeCart(product.id);
                 }
               });
@@ -137,7 +136,9 @@ export const useCartStore = defineStore("cartStore", {
           (product) => product.id === id
         );
         this.cartItems.splice(productIndex, 1);
+        this.productLists.splice(productIndex, 1)
         await set(this.cartRef, this.cartItems);
+       
         useAlertStore().toggleAlert("Success", "Delete product success");
       } catch (error) {
         console.log(error);

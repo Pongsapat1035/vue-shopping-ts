@@ -4,8 +4,8 @@
     "target": "ES2020", // Target modern JavaScript
     "moduleResolution": "node16", // Resolve modules in Node.js style
     "esModuleInterop": true, // Enable compatibility with CommonJS modules
-    "outDir": "lib", // Output directory for compiled files
-    "rootDir": "src", 
+    "outDir": "./lib", // Output directory for compiled files
+    "rootDir": "./src", 
     "sourceMap": true,
     "strict": true,
     "noImplicitReturns": true,

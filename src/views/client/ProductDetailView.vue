@@ -117,7 +117,7 @@ watch(
             Out of stock
           </div>
         </div>
-        <p class="text-5xl">{{ productStore.product.productInfo.price }}THB</p>
+        <p class="text-5xl">{{ productStore.product.productInfo.price.toLocaleString() }} THB</p>
         <VariantSelect
           v-if="productStore.product.variantType !== 'none'"
           v-model:value="selectedVariant"></VariantSelect>

@@ -13,7 +13,7 @@ const productLists = ref<ProductCartDetail[]>([]);
 watch(
   () => cartStore.productLists,
   () => {
-    productLists.value = [...cartStore.productLists];
+    productLists.value = cartStore.productLists;
   }
 );
 </script>
@@ -29,7 +29,7 @@ watch(
               v-for="(product, index) in productLists"
               :data="product"
               :index="index"></ProductListCart>
-              <div v-else class="flex justify-center items-center font-semibold">
+              <div v-else class="flex justify-center items-center font-semibold  p-10 border-dashed border-2 border-neutral-300 rounded-2xl text-neutral-500">
                 Cart is empty
               </div>
           </div>

@@ -34,6 +34,7 @@ export interface ProductCardDetail  {
 export type ProductCardData = ProductInfo & {
   id:string
   remainQuantity: number
+  variantType: string
   variants: ProductVariants[]
 }
 
@@ -54,6 +55,6 @@ export interface ProductVariants {
   name: string;
   enable: boolean;
   remainQuantity: number;
-  serveQuantity?: number
-  soldQuantity?: number
+  serveQuantity: number
+  soldQuantity: number
 }

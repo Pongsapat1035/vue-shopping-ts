@@ -93,7 +93,7 @@ const radioVariantData = [
       <div class="px-4 py-3 bg-gray-100 rounded-lg">
         <textarea
           class="bg-gray-100 rounded-lg outline-none w-full font-light"
-          placeholder="detail"
+          placeholder="description"
           v-model="productInfo.description"></textarea>
       </div>
     </fieldset>

@@ -1,15 +1,25 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
 import { useCartStore } from "../../../store/client/cart";
 import type { ProductCartDetail } from "../../../types";
 
 import ProductQuantity from "./ProductQuantity.vue";
+import ConfirmModal from "../../ConfirmModal.vue";
 
 const cartStore = useCartStore();
 
-defineProps<{
+const props = defineProps<{
   data: ProductCartDetail;
   index: number;
 }>();
+
+const confirmModalState = ref<boolean>(false);
+
+const confirmModalInfo = {
+  title: "Delete",
+  desctiption: `Are you sure to delete ${props.data.productInfo?.name}`
+}
 
 </script>
 <template>
@@ -25,7 +35,9 @@ defineProps<{
         <h1 class="font-semibold text-xl">
           {{ data.productInfo.name }}
         </h1>
-        <button class="btn btn-circle" @click="data.id && cartStore.removeCart(data.id)">
+        <button
+          class="btn btn-circle"
+          @click="confirmModalState = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             stroke-width="2.5"
@@ -41,12 +53,18 @@ defineProps<{
       </div>
       <div class="flex-auto flex gap-2 items-start">
         <div class="flex gap-2">
-          <div v-if="data.variantType !== 'none'" class="flex gap-2 justify-center items-center">
-            <span class="text-sm text-neutral-400 font-light">{{ data.variantType.toUpperCase() }} : </span>
-            <div v-if="data.variantType ==='color'"
+          <div
+            v-if="data.variantType !== 'none'"
+            class="flex gap-2 justify-center items-center">
+            <span class="text-sm text-neutral-400 font-light"
+              >{{ data.variantType.toUpperCase() }} :
+            </span>
+            <div
+              v-if="data.variantType === 'color'"
               class="w-4 h-4 rounded-full"
               :style="{ backgroundColor: data.variant }"></div>
-              <div v-else
+            <div
+              v-else
               class="w-7 h-7 rounded-md border-1 border-gray-100 flex justify-center items-center text-xs">
               {{ data.variant }}
             </div>
@@ -58,8 +76,16 @@ defineProps<{
           :currentQuantity="data.quantity"
           :remainQuantity="data.remainQuantity"
           :index="index"></ProductQuantity>
-        <span class="text-semibold">{{ data.totalPrice.toLocaleString() }} THB</span>
+        <span class="text-semibold"
+          >{{ data.totalPrice.toLocaleString() }} THB</span
+        >
       </div>
     </div>
+    <ConfirmModal
+      v-if="confirmModalState"
+      :action="() => cartStore.removeCart(data.id)"
+      :title="confirmModalInfo.title"
+      :description="confirmModalInfo.desctiption"
+      :cancel="() => (confirmModalState = false)"></ConfirmModal>
   </div>
 </template>

@@ -18,7 +18,6 @@ type OrderList = Pick<OrderDetail, "id" | "status"> & {
   products: string[]
 }
 
-
 const createSource = (amount: number) => {
   return new Promise((resolve, reject) => {
     // ทำการส่ง source ที่ต้องการจ่ายไป omise เพื่อนำ source token กลับมา
@@ -104,20 +103,18 @@ export const useOrderStore = defineStore("orderStore", {
     },
     async payment(): Promise<string | null> {
       try {
-        const omiseResponse: any = await createSource(
-          this.orderDetail.totalPrice
-        );
-        interface CheckoutDetail {
+        const omiseResponse: any = await createSource(this.orderDetail.totalPrice);
+        type CheckoutDetail =  {
           sourceId: string;
           checkout: OrderDetail;
         }
         const sourceId = omiseResponse.id;
+
         const checkOutDetail: CheckoutDetail = {
           sourceId,
           checkout: this.orderDetail,
         };
-
-        // console.log("check response : ", omiseResponse);
+       
         const response = await axios.post("/api/payment", checkOutDetail);
         // console.log("check url : ", response.data);
         console.log("check response : ", response);

@@ -12,10 +12,7 @@ const cartStore = useCartStore();
       <RouterLink to="/" class="btn btn-ghost text-xl">Mart.shop</RouterLink>
     </div>
     <div class="flex gap-2">
-      <RouterLink
-        v-if="!authStore.userId"
-        class="btn btn-primary"
-        to="/auth"
+      <RouterLink v-if="!authStore.userId" class="btn btn-primary" to="/auth"
         >Get started</RouterLink
       >
     </div>
@@ -48,7 +45,7 @@ const cartStore = useCartStore();
               >{{ cartStore.getTotalItem }} Items</span
             >
             <span class="text-neutral-700"
-              >Subtotal: ${{ cartStore.getTotalProductPrice }}</span
+              >Subtotal: THB {{ cartStore.getTotalProductPrice.toLocaleString() }}</span
             >
             <div class="card-actions">
               <RouterLink to="/user/cart" class="btn btn-primary btn-block"

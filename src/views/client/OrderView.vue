@@ -10,6 +10,7 @@ const orderStore = useOrderStore();
 onMounted(async () => {
   await orderStore.loadAllOrders();
 });
+
 </script>
 <template>
   <UserLayout>

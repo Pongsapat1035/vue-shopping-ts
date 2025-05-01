@@ -3,8 +3,7 @@ import { useRouter } from "vue-router";
 import { useCartStore } from "../../../store/client/cart";
 import { useAlertStore } from "../../../store/alert";
 
-
-defineProps<{
+const props = defineProps<{
   isEmpty: Boolean;
 }>();
 
@@ -14,11 +13,16 @@ const router = useRouter();
 
 const handleSubmit = async () => {
   try {
+    const isEmpty = props.isEmpty
+    if(!isEmpty) throw new Error("Cart is empty !")
     const orderId: string = await cartStore.createOrder();
-    alertStore.toggleAlert("success", "Create order success !");
+    alertStore.toggleAlert("Success", "Create order success !");
     router.push({ name: "user-checkout", params: { id: orderId } });
   } catch (error) {
     console.log(error);
+    if(error instanceof Error) {
+      alertStore.toggleAlert("Warning", error.message);
+    }
   }
 };
 </script>
@@ -39,7 +43,7 @@ const handleSubmit = async () => {
         <p>{{ cartStore.getTotalPrice.toLocaleString() }} THB</p>
       </div>
       <button @click="handleSubmit" class="btn btn-primary">Checkout</button>
-      <RouterLink to="/" class="btn btn-neutral">Shopping more</RouterLink>
+      <RouterLink :to="{ name: 'user-products' }" class="btn btn-neutral">Shopping more</RouterLink>
     </div>
   </div>
 </template>

@@ -42,7 +42,7 @@ defineProps<{
       <div class="flex gap-5 justify-between items-center">
         <span class="font-light text-neutral-400"
           >Qty : {{ data.quantity }}</span>
-        <span class="text-semibold">{{ data.totalPrice }}$</span>
+        <span class="text-semibold">{{ data.totalPrice.toLocaleString() }} THB</span>
       </div>
     </div>
   </div>

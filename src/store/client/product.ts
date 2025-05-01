@@ -110,6 +110,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
             description: data.productInfo?.description ?? "",
             price: data.productInfo?.price ?? 0,
             remainQuantity: data.totalQuantity?.remainQty ?? 0,
+            variantType: data.variantType ?? "",
             variants: data.variants ?? [],
           };
           products.push(convertData);
