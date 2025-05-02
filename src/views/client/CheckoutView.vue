@@ -12,6 +12,7 @@ import StatusBadge from "../../components/StatusBadge.vue";
 import AddressWarpper from "../../components/client/checkout/AddressWarpper.vue";
 import ProductCard from "../../components/client/checkout/ProductCard.vue";
 import ConfirmModal from "../../components/ConfirmModal.vue";
+import LoadingScreen from "../../components/LoadingScreen.vue";
 
 
 const route = useRoute();
@@ -22,7 +23,7 @@ const orderId: string = Array.isArray(route.params.id)
   ? route.params.id[0]
   : route.params.id;
 const confirmModalState = ref<boolean>(false)
-
+const loadingState = ref<boolean>(false)
 
 onMounted(async () => {
   try {
@@ -32,20 +33,21 @@ onMounted(async () => {
   }
 });
 
-const handleCancel = () => {
+const handleCancel = async () => {
   console.log('call cancel order')
+  await orderStore.cancel(orderId)
 }
-
 
 const handlePayment = async () => {
   try {
     if (!allInputIsFilled(authStore.userInfo.addressInfo))
       throw new Error("Please set your address");
     console.log("call payment");
-
+    loadingState.value = true
     const paymentUrl: string | null = await orderStore.payment();
     if (paymentUrl) {
       location.href = paymentUrl;
+      loadingState.value = false
     }
   } catch (error) {
     console.log(error);
@@ -125,5 +127,6 @@ const handlePayment = async () => {
       </div>
     </div>
     <ConfirmModal v-if="confirmModalState" title="Cancel order" description="Are you sure to cancel order ?" :action="()=> handleCancel()" :cancel="()=> confirmModalState = false"></ConfirmModal>
+    <LoadingScreen v-if="loadingState" text="Processing Payment"></LoadingScreen>
   </UserLayout>
 </template>

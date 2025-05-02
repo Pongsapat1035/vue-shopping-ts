@@ -128,5 +128,14 @@ export const useOrderStore = defineStore("orderStore", {
         return null;
       }
     },
+    async cancel(orderId: string) {
+      try{
+        console.log('check order id : ', orderId)
+        const response = await axios.post("/api/restock", { orderId })
+        console.log('check response : ', response)
+      } catch(error) {
+        console.log('cancel order error : ', error)
+      }
+    }
   },
 });

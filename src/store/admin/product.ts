@@ -39,6 +39,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
           name: item,
           enable: false,
           remainQuantity: 0,
+          serveQuantity: 0,
+          soldQuantity: 0
         }));
         return convertItem;
       };
