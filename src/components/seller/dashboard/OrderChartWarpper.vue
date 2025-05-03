@@ -1,8 +1,16 @@
 <script setup lang="ts">
-const data = {
+import { ref, watch } from "vue";
+import { useAdminDashboard } from "../../../store/admin/dashboard";
+
+const dashboardStore = useAdminDashboard();
+
+
+const chartRef = ref<ApexCharts | null>(null);
+
+const data = ref({
   options: {
     xaxis: {
-      categories: ["01 Jan", "02 Jan", "03 Jan", "04 Jan", "05 Jan", "06 Jan"],
+      categories: dashboardStore.chartData.label, // Initialize with store data
       lines: {
         show: false,
       },
@@ -13,26 +21,41 @@ const data = {
   },
   series: [
     {
-      name: "Series 1",
-      data: [45, 52, 38, 45, 19, 33],
-    },
-    {
-      name: "Series 2",
-      data: [50, 42, 70, 50, 69, 33],
-    },
+      name: "Sale",
+      data: dashboardStore.chartData.series1,
+    }
   ],
-};
+});
+
+watch(
+  () => dashboardStore.chartData,
+  (newChartData) => {
+    data.value.series[0].data = newChartData.series1
+   
+    if (chartRef.value) {
+      chartRef.value.updateOptions({
+        xaxis: {
+          categories: newChartData.label,
+        },
+      });
+    }
+  },
+  { immediate: true }
+);
 </script>
 <template>
   <div class="rounded-2xl w-full p-10 flex justify-between items-center">
     <div class="flex flex-col gap-2">
       <h1 class="text-semibold text-xl">Your sale report</h1>
       <p class="text-neutral-500 font-light text-sm">Look at your sale</p>
-      <h1 class="font-semibold text-6xl mt-5">THB 45,000</h1>
+      <h1 class="font-semibold text-6xl mt-5">
+        THB {{ dashboardStore.totalData.sale.toLocaleString() }}
+      </h1>
     </div>
     <div class="">
       <apexchart
         class="min-h-0"
+        ref="chartRef"
         type="line"
         width="600"
         height="300"

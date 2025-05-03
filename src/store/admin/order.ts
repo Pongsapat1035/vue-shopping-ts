@@ -14,7 +14,7 @@ export const useAdminOrderStore = defineStore("adminOrderStore", {
       return state.orderLists.length
     },
     totalAmout(state){
-      const successOrderLists = state.orderLists.filter((order) => order.status === 'Success')
+      const successOrderLists = state.orderLists.filter((order) => order.status === 'Successful')
       return successOrderLists.reduce((acc, cur) => acc + cur.totalPrice, 0)
     }
     

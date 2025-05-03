@@ -11,11 +11,14 @@ import {
 } from "firebase/firestore";
 import type {
   ProductData,
-  ProductInfo,
-  TotalQuantity,
-  ProductVariants,
   ProductCardData,
 } from "../../types";
+import { searchClient } from "@algolia/client-search"; 
+
+const client = searchClient(
+  import.meta.env.VITE_ALGOLIA_APPID,
+  import.meta.env.VITE_ALGOLIA_API_KEY
+);
 
 interface QueryProduct {
   searchText: string;
@@ -43,7 +46,6 @@ export const useClientProductStore = defineStore("clientProductStore", {
         description: "",
       },
       totalQuantity: {
-        quantity: 0,
         remainQty: 0,
       },
       status: false,
@@ -73,7 +75,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
         const response = await getDocs(docRef);
         const products: ProductCardData[] = [];
         response.forEach((doc) => {
-          const data: Partial<ProductData> = doc.data();
+          const data:ProductData = doc.data() as ProductData;
           const convertData: ProductCardData = {
             id: doc.id,
             name: data.productInfo?.name ?? "",
@@ -82,6 +84,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
             price: data.productInfo?.price ?? 0,
             remainQuantity: data.totalQuantity?.remainQty ?? 0,
             variants: data.variants ?? [],
+            variantType: data.variantType ?? ""
           };
           products.push(convertData);
         });
@@ -140,7 +143,23 @@ export const useClientProductStore = defineStore("clientProductStore", {
       );
       this.productLists = productSearchByName;
     },
-
+    async searchProduct(){
+      const indexName = "test-index";
+      try{
+        const { results } = await client.search({
+          requests: [
+            {
+              indexName,
+              query: "product", facetFilters: [['tag:number'], ['price >= 150']]
+            },
+          ],
+        });
+        console.log('check result : ', results)
+      } catch(error) {
+        console.log(error)
+      }
+     
+    },
     queryProduct(query: QueryProduct) {
       console.log("check query : ", query);
       let queryProduct = <ClientProductCard[]>[...this.backupProduct];

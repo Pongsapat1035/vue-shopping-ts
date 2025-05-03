@@ -1,37 +1,18 @@
 <script setup lang="ts">
 import StatusBadge from "../../StatusBadge.vue";
-interface ProductData {
-  name: string;
-  price: number;
-  totalPrice: number;
-  remainQuantity: number;
-  coverImg: string;
-  id: string;
-  color: string | "";
-  size: string | "";
-  quantity: number;
-}
-interface OrderDetail {
-  id: string;
-  name: string;
-  totalProductPrice: number;
-  totalShippingPrice: number;
-  totalPrice: number;
-  status: string;
-  createdDate: Date;
-  products: ProductData[];
-}
+import type { OrderDetail } from "../../../types";
 
 defineProps<{
   orderData: OrderDetail;
 }>();
+
 </script>
 <template>
   <li class="list-row grid grid-cols-5 items-center">
     <div class="flex gap-5">
       <div class="list-col-grow">
         <div class="text-xs uppercase font-semibold opacity-60">
-          {{ orderData.name || "Customer name" }}
+          {{ orderData.customerName || "Customer name" }}
         </div>
       </div>
     </div>

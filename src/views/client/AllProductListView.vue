@@ -41,6 +41,7 @@ const toggleSort = () =>
 onMounted(async () => {
   try {
     await productStore.loadAllProducts();
+    await productStore.searchProduct()
   } catch (error) {
     console.log(error);
   }

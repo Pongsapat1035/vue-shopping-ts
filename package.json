@@ -10,6 +10,7 @@
     "emulator": "firebase emulators:start --import ./firebase-data  --export-on-exit ./firebase-data"
   },
   "dependencies": {
+    "@algolia/client-search": "^5.24.0",
     "@tailwindcss/postcss": "^4.1.4",
     "@tailwindcss/vite": "^4.0.14",
     "axios": "^1.8.4",

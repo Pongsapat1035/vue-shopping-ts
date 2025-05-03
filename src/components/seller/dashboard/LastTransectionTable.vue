@@ -1,9 +1,25 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import { useAdminDashboard } from "../../../store/admin/dashboard";
+import {  watch, ref } from "vue";
+import type { OrderDetail } from "../../../types";
+import OrderLists from "../order/OrderLists.vue";
+const dashboardStore = useAdminDashboard();
+
+const orderList = ref<OrderDetail[]>([]);
+
+watch(
+  () => dashboardStore.orderLists,
+  (newOrderLists) => {
+    orderList.value = newOrderLists;
+    console.log(orderList.value)
+  },
+  { immediate: true }
+);
 </script>
 <template>
-  <div class="flex flex-col gap-2">
-    <div class="flex justify-between items-center ">
+  <div class="flex flex-col gap-5">
+    <div class="flex justify-between items-center">
       <h1 class="font-semibold text-2xl">Last transection</h1>
       <RouterLink
         class="font-light text-sm text-neutral-500 underline underline-offset-2"
@@ -14,28 +30,21 @@ import { RouterLink } from "vue-router";
     <p class="font-light text-sm text-neutral-500">
       Keep track of your 10 most recent transactions at a glance.
     </p>
-    <div class="overflow-x-auto h-[300px] mt-5">
-      <table
-        class="table table-md table-pin-rows overflow-scroll table-pin-cols">
-        <thead>
-          <tr>
-            <th>Order ID</th>
-            <td>Name</td>
-            <td>Date</td>
-            <td>Status</td>
-            <td>Amout</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="i in 10">
-            <th>1</th>
-            <td>Cy Ganderton</td>
-            <td>12/02/2568</td>
-            <td>Success</td>
-            <td>560.-</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <ul class="flex-1 basis-60 list bg-base-100 rounded-box shadow-md">
+      <li class="list-row grid grid-cols-5">
+        <div class="text-xs uppercase font-semibold">Customer name</div>
+        <div class="text-xs uppercase font-semibold">Order ID</div>
+        <div class="text-xs uppercase font-semibold">order date</div>
+        <div class="text-xs uppercase font-semibold">amout</div>
+        <div class="text-xs uppercase font-semibold">Status</div>
+      </li>
+      <OrderLists
+        v-if="orderList.length > 0"
+        v-for="order in orderList"
+        :orderData="order"></OrderLists>
+      <div v-else class="flex justify-center items-center h-full w-full">
+        There are currently no orders to display.
+      </div>
+    </ul>
   </div>
 </template>
