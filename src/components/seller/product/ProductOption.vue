@@ -6,7 +6,8 @@ const router = useRouter();
 const props = defineProps<{
   modalState: boolean;
   productId: string;
-  closeModal: Function
+  closeModal: Function;
+  toggleDeleteModal: Function;
 }>();
 const boxRef = ref<HTMLElement | null>(null);
 
@@ -14,7 +15,7 @@ const handleClickOutside = (event: Event) => {
   const target = event.target as HTMLElement;
   if (boxRef.value && !boxRef.value.contains(target)) {
     // editState.value = false;
-    props.closeModal()
+    props.closeModal();
   }
 };
 
@@ -45,7 +46,8 @@ onUnmounted(() => {
     </li>
     <div class="divider my-0"></div>
     <li
-      class="px-4 py-2 cursor-pointer hover:bg-red-200 rounded-lg text-red-500 transition-all font-semibold">
+      class="px-4 py-2 cursor-pointer hover:bg-red-200 rounded-lg text-red-500 transition-all font-semibold"
+      @click="toggleDeleteModal()">
       Delete
     </li>
   </ul>

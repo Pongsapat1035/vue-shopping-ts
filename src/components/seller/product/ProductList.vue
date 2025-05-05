@@ -7,8 +7,8 @@ import type { ProductData, TotalQuantity, ProductInfo } from "../../../types";
 
 import ProductStatus from "./ProductStatus.vue";
 import ProductStockStatus from "./ProductStockStatus.vue";
-import EditQuantityModal from "./EditQuantityModal.vue";
 import ProductOption from "./ProductOption.vue";
+import ConfirmModal from "../../ConfirmModal.vue";
 
 type ProductListsData = Pick<ProductData, "id" | "status"> &
   Pick<ProductInfo, "coverImg" | "name"> &
@@ -17,32 +17,20 @@ type ProductListsData = Pick<ProductData, "id" | "status"> &
 const props = defineProps<{
   data: ProductListsData;
 }>();
-
 const productStore = useAdminProductStore();
 const alertStore = useAlertStore();
-
-const quantityModalState = ref<boolean>(false);
-const quantityModalMode = ref<string>("Add");
+const confirmState = ref<boolean>(false);
 const editState = ref<boolean>(false);
 
-const updateQuantity = (newQuantity: number) => {
-  const { id, remainQty } = props.data;
-  if (
-    quantityModalMode.value === "Remove" &&
-    remainQty &&
-    remainQty < newQuantity
-  ) {
-    alertStore.toggleAlert(
-      "Error",
-      "Can't remove product more than remain quantity"
-    );
-    quantityModalState.value = false;
-    return;
+const handleDelete = async () => {
+  try {
+    const { id } = props.data;
+    await productStore.deleteProduct(id ?? "");
+    alertStore.toggleAlert("Success", `Delete product success`);
+  } catch (error) {
+    console.log(error);
   }
-  productStore.updateQuantity(id ?? "", newQuantity, quantityModalMode.value);
-  quantityModalState.value = false;
 };
-
 </script>
 <template>
   <li class="list-row grid grid-cols-6 items-center">
@@ -72,12 +60,14 @@ const updateQuantity = (newQuantity: number) => {
       <ProductOption
         :modalState="editState"
         :productId="data.id ?? ''"
-        :closeModal="() => (editState = false)"></ProductOption>
+        :closeModal="() => (editState = false)"
+        :toggleDeleteModal="() => (confirmState = true)"></ProductOption>
     </div>
   </li>
-  <EditQuantityModal
-    v-if="quantityModalState"
-    :mode="quantityModalMode"
-    :confirmModal="updateQuantity"
-    :toggleModal="() => (quantityModalState = false)"></EditQuantityModal>
+  <ConfirmModal
+    v-if="confirmState"
+    title="Delete product"
+    description="Are you sure to delete product ?"
+    :action="handleDelete"
+    :cancel="() => (confirmState = false)"></ConfirmModal>
 </template>

@@ -64,7 +64,6 @@ export const useAdminProductStore = defineStore("adminProductStore", {
           };
           products.push(convertData);
         });
-        console.log('check product : ', products)
         this.productLists = products;
       } catch (error) {
         console.log("load product error : ", error);
@@ -117,6 +116,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     async deleteProduct(productId: string) {
       try {
         await deleteDoc(doc(db, "products", productId));
+        const productIndex = this.productLists.findIndex(product=> product.id === productId)
+        this.productLists.splice(productIndex, 1)
       } catch (error) {
         console.log(error);
       }
@@ -161,7 +162,6 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         const docRef = doc(db, "config", "productConfig");
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          // console.log(docSnap.data());
           const { colors, sizes } = docSnap.data();
           this.colorsConfig = colors;
           this.sizesConfig = sizes;
@@ -173,7 +173,6 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     },
     async setConfig() {
       try {
-       
           const colors = [
             "#F7374F",
             "#FCB454",

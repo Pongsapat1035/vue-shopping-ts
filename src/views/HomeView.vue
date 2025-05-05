@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import type { ProductCardData } from "../types";
+import { onMounted } from "vue";
 
 import { useAuthStore } from "../store/auth";
 import { useClientProductStore } from "../store/client/product";
@@ -11,13 +10,11 @@ import ProductCard from "@/components/client/ProductCard.vue";
 
 const productStore = useClientProductStore();
 const authStore = useAuthStore();
-const productLists = ref<ProductCardData[]>([]);
 
 const fetchProductLists = async () => {
   try {
     await authStore.checkAuth();
-    const response: ProductCardData[] = await productStore.loadHomeProduct();
-    productLists.value = response;
+    await productStore.loadProducts(4);
   } catch (error) {
     console.log("error : ", error);
   }
@@ -35,7 +32,7 @@ onMounted(async () => {
       <h1 class="font-bold text-5xl my-8">Product lists</h1>
       <div class="flex gap-8">
         <ProductCard
-          v-for="product in productLists"
+          v-for="product in productStore.productLists"
           :data="product"></ProductCard>
       </div>
       <RouterLink

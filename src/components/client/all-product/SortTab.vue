@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const value = defineModel<string>();
 
-defineProps<{
-  toggleSort: Function;
-}>();
+// defineProps<{
+//   toggleSort: Function;
+// }>();
 
 </script>
 <template>
@@ -11,9 +11,9 @@ defineProps<{
     <h1 class="font-semibold text-3xl">Sort by</h1>
     <div class="flex justify-between">
       <h1 class="font-semibold">Name</h1>
-      <button class="btn" @click="toggleSort()">
+      <!-- <button class="btn" @click="toggleSort()">
         {{ value }}
-      </button>
+      </button> -->
     </div>
   </div>
 </template>

@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
-import type { ProductCardData } from "../../types";
 import { onMounted, ref } from "vue";
-import type { ProductVariants } from "../../types";
+import { RouterLink } from "vue-router";
+import type { ProductCardData, ProductVariants } from "../../types";
 
 const props = defineProps<{
   data: ProductCardData;
@@ -11,7 +10,6 @@ const props = defineProps<{
 const enabledVariants = ref<ProductVariants[]>([]);
 
 onMounted(() => {
-  console.log(props.data);
   const variantType = props.data.variantType;
   if (variantType !== "none")
     enabledVariants.value = props.data.variants.filter((item) => item.enable);
@@ -27,7 +25,6 @@ onMounted(() => {
     <div class="card-body flex flex-col gap-3 p-3">
       <div class="flex justify-between">
         <h2 class="card-title">{{ data.name }}</h2>
-
         <div
           v-if="data.remainQuantity === 0"
           class="bg-red-200 rounded-2xl py-1 px-2 text-xs text-red-800 font-semibold">
