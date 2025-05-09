@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { db } from "../../firebase";
 import type {
   ProductData,
+  ProductFormData,
   ProductInfo,
   TotalQuantity,
 } from "../../types";
@@ -85,19 +86,33 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
       }
     },
-    async addProduct(data: ProductData) {
+    async addProduct(data: ProductFormData) {
       try {
-        const productName = data.productInfo.name;
+        const { productInfo, quantity, variants, variantType } = data
+        const variantName: string[] = variants.filter(variant => variant.enable === true).map(item => item.name)
+        const convertData: ProductData = {
+          productInfo,
+          variants,
+          variantType,
+          variantName,
+          status: true,
+          totalQuantity: {
+            remainQty: quantity
+          },
+          createAt: new Date()
+        }
 
+        const productName = data.productInfo.name;
         const colRef = collection(db, "products");
         const querySnap = query(
           colRef,
           where("productInfo.name", "==", productName)
         );
+
         const response = await getDocs(querySnap);
         if (!response.empty) throw new Error("Name is already used");
 
-        await addDoc(colRef, data);
+        await addDoc(colRef, convertData);
       } catch (error) {
         console.log("error from add product : ", error);
         if (error instanceof Error) {
@@ -105,10 +120,17 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
       }
     },
-    async updateProduct(productId: string, data: ProductData) {
+    async updateProduct(productId: string, data: ProductFormData) {
       try {
+        const { variants, variantType, quantity } = data
+        const enableVariants = variants.filter(variant => variant.enable === true)
+        const variantName: string[] = enableVariants.map(item => item.name)
+        const totalUpdateQuantity = variantType !== 'none' ? enableVariants.reduce((acc, currentVal) => acc + currentVal.remainQuantity, 0) : quantity
+
+        const convertData = { ...data, variantName, totalQuantity: { remainQty: totalUpdateQuantity } }
+
         const docRef = doc(db, "products", productId);
-        await updateDoc(docRef, data as Partial<ProductData>);
+        await updateDoc(docRef, convertData as Partial<ProductData>);
       } catch (error) {
         console.log(error);
       }
@@ -116,7 +138,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     async deleteProduct(productId: string) {
       try {
         await deleteDoc(doc(db, "products", productId));
-        const productIndex = this.productLists.findIndex(product=> product.id === productId)
+        const productIndex = this.productLists.findIndex(product => product.id === productId)
         this.productLists.splice(productIndex, 1)
       } catch (error) {
         console.log(error);
@@ -173,20 +195,20 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     },
     async setConfig() {
       try {
-          const colors = [
-            "#F7374F",
-            "#FCB454",
-            "#27548A",
-            "#77B254",
-            "#A31D1D",
-          ];
-          const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
-          await setDoc(doc(db, "config", "productConfig"), {
-            colors,
-            sizes,
-          });
-          console.log("testing : create config success");
-        
+        const colors = [
+          "#F7374F",
+          "#FCB454",
+          "#27548A",
+          "#77B254",
+          "#A31D1D",
+        ];
+        const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
+        await setDoc(doc(db, "config", "productConfig"), {
+          colors,
+          sizes,
+        });
+        // console.log("testing : create config success");
+
       } catch (error) {
         console.log("error from set config");
       }

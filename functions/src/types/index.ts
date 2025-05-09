@@ -1,10 +1,12 @@
 export interface ProductData {
     id?: string;
     productInfo: ProductInfo
-    totalQuantity?: TotalQuantity
+    totalQuantity: TotalQuantity
     status: boolean;
     variantType: string;
-    variants?: ProductVariants[]
+    variantName: string[]
+    createAt: Date
+    variants: ProductVariants[]
 }
 
 export interface ProductVariants {

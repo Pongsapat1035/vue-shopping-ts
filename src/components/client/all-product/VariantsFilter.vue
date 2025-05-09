@@ -8,6 +8,7 @@ defineProps<{
 }>();
 
 const adminProductStore = useAdminProductStore();
+
 </script>
 <template>
   <fieldset

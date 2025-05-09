@@ -4,7 +4,7 @@ import { useRoute, useRouter } from "vue-router";
 
 import { useAdminProductStore } from "../../store/admin/product";
 import { useAlertStore } from "../../store/alert";
-import type { ProductVariants, ProductInfo, ProductData } from "../../types";
+import type { ProductVariants, ProductInfo, ProductFormData } from "../../types";
 import { allInputIsFilled, allErrorEmpty } from "../../utils/validate.method";
 
 import ProductForm from "../../components/seller/product/ProductForm.vue";
@@ -108,16 +108,11 @@ const handleSubmit = async () => {
   try {
     validation();
 
-    const productData: ProductData = {
+    const productData: ProductFormData = {
       productInfo,
       variantType: variantType.value,
       variants: variantType.value === "none" ? [] : variants.value,
-      totalQuantity: {
-        remainQty: productQty.value,
-        soldQty: 0,
-        serveQty: 0,
-      },
-      status: true,
+      quantity: productQty.value,
     };
     console.log("check product data : ", productData);
     if (formMode.value === "create") {

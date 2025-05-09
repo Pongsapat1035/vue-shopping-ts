@@ -1,19 +1,19 @@
 <script setup lang="ts">
+import { nextTick, ref, watch } from "vue";
 import { useClientProductStore } from "../../../store/client/product";
-import { ref, onMounted } from "vue";
 
-const productStore = useClientProductStore()
+const productStore = useClientProductStore();
 
 const progress = ref<HTMLElement | null>(null);
 const minPrice = 0;
-const maxPrice = 100;
+const maxPrice = ref<number>(0);
 const minRange = ref<number>(0);
 const maxRange = ref<number>(100);
 
 const updateProgress = () => {
   const minValue = minRange.value;
   const maxValue = maxRange.value;
-  const range = maxPrice - minPrice;
+  const range = maxPrice.value - minPrice;
   const valueRange = maxValue - minValue;
 
   const width = (valueRange / range) * 100;
@@ -32,28 +32,41 @@ const handleChange = () => {
       minRange.value = maxRange.value - 1;
     }
   }
-
   if (maxRange.value <= minRange.value && minRange.value !== 0) {
     maxRange.value = minRange.value + 1;
   }
   updateProgress();
 };
 
-const resetValue = () => {
-  minRange.value = minPrice;
-  maxRange.value = maxPrice;
+const resetValue = async() => {
+  minRange.value = 0;
+  maxRange.value = 0
+  await nextTick()
+  maxRange.value = productStore.productMaxprice;
   updateProgress();
+  productStore.productQuery.variants = [];
+  productStore.productQuery.searchText = ""
+  productStore.queryProduct();
 };
 
 const handleSubmit = () => {
-  productStore.productQuery.priceFilter.min = minRange.value
-  productStore.productQuery.priceFilter.max = maxRange.value
-  productStore.queryProduct()
-}
+  productStore.productQuery.priceFilter.min = minRange.value;
+  productStore.productQuery.priceFilter.max = maxRange.value;
+  productStore.queryProduct();
+};
 
-onMounted(() => {
-  updateProgress();
-});
+watch(
+  () => productStore.productMaxprice,
+  async (newPrice) => {
+    maxRange.value = 0
+    await nextTick()
+    maxRange.value = newPrice;
+    maxPrice.value = newPrice;
+    productStore.productQuery.priceFilter.min = minRange.value;
+    productStore.productQuery.priceFilter.max = maxRange.value;
+    updateProgress();
+  }, { immediate: true }
+);
 </script>
 <template>
   <div class="relative flex flex-col gap-3">
@@ -65,7 +78,7 @@ onMounted(() => {
           type="number"
           class="text-sm"
           :min="minPrice"
-          :max="maxPrice"
+          :max="productStore.productMaxprice"
           @input="handleChange"
           v-model.number="minRange" />
       </fieldset>
@@ -75,7 +88,7 @@ onMounted(() => {
           type="number"
           class="text-sm"
           :min="minPrice"
-          :max="maxPrice"
+          :max="productStore.productMaxprice"
           @input="handleChange"
           v-model.number="maxRange" />
       </fieldset>
@@ -85,14 +98,14 @@ onMounted(() => {
         class="col-1 row-1 pointer-events-none bg-transparent w-full"
         type="range"
         :min="minPrice"
-        :max="maxPrice"
+        :max="productStore.productMaxprice"
         v-model.number="minRange"
         @input="handleChange" />
       <input
         class="col-1 row-1 pointer-events-none bg-transparent w-full"
         type="range"
         :min="minPrice"
-        :max="maxPrice"
+        :max="productStore.productMaxprice"
         v-model.number="maxRange"
         @input="handleChange" />
     </div>
@@ -105,7 +118,9 @@ onMounted(() => {
     <button class="btn btn-ghost rounded-xl" @click="resetValue()">
       Reset
     </button>
-    <button class="btn btn-primary rounded-xl" @click="handleSubmit()">Apply</button>
+    <button class="btn btn-primary rounded-xl" @click="handleSubmit()">
+      Apply
+    </button>
   </div>
 </template>
 

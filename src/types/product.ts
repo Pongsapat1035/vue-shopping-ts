@@ -1,10 +1,16 @@
 export interface ProductData {
   id?: string;
   productInfo : ProductInfo
-  totalQuantity?: TotalQuantity
+  totalQuantity: TotalQuantity
   status: boolean;
   variantType: string;
-  variants?: ProductVariants[]
+  variantName: string[]
+  createAt: Date
+  variants: ProductVariants[]
+}
+
+export type ProductFormData = Pick<ProductData, 'productInfo' | 'variantType' | 'variants'> & {
+  quantity: number
 }
 
 export interface ProductInfo {
@@ -12,12 +18,6 @@ export interface ProductInfo {
   name: string
   price: number
   description: string
-}
-
-export interface TotalQuantity {
-  remainQty: number
-  serveQty?: number
-  soldQty?: number
 }
 
 export interface ProductCardDetail  {
@@ -35,7 +35,7 @@ export type ProductCardData = ProductInfo & {
   id:string
   remainQuantity: number
   variantType: string
-  variants: ProductVariants[]
+  variantName: string[]
 }
 
 export interface ProductCart {
@@ -49,6 +49,12 @@ export interface ProductCartDetail extends ProductCart {
   productInfo?: ProductInfo;
   totalPrice: number;
   remainQuantity: number;
+}
+
+export interface TotalQuantity {
+  remainQty: number
+  serveQty?: number
+  soldQty?: number
 }
 
 export interface ProductVariants {

@@ -1,19 +1,24 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref, watch } from "vue";
 import { RouterLink } from "vue-router";
-import type { ProductCardData, ProductVariants } from "../../types";
+import type { ProductCardData } from "../../types";
 
 const props = defineProps<{
   data: ProductCardData;
 }>();
 
-const enabledVariants = ref<ProductVariants[]>([]);
+const enabledVariants = ref<string[]>([]);
 
-onMounted(() => {
-  const variantType = props.data.variantType;
-  if (variantType !== "none")
-    enabledVariants.value = props.data.variants.filter((item) => item.enable);
-});
+watch(
+  () => props.data,
+  () => {
+    const variantType = props.data.variantType;
+    if (variantType !== "none") {
+      enabledVariants.value = props.data.variantName;
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -35,13 +40,14 @@ onMounted(() => {
         <div
           v-for="variant in enabledVariants"
           class="w-3 h-3 rounded-full"
-          :style="{ backgroundColor: variant.name }"></div>
+          :style="{ backgroundColor: variant }">
+        </div>
       </div>
       <div v-else-if="data.variantType === 'size'" class="flex gap-1">
         <div
           v-for="variant in enabledVariants"
           class="border border-neutral-200 rounded-lg p-1 text-xs min-w-6 min-h-6 flex items-center justify-center font-bold">
-          {{ variant.name }}
+          {{ variant }}
         </div>
       </div>
       <p class="font-light text-neutral-500">{{ data.description }}</p>

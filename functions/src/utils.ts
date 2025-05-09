@@ -120,12 +120,7 @@ export const checkStockInVariants = (newVariants: ProductVariants[], oldVariants
 }
 
 export const createRecord = async (docData: ProductData, docId: string) => {
-    let convertedVariants: string[] = []
-    if ((docData.variants?.length ?? 0) > 0) {
-        convertedVariants = (docData.variants ?? []).filter(item => item.enable === true).map(item => item.name)
-    }
     const variantType = docData.variantType
-    const variants = variantType !== 'none' ? convertedVariants : []
     const productData = {
         id: docId,
         name: docData.productInfo.name,
@@ -134,7 +129,8 @@ export const createRecord = async (docData: ProductData, docId: string) => {
         coverImg: docData.productInfo.coverImg,
         remainQuantity: (docData.totalQuantity?.remainQty ?? 0),
         variantType,
-        variants
+        variants : variantType !== 'none' ? docData.variantName : [],
+        createAt: new Date()
     }
 
     const { taskID } = await algolia.addOrUpdateObject({

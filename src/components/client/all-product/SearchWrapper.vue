@@ -2,7 +2,6 @@
 import { useClientProductStore } from "../../../store/client/product";
 
 const productStore = useClientProductStore();
-
 </script>
 <template>
   <div
@@ -34,15 +33,6 @@ const productStore = useClientProductStore();
         </svg>
       </button>
       <div class="divider divider-horizontal"></div>
-      <div class="flex items-center gap-2">
-        <h1 class="font-semibold w-20 text-nowrap">Sort By :</h1>
-        <select class="select select-ghost rounded-lg">
-          <option disabled selected>Sort Products</option>
-          <option>Newest First</option>
-          <option>Name (A-Z)</option>
-          <option>Name (Z-A)</option>
-        </select>
-      </div>
       <button
         class="btn btn-ghost"
         @click="productStore.filterState = !productStore.filterState">
@@ -55,6 +45,14 @@ const productStore = useClientProductStore();
         </svg>
         {{ productStore.filterState ? "Hide filter" : "Show filter" }}
       </button>
+      <div class="flex items-center gap-2">
+        <select class="select select-ghost rounded-lg" v-model="productStore.productQuery.sortBy" @change="productStore.queryProduct()">
+          <option disabled selected>Sort Products</option>
+          <option>Newest First</option>
+          <option>Name (A-Z)</option>
+          <option>Name (Z-A)</option>
+        </select>
+      </div>
     </div>
   </div>
 </template>
