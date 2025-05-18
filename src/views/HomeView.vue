@@ -28,9 +28,9 @@ onMounted(async () => {
 <template>
   <UserLayout>
     <HeroSection></HeroSection>
-    <div class="flex flex-col gap-10">
+    <div class="flex flex-col gap-10 px-4 md:px-0">
       <h1 class="font-bold text-5xl my-8">Product lists</h1>
-      <div class="flex gap-8">
+      <div class="flex gap-8 overflow-scroll">
         <ProductCard
           v-for="product in productStore.productLists"
           :data="product"></ProductCard>

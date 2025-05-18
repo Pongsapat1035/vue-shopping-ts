@@ -25,7 +25,7 @@ onMounted(async () => {
 
 <template>
   <div class="w-screen flex justify-center">
-    <div class="container h-screen flex flex-col sticky top-0">
+    <div class="container h-screen flex flex-col ">
       <Navbar></Navbar>
       <div class="flex-auto">
         <slot></slot>

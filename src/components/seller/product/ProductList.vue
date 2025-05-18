@@ -17,6 +17,7 @@ type ProductListsData = Pick<ProductData, "id" | "status"> &
 const props = defineProps<{
   data: ProductListsData;
 }>();
+
 const productStore = useAdminProductStore();
 const alertStore = useAlertStore();
 const confirmState = ref<boolean>(false);
@@ -28,9 +29,12 @@ const handleDelete = async () => {
     await productStore.deleteProduct(id ?? "");
     alertStore.toggleAlert("Success", `Delete product success`);
   } catch (error) {
+    if(error instanceof Error)
+      alertStore.toggleAlert("Error", error.message);
     console.log(error);
   }
 };
+
 </script>
 <template>
   <li class="list-row grid grid-cols-6 items-center">

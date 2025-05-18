@@ -53,6 +53,14 @@ export const useOrderStore = defineStore("orderStore", {
       products: [],
       status: "",
       createdDate: new Date(),
+      address: {
+        name: "",
+        tel: "",
+        address: "",
+        district: "",
+        province: "",
+        postcode: "",
+      }
     },
   }),
   getters: {
@@ -84,15 +92,15 @@ export const useOrderStore = defineStore("orderStore", {
         const docSnapshot = await getDocs(docRef);
         const result: OrderList[] = [];
         docSnapshot.forEach((doc) => {
-          const docData:Partial<OrderDetail> = doc.data();
+          const docData: Partial<OrderDetail> = doc.data();
           const productName: string[] = (docData.products ?? []).map(product => (product.productInfo?.name ?? ""))
-       
+
           const orderData: OrderList = {
             id: doc.id,
             status: docData.status ?? "",
             products: productName
           }
-          
+
           result.push(orderData);
         });
         this.orderLists = result;
@@ -104,7 +112,7 @@ export const useOrderStore = defineStore("orderStore", {
     async payment(): Promise<string | null> {
       try {
         const omiseResponse: any = await createSource(this.orderDetail.totalPrice);
-        type CheckoutDetail =  {
+        type CheckoutDetail = {
           sourceId: string;
           checkout: OrderDetail;
         }
@@ -114,7 +122,7 @@ export const useOrderStore = defineStore("orderStore", {
           sourceId,
           checkout: this.orderDetail,
         };
-       
+
         const response = await axios.post("/api/payment", checkOutDetail);
         // console.log("check url : ", response.data);
         console.log("check response : ", response);
@@ -129,11 +137,11 @@ export const useOrderStore = defineStore("orderStore", {
       }
     },
     async cancel(orderId: string) {
-      try{
+      try {
         console.log('check order id : ', orderId)
         const response = await axios.post("/api/restock", { orderId })
         console.log('check response : ', response)
-      } catch(error) {
+      } catch (error) {
         console.log('cancel order error : ', error)
       }
     }

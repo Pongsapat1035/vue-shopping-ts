@@ -84,12 +84,29 @@ export const updateChartData = async (sale: number) => {
     await dbRef.transaction((currentVal) => {
         if (!currentVal) {
             return {
-                // order: 1,
                 sale: sale
             };
         }
-        // currentVal.order++;
         currentVal.sale += sale;
+        return currentVal
+    });
+}
+
+export const checkBestSellerProduct = async (newQty: number, productName:string) => {
+    const dbRef = realtimeDB.ref(`dashboard/bestSeller`);
+    await dbRef.transaction((currentVal) => {
+        console.log('check best seller : ', currentVal)
+        if (!currentVal) {
+            return {
+                qty: newQty,
+                productName
+            }
+        }
+        const prevQty = currentVal.qty
+        if(newQty > prevQty){
+            currentVal.qty = newQty
+            currentVal.productName = productName
+        }
         return currentVal
     });
 }
@@ -129,7 +146,7 @@ export const createRecord = async (docData: ProductData, docId: string) => {
         coverImg: docData.productInfo.coverImg,
         remainQuantity: (docData.totalQuantity?.remainQty ?? 0),
         variantType,
-        variants : variantType !== 'none' ? docData.variantName : [],
+        variants: variantType !== 'none' ? docData.variantName : [],
         createAt: new Date()
     }
 

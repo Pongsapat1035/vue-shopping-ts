@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onMounted, ref } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { useAdminDashboard } from "../../store/admin/dashboard";
 
@@ -6,7 +7,6 @@ import SellerLayout from "../../layout/SellerLayout.vue";
 import OrderChartWarpper from "../../components/seller/dashboard/OrderChartWarpper.vue";
 import TotalBoxWarpper from "../../components/seller/dashboard/TotalBoxWarpper.vue";
 import LastTransectionTable from "../../components/seller/dashboard/LastTransectionTable.vue";
-import { onMounted, ref } from "vue";
 
 const authStore = useAuthStore();
 const dashboardStore = useAdminDashboard()

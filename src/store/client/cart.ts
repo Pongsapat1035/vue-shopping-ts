@@ -17,8 +17,9 @@ import type {
   ProductData,
   ProductCart,
   ProductCartDetail,
-  OrderDetail,
+  OrderDetail, AddressInfo
 } from "../../types";
+import { allInputIsFilled } from "../../utils/validate.method";
 
 export const useCartStore = defineStore("cartStore", {
   state: (): {
@@ -35,9 +36,6 @@ export const useCartStore = defineStore("cartStore", {
   getters: {
     user(): string {
       return useAuthStore().userId;
-    },
-    customerName(): string {
-      return useAuthStore().userInfo.name;
     },
     cartRef(): DatabaseReference {
       return ref(realtimeDB, `carts/${this.user}`);
@@ -138,7 +136,7 @@ export const useCartStore = defineStore("cartStore", {
         this.cartItems.splice(productIndex, 1);
         this.productLists.splice(productIndex, 1)
         await set(this.cartRef, this.cartItems);
-       
+
         useAlertStore().toggleAlert("Success", "Delete product success");
       } catch (error) {
         console.log(error);
@@ -208,6 +206,12 @@ export const useCartStore = defineStore("cartStore", {
     async createOrder() {
       try {
         await this.checkStock();
+        const addressInfo = useAuthStore().userInfo.addressInfo;
+        const checkAddress = allInputIsFilled(addressInfo)
+
+        if(!checkAddress) {
+          throw new Error("Please set shipping address in profile setting")
+        }
 
         const orderDetail: OrderDetail = {
           totalProductPrice: this.getTotalProductPrice,
@@ -217,7 +221,8 @@ export const useCartStore = defineStore("cartStore", {
           status: "Pending",
           createdDate: new Date(),
           userId: this.user,
-          customerName: this.customerName,
+          customerName: addressInfo.name,
+          address: addressInfo
         };
 
         const docRef = collection(db, "orders");

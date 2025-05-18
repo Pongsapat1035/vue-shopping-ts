@@ -8,7 +8,6 @@ defineProps<{
   address: AddressInfo;
 }>();
 
-
 </script>
 <template>
   <div
@@ -21,9 +20,7 @@ defineProps<{
         </svg>
         <h1 class="text-xl font-semibold">Shipping to</h1>
       </div>
-      <RouterLink to="/user/profile" class="btn btn-primary"
-        >Change address</RouterLink
-      >
+      <RouterLink v-if="!allInputIsFilled(address)" to="/user/profile" class="btn btn-primary">Change address</RouterLink>
     </div>
     <div v-if="allInputIsFilled(address)" class="flex flex-col gap-2">
       <h1 class="text-md text-neutral-500 font-light">

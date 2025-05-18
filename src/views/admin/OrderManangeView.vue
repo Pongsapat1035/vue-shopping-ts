@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import SellerLayout from "../../layout/SellerLayout.vue";
-import OrderListWarpper from "../../components/seller/order/OrderListWarpper.vue";
 import { useAdminOrderStore } from "../../store/admin/order";
 
+import SellerLayout from "../../layout/SellerLayout.vue";
+import OrderListWarpper from "../../components/seller/order/OrderListWarpper.vue";
+
 const orderStore = useAdminOrderStore();
+
 
 </script>
 <template>

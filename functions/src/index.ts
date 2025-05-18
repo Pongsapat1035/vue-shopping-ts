@@ -4,7 +4,7 @@ import { onDocumentCreated, onDocumentDeleted, onDocumentUpdated } from "firebas
 import express from "express";
 import { Request, Response } from "express";
 import type { OrderDetail, ProductData } from "./types";
-import { updateTotalDashboard, updateChartData, checkStockInVariants, createRecord, deleteRecord } from "./utils";
+import { updateTotalDashboard, updateChartData, checkStockInVariants,checkBestSellerProduct, createRecord, deleteRecord } from "./utils";
 import { paymentHandle, webhookHandle, restockHandle } from "./controller";
 
 const app = express();
@@ -37,23 +37,27 @@ export const productUpdate = onDocumentUpdated(
   "products/{docId}",
   async (event) => {
     try {
+      const newData = event.data?.after.data() as ProductData;
+      const oldData = event.data?.before.data() as ProductData;
+      const docId = event.params.docId
+      const variantType = newData.variantType
+      
+      const productSoldQty = newData.totalQuantity.soldQty
+      const productName = newData.productInfo.name
+      checkBestSellerProduct((productSoldQty ?? 0), productName)
 
+      if (variantType !== 'none') {
+        const newVariants = (newData.variants ?? [])
+        const oldVariants = (oldData.variants ?? [])
+        const productId = event.params.docId;
+        checkStockInVariants(newVariants, oldVariants, productId)
+      }
+
+      const taskId = await createRecord(newData, docId)
+      console.log('create record Success task id : ', taskId)
     } catch (error) {
       console.log('trigger : update product ERROR : ', error)
     }
-    const newData = event.data?.after.data() as ProductData;
-    const oldData = event.data?.before.data() as ProductData;
-    const docId = event.params.docId
-    const variantType = newData.variantType
-
-    if (variantType !== 'none') {
-      const newVariants = (newData.variants ?? [])
-      const oldVariants = (oldData.variants ?? [])
-      const productId = event.params.docId;
-      checkStockInVariants(newVariants, oldVariants, productId)
-    }
-    const taskId = await createRecord(newData, docId)
-    console.log('create recordSuccess task id : ', taskId)
   }
 );
 

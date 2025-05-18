@@ -26,13 +26,14 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
+
 </script>
 <template>
   <ul
     @click.stop
     v-if="modalState"
     ref="boxRef"
-    class="absolute rounded-lg bg-white z-10 border border-neutral-200 p-1">
+    class="min-w-30 absolute rounded-lg bg-white z-10 border border-neutral-200 p-1">
     <li
       class="px-4 py-2 cursor-pointer hover:bg-gray-200 rounded-lg transition-all"
       @click="

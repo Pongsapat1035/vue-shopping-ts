@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import StatusBadge from "../../StatusBadge.vue";
+import { ref } from "vue";
 import type { OrderDetail } from "../../../types";
+
+import StatusBadge from "../../StatusBadge.vue";
+import OrderCard from "./OrderCard.vue";
 
 defineProps<{
   orderData: OrderDetail;
 }>();
-
+const orderModalState = ref<boolean>(false);
 </script>
 <template>
-  <li class="list-row grid grid-cols-5 items-center">
+  <li
+    class="list-row grid grid-cols-5 items-center cursor-pointer"
+    @click="orderModalState = true">
     <div class="flex gap-5">
       <div class="list-col-grow">
         <div class="text-xs uppercase font-semibold opacity-60">
@@ -37,4 +42,8 @@ defineProps<{
       <StatusBadge v-model:type="orderData.status"></StatusBadge>
     </div>
   </li>
+  <OrderCard
+    v-if="orderModalState"
+    :closeModal="() => (orderModalState = false)"
+    :orderId="(orderData.id ?? '')"></OrderCard>
 </template>

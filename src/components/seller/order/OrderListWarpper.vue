@@ -9,6 +9,7 @@ const orderStore = useAdminOrderStore();
 onMounted(async () => {
   await orderStore.loadOrders();
 });
+
 </script>
 <template>
   <ul class="flex-1 basis-60 list bg-base-100 rounded-box shadow-md">

@@ -28,6 +28,7 @@ const loadingState = ref<boolean>(false)
 onMounted(async () => {
   try {
     await orderStore.loadOrder(orderId);
+    console.log('check order : ', orderStore.orderDetail)
   } catch (error) {
     console.log(error);
   }
@@ -91,8 +92,8 @@ const handlePayment = async () => {
             v-model:type="orderStore.orderDetail.status"></StatusBadge>
         </li>
       </ul>
-      <AddressWarpper
-        :address="authStore.userInfo.addressInfo"></AddressWarpper>
+      <AddressWarpper 
+        :address="orderStore.orderDetail.address"></AddressWarpper>
       <div class="divider"></div>
       <div class="flex flex-col gap-5 px-5">
         <ProductCard
@@ -120,7 +121,7 @@ const handlePayment = async () => {
       <div
         v-if="orderStore.orderDetail.status === 'Pending'"
         class="flex justify-end items-center gap-5 mt-4">
-        <Button class="btn btn-neutral rounded-xl" @click="confirmModalState = true">Cancel order</Button>
+        <button class="btn btn-neutral rounded-xl" @click="confirmModalState = true">Cancel order</button>
         <button class="btn btn-primary rounded-xl w-30" @click="handlePayment">
           Payment
         </button>

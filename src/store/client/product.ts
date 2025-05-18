@@ -37,6 +37,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
     filterState: boolean;
     productMaxprice: number
     productQuery: QueryProduct
+    isLoading: boolean
   } => ({
     productLists: [],
     productMaxprice: 0,
@@ -64,7 +65,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
       variants: [],
       createAt: new Date()
     },
-
+    isLoading: false
   }),
   getters: {
     getVariant(state) {
@@ -78,6 +79,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
   actions: {
     async loadProducts(productLimit: number = 10, priceSort: boolean = true) {
       try {
+        this.isLoading = true
         const { sortBy, variants, priceFilter } = this.productQuery
         const sortField = this.getFirestoreSortText(sortBy)
 
@@ -95,7 +97,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
 
         constraints.push(limit(productLimit))
         constraints.push(orderBy(sortField.field, sortField.type as OrderByDirection))
-        
+
         const productsRef = collection(db, "products")
         const docRef = query(productsRef, ...constraints);
         const response = await getDocs(docRef);
@@ -115,8 +117,11 @@ export const useClientProductStore = defineStore("clientProductStore", {
           };
           products.push(convertData);
         });
-        
+
         this.productLists = products
+        setTimeout(() => {
+          this.isLoading = false
+        }, 1000)
 
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
@@ -161,7 +166,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
         case "Newest First":
           replica = 'products_create_desc'
           break
-        case "Name (A-Z)":
+        case "Name A-Z":
           replica = 'products_name_asc'
           break
         default:
@@ -217,6 +222,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
         console.log('check products : ', products)
         this.productLists = products
       } else {
+        this.productLists = []
         console.log('product not found')
       }
     },

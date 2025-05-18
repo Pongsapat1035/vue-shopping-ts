@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import { ref, onValue, type DatabaseReference } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 import { realtimeDB, db } from "../../firebase";
-import { collection, getCountFromServer, query, where, getDocs, orderBy, limit } from "firebase/firestore";
+import { collection, getCountFromServer, query, getDocs, orderBy, limit } from "firebase/firestore";
 import type { OrderDetail } from "../../types";
 
 interface TotalData {
@@ -20,7 +20,7 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
         totalData: TotalData,
         selectedMonth: string,
         chartData: ChartData,
-        orderLists : OrderDetail[]
+        orderLists: OrderDetail[]
     } => ({
         totalData: {
             product: 0,
@@ -31,8 +31,8 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
         },
         selectedMonth: 'asd',
         chartData: {
-            label: ["01 Jan", "02 Jan", "03 Jan", "04 Jan", "05 Jan", "06 Jan"],
-            series1: [45, 52, 38, 45, 19, 33]
+            label: [],
+            series1: []
         },
         orderLists: []
     }),
@@ -52,34 +52,44 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
 
                 onValue(dashboardRef, (snapShot) => {
                     const data = snapShot.val();
-                    const dashboardData: TotalData = {
-                        product: productCount,
-                        sale: data.sale,
-                        successOrder: data.successOrder,
-                        cancelOrder: data.cancelOrder,
-                        topProduct: "Mart"
+                    if (data) {
+                        const dashboardData: TotalData = {
+                            product: productCount,
+                            sale: data.sale,
+                            successOrder: data.successOrder,
+                            cancelOrder: data.cancelOrder,
+                            topProduct: "Mart"
+                        }
+                        this.totalData = dashboardData
                     }
-                    this.totalData = dashboardData
                 })
-                await this.loadCharData()
+                const bestSellerRef = ref(realtimeDB, "dashboard/bestSeller")
+                onValue(bestSellerRef, (snapShot) => {
+                    const data = snapShot.val();
+                    if (data) {
+                        this.totalData.topProduct = data.productName
+                    }
+                })
+                await this.loadChartData()
                 await this.loadLastOrder()
             } catch (error) {
                 console.log('load dashboard data error : ', error)
             }
         },
-        async loadCharData() {
+        async loadChartData() {
             try {
                 const chartDataRef = ref(realtimeDB, `dashboard/chart/${this.currentMonth}`)
                 onValue(chartDataRef, (snapShot) => {
                     const data = snapShot.val();
-                    const label = Object.keys(data)
-                    const series1 = Object.values(data).map((item: any) => item.sale)
-                    // const series2 = Object.values(data).map((item: any) => item.sale)
-                    this.chartData = {
-                        label,
-                        series1,
+                    if (data) {
+                        const label = Object.keys(data)
+                        const series1 = Object.values(data).map((item: any) => item.sale)
+                        this.chartData = {
+                            label,
+                            series1,
+                        }
+                        console.log('check chart data : ', this.chartData)
                     }
-                    console.log('check chart data : ', this.chartData)
                 })
             } catch (error) {
                 console.log(error)
@@ -90,11 +100,11 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
                 const orderRef = collection(db, "orders")
                 const orderQuery = query(orderRef, orderBy("createdDate", "desc"), limit(10))
                 const orderSnap = await getDocs(orderQuery)
-                const recievedOrders :OrderDetail[] = []
+                const recievedOrders: OrderDetail[] = []
                 orderSnap.forEach(order => {
                     console.log(order.data())
-                    const orderData = order.data() 
-                    
+                    const orderData = order.data()
+
                     const options = {
                         year: "numeric",
                         month: "numeric",
@@ -106,11 +116,10 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
                     recievedOrders.push(orderData as OrderDetail)
                 })
                 this.orderLists = recievedOrders
-                
+
             } catch (error) {
                 console.log(error)
             }
         }
     }
 });
-// citiesRef.orderBy("name", "desc").limit(3);

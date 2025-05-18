@@ -137,10 +137,22 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     },
     async deleteProduct(productId: string) {
       try {
+        const productRef = doc(db, "products", productId)
+        const productSnap = await getDoc(productRef)
+        if (productSnap.exists()) {
+          const quantityInServe = productSnap.data().totalQuantity.serveQty
+          if (quantityInServe > 0)
+            throw new Error("This product is part of one or more active orders")
+
+        } else {
+          throw new Error("Product not found !")
+        }
         await deleteDoc(doc(db, "products", productId));
         const productIndex = this.productLists.findIndex(product => product.id === productId)
         this.productLists.splice(productIndex, 1)
       } catch (error) {
+        if (error instanceof Error)
+          throw new Error(error.message)
         console.log(error);
       }
     },

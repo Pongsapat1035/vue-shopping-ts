@@ -21,10 +21,10 @@ watch(
 <template>
   <UserLayout>
     <div class="container mx-auto">
-      <div class="flex w-3/4 gap-5 p-10 mx-auto">
-        <div class="w-3/4 p-5">
+      <div class="flex flex-col md:flex-row w-full lg:w-3/4 gap-5 p-10 mx-auto">
+        <div class="w-full lg:w-3/4 p-5">
           <h1 class="font-bold text-2xl">Product lists</h1>
-          <div class="flex flex-col h-[600px] overflow-scroll gap-3 my-5">
+          <div class="flex flex-col h-max lg:h-[600px] overflow-scroll gap-3 my-5">
             <ProductListCart v-if="productLists.length > 0"
               v-for="(product, index) in productLists"
               :data="product"

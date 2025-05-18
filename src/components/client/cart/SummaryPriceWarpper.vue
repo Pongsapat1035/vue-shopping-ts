@@ -27,7 +27,7 @@ const handleSubmit = async () => {
 };
 </script>
 <template>
-  <div class="w-2/4 h-max p-8 border border-gray-200 rounded-2xl">
+  <div class="w-full lg:w-2/4 h-max p-8 border border-gray-200 rounded-2xl">
     <h1 class="font-bold text-2xl">Summary</h1>
     <div class="flex flex-col gap-4 mt-5">
       <div class="flex justify-between">

@@ -22,9 +22,9 @@ watch(
 </script>
 
 <template>
-  <div class="card bg-base-100 w-90 rounded-2xl">
+  <div class="card bg-base-100 min-w-60 w-90 rounded-2xl">
     <img
-      class="h-[450px] object-contain rounded-lg"
+      class=" h-[300px] lg:h-[450px] object-contain rounded-lg"
       :src="data.coverImg"
       :alt="data.name" />
     <div class="card-body flex flex-col gap-3 p-3">

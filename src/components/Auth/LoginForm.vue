@@ -2,9 +2,9 @@
 import { onMounted, reactive } from "vue";
 import { useRouter } from "vue-router";
 
-import { useAuthStore } from "@/store/auth";
-import { useAlertStore } from "@/store/alert";
-import type { LoginFormData } from '@/types'
+import { useAuthStore } from "../../store/auth";
+import { useAlertStore } from "../../store/alert";
+import type { LoginFormData } from '../../types'
 
 import InputTag from "@/components/InputTag.vue";
 import PasswordInput from "@/components/auth/PasswordInput.vue";
@@ -32,7 +32,7 @@ onMounted(() => {
   authStore.checkAuth();
 });
 
-const validateInput = (): boolean => {
+const validateInput = () => {
   for (const field in errorMsg) {
     const key = field as keyof LoginFormData;
     if (errorMsg[key] !== "") {
@@ -67,7 +67,7 @@ const handleSubmit = async () => {
 </script>
 <template>
   <form
-    class="flex flex-col p-10 gap-5 w-1/3 max-w-[480px] bg-white rounded-2xl"
+    class="flex flex-col p-0 md:p-10 gap-5 w-3/4 md:w-1/2 lg:w-1/3 max-w-[480px] bg-white rounded-2xl"
     @submit.prevent="handleSubmit">
     <h1 class="font-bold text-5xl mb-5">Login</h1>
     <InputTag

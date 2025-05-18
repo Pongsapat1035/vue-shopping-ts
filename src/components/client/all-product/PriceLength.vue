@@ -67,6 +67,7 @@ watch(
     updateProgress();
   }, { immediate: true }
 );
+
 </script>
 <template>
   <div class="relative flex flex-col gap-3">

@@ -1,4 +1,5 @@
 import type { ProductCartDetail } from "./product";
+import type { AddressInfo } from "./user";
 
 export interface OrderDetail{
     id?: string;
@@ -9,5 +10,6 @@ export interface OrderDetail{
     totalPrice: number;
     status: string;
     createdDate: Date;
+    address: AddressInfo
     products: ProductCartDetail[];
 }
