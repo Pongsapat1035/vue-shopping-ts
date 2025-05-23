@@ -8,14 +8,13 @@ defineProps<{
 }>();
 
 const adminProductStore = useAdminProductStore();
-
 </script>
 <template>
   <fieldset
     class="fieldset flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-full h-auto">
     <legend class="fieldset-legend text-xl">{{ variantType }}</legend>
     <div class="flex gap-2 flex-wrap">
-      <div v-if="variantType === 'Color'" class="flex gap-2 flex-wrap">
+      <div v-if="variantType === 'Color'" class="flex gap-1 flex-wrap">
         <label
           v-for="color in adminProductStore.colorsConfig"
           class="w-8 h-8 relative">
@@ -25,8 +24,11 @@ const adminProductStore = useAdminProductStore();
             :value="color"
             v-model="value" />
           <div
-            class="w-full h-full border-2 border-transparent peer-checked:border-black rounded-lg flex justify-center items-center font-semibold"
-            :style="{ backgroundColor: color }"></div>
+            class="w-full h-full border-2 border-transparent peer-checked:border-blue-600 peer-checked:shadow rounded-lg flex justify-center items-center font-semibold p-[2px]">
+            <div
+              class="w-full h-full rounded-md"
+              :style="{ backgroundColor: color }"></div>
+          </div>
         </label>
       </div>
       <div v-else class="flex gap-2 flex-wrap">

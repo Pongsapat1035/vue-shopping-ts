@@ -120,8 +120,8 @@ const handleSubmit = async () => {
     } else {
       await productStore.updateProduct(productId, productData);
     }
-
-    alertStore.toggleAlert("Success", "Create new product success !");
+    const successMsg = formMode.value === 'create' ?  "Create new product success" : "Update product success"
+    alertStore.toggleAlert("Success", successMsg);
     router.push({ name: "seller-products" });
   } catch (error) {
     console.log("add product error : ", error);

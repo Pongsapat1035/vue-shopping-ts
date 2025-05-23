@@ -101,11 +101,11 @@ watch(
         <li>{{ productStore.product.productInfo.name }}</li>
       </ul>
     </div>
-    <div class="w-4/5 mx-auto mt-10 flex h-[600px]">
+    <div class="w-4/5 mx-auto mt-10 flex flex-col items-center lg:flex-row  lg:h-[600px]">
       <ProductImg
         :coverImg="productStore.product.productInfo.coverImg"></ProductImg>
       <form
-        class="flex-auto w-1/2 p-8 flex flex-col gap-5"
+        class="flex-auto w-full lg:w-1/2 p-4 md:p-8 flex flex-col gap-5"
         @submit.prevent="handleSubmit">
         <div class="flex justify-between items-center">
           <h1 class="text-3xl font-semibold">
@@ -117,7 +117,7 @@ watch(
             Out of stock
           </div>
         </div>
-        <p class="text-5xl">{{ productStore.product.productInfo.price.toLocaleString() }} THB</p>
+        <p class="text-5xl">{{ productStore.product.productInfo.price.toLocaleString() }} ฿</p>
         <VariantSelect
           v-if="productStore.product.variantType !== 'none'"
           v-model:value="selectedVariant"></VariantSelect>

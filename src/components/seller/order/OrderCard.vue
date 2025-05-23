@@ -46,13 +46,13 @@ const customerInfoText = computed(() => {
   const addressText = addressValue.join(" ");
   return addressText;
 });
+
 </script>
 <template>
   <div
     class="fixed top-0 left-0 w-screen h-screen bg-neutral-800/30 flex justify-center items-center z-9"
     @click="closeModal()">
-    <div
-      class="border border-neutral-200 rounded-2xl bg-white w-[350px] relative z-10">
+    <div class="border border-neutral-200 rounded-2xl bg-white w-[350px] relative z-10" @click.stop>
       <div class="absolute top-5 right-5 cursor-pointer" @click="closeModal()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -119,7 +119,7 @@ const customerInfoText = computed(() => {
         </div>
         <button
           v-if="orderDetail.status === 'Pending'"
-          @click="confirmModalState = true"
+          @click="()=> confirmModalState = true"
           class="py-1 px-2 rounded-lg bg-red-100 text-red-700 text-sm cursor-pointer">
           Cancel order
         </button>

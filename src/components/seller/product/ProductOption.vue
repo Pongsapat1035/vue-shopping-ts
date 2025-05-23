@@ -9,12 +9,12 @@ const props = defineProps<{
   closeModal: Function;
   toggleDeleteModal: Function;
 }>();
+
 const boxRef = ref<HTMLElement | null>(null);
 
 const handleClickOutside = (event: Event) => {
   const target = event.target as HTMLElement;
   if (boxRef.value && !boxRef.value.contains(target)) {
-    // editState.value = false;
     props.closeModal();
   }
 };
@@ -26,7 +26,6 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener("click", handleClickOutside);
 });
-
 </script>
 <template>
   <ul

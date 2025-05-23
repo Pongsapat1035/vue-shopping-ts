@@ -41,16 +41,10 @@ const cartStore = useCartStore();
           tabindex="0"
           class="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
           <div class="card-body">
-            <span class="text-lg font-bold"
-              >{{ cartStore.getTotalItem }} Items</span
-            >
-            <span class="text-neutral-700"
-              >Subtotal: THB {{ cartStore.getTotalProductPrice.toLocaleString() }}</span
-            >
+            <span class="text-lg font-bold">{{ cartStore.getTotalItem }} Items</span>
+            <span class="text-neutral-700">Subtotal: THB {{ cartStore.getTotalProductPrice.toLocaleString() }}</span>
             <div class="card-actions">
-              <RouterLink to="/user/cart" class="btn btn-primary btn-block"
-                >View cart</RouterLink
-              >
+              <RouterLink to="/user/cart" class="btn btn-primary btn-block">View cart</RouterLink>
             </div>
           </div>
         </div>

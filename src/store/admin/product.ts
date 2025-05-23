@@ -46,6 +46,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         return convertItem;
       };
     },
+
+
   },
   actions: {
     async loadAllProducts() {
@@ -55,7 +57,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         const products: ProductListsData[] = [];
         response.forEach((doc) => {
           const docData = doc.data() as ProductData;
-          const totalQuantity = (docData.totalQuantity?.remainQty || 0) + (docData.totalQuantity?.soldQty || 0)
+          const totalQuantity = (docData.totalQuantity?.remainQty || 0)
+          console.log('check quantity : ', totalQuantity)
           const convertData = {
             id: doc.id,
             name: docData.productInfo.name,
@@ -103,15 +106,11 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
 
         const productName = data.productInfo.name;
-        const colRef = collection(db, "products");
-        const querySnap = query(
-          colRef,
-          where("productInfo.name", "==", productName)
-        );
 
-        const response = await getDocs(querySnap);
-        if (!response.empty) throw new Error("Name is already used");
+        const checkNameExist = await this.isNameUsed(productName)
+        if (!checkNameExist) throw new Error("Name is already used");
 
+        const colRef = collection(db, "products")
         await addDoc(colRef, convertData);
       } catch (error) {
         console.log("error from add product : ", error);
@@ -122,17 +121,37 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     },
     async updateProduct(productId: string, data: ProductFormData) {
       try {
-        const { variants, variantType, quantity } = data
+        const { variants, variantType, quantity, productInfo } = data
+
+        const colRef = collection(db, "products");
+        const querySnap = query(
+          colRef,
+          where("productInfo.name", "==", productInfo.name)
+        );
+        const response = await getDocs(querySnap);
+
+        if (!response.empty) {
+          response.forEach(doc => {
+            if (doc.id !== productId) {
+              throw new Error("Name is already use")
+            }
+          })
+        }
+
         const enableVariants = variants.filter(variant => variant.enable === true)
         const variantName: string[] = enableVariants.map(item => item.name)
         const totalUpdateQuantity = variantType !== 'none' ? enableVariants.reduce((acc, currentVal) => acc + currentVal.remainQuantity, 0) : quantity
 
-        const convertData = { ...data, variantName, totalQuantity: { remainQty: totalUpdateQuantity } }
+        const convertData = { productInfo, variants, variantType, variantName, totalQuantity: { remainQty: totalUpdateQuantity } }
 
         const docRef = doc(db, "products", productId);
         await updateDoc(docRef, convertData as Partial<ProductData>);
+
       } catch (error) {
         console.log(error);
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
       }
     },
     async deleteProduct(productId: string) {
@@ -204,6 +223,17 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         console.log('load config error : ', error)
       }
 
+    },
+    async isNameUsed(name: string): Promise<boolean> {
+      const colRef = collection(db, "products");
+      const querySnap = query(
+        colRef,
+        where("productInfo.name", "==", name)
+      );
+
+      const response = await getDocs(querySnap);
+      if (!response.empty) return false
+      return true
     },
     async setConfig() {
       try {

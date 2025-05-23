@@ -17,8 +17,12 @@ const selectedVariant = defineModel("value")
           :value="color"
           v-model="selectedVariant" />
         <div
-          class="w-8 h-8 rounded-md border-0 peer-checked:border-2"
-          :style="{ backgroundColor: color }"></div>
+          class="w-8 h-8 rounded-md border-0 peer-checked:border-2 border-blue-500 p-[2px]">
+        <div class="w-full h-full rounded-md" :style="{ backgroundColor: color }">
+
+        </div>
+      
+      </div>
       </label>
     </div>
     <div

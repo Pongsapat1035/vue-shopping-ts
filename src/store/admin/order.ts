@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { db } from "../../firebase";
-import { collection, getDocs, query, where, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, doc, getDoc, updateDoc, orderBy } from "firebase/firestore";
 import type { OrderDetail } from "../../types/order";
 
 export const useAdminOrderStore = defineStore("adminOrderStore", {
@@ -22,10 +22,8 @@ export const useAdminOrderStore = defineStore("adminOrderStore", {
   actions: {
     async loadOrders() {
       try {
-        const docRef = query(
-          collection(db, "orders"),
-          where("status", "!=", "Cancel")
-        );
+        const docRef = query(collection(db, "orders"), orderBy("createdDate", "desc"));
+
         const docSnap = await getDocs(docRef);
         const orders: OrderDetail[] = []
         docSnap.forEach((doc) => {
@@ -70,7 +68,7 @@ export const useAdminOrderStore = defineStore("adminOrderStore", {
       try {
         const docRef = doc(db, "orders", orderId)
         await updateDoc(docRef, { status: 'Canceled' })
-        console.log('update doc success')
+        window.location.reload()
       } catch (error) {
         console.log('error from cancel order : ', error)
       }

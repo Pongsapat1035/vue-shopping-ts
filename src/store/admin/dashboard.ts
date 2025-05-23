@@ -27,7 +27,7 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
             sale: 0,
             successOrder: 0,
             cancelOrder: 0,
-            topProduct: "Mart"
+            topProduct: ""
         },
         selectedMonth: 'asd',
         chartData: {
@@ -58,7 +58,7 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
                             sale: data.sale,
                             successOrder: data.successOrder,
                             cancelOrder: data.cancelOrder,
-                            topProduct: "Mart"
+                            topProduct: ""
                         }
                         this.totalData = dashboardData
                     }
@@ -102,7 +102,6 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
                 const orderSnap = await getDocs(orderQuery)
                 const recievedOrders: OrderDetail[] = []
                 orderSnap.forEach(order => {
-                    console.log(order.data())
                     const orderData = order.data()
 
                     const options = {

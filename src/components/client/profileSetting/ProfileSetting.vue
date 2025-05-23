@@ -3,9 +3,9 @@ import { ref as refDB } from "firebase/storage";
 import { uploadBytes, getDownloadURL } from "firebase/storage";
 import { uid } from "uid";
 
-import { useAuthStore } from "@/store/auth";
-import { useAlertStore } from "@/store/alert.ts";
-import { storage } from "@/firebase.ts";
+import { useAuthStore } from "../../../store/auth";
+import { useAlertStore } from "../../../store/alert";
+import { storage } from "../../../firebase";
 
 import InputTag from "@/components/InputTag.vue";
 
@@ -22,7 +22,7 @@ const handleFileSubmit = async (e: Event) => {
 
     if (file) {
       if (!file.type.includes("image")) throw new Error("Wrong type");
-      
+
       const fileUid = uid();
       const path = `${authStore.userId}/profile/${fileUid}`;
       const mountainsRef = refDB(storage, path);
@@ -33,16 +33,18 @@ const handleFileSubmit = async (e: Event) => {
       alertStore.toggleAlert("Success", "Upload Profile success!");
     }
   } catch (error) {
-    const errorMsg = error.message;
-    console.log("error from handle file : ", errorMsg);
-    alertStore.toggleAlert("Error", errorMsg);
+    if (error instanceof Error) {
+      const errorMsg = error.message;
+      console.log("error from handle file : ", errorMsg);
+      alertStore.toggleAlert("Error", errorMsg);
+    }
   }
 };
 </script>
 <template>
   <div class="flex flex-col gap-5">
     <h1 class="text-3xl font-bold">Profile setting</h1>
-    <p class="text-neutral-500 font-light mb-8">
+    <p class="text-sm sm:text-md text-neutral-500 font-light mb-8">
       The Profile Settings section lets users instantly update their public
       identity by uploading a new profile picture and editing their display
       name, with changes saved and reflected across the app in real time.
@@ -51,10 +53,7 @@ const handleFileSubmit = async (e: Event) => {
       <div class="flex gap-5 items-center">
         <div class="avatar">
           <div class="w-30 rounded-full">
-            <img
-              :src="
-                profileImg 
-              " />
+            <img :src="profileImg" />
           </div>
         </div>
         <input

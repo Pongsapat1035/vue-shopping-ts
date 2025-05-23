@@ -73,21 +73,21 @@ const handlePayment = async () => {
         <li>Order Detail</li>
       </ul>
     </div>
-    <div class="flex flex-col gap-3 mx-auto w-2/3 mt-10">
+    <div class="flex flex-col gap-3 mx-auto p-5 sm:w-2/3 sm:mt-10">
       <ul
         class="flex-auto flex flex-col gap-3 justify-between p-5 border border-gray-200 rounded-2xl">
         <li class="flex gap-5 items-center">
-          <h1 class="text-xl font-semibold">Order number :</h1>
-          <span class="font-light">{{ orderId }}</span>
+          <h1 class="text-md sm:text-xl font-semibold w-1/3">Order number :</h1>
+          <span class="font-light text-neutral-500">{{ orderId }}</span>
         </li>
-        <li class="flex gap-5 items-center">
-          <h1 class="text-xl font-semibold">Order date :</h1>
-          <h1 class="text-lg text-neutral-500 font-light">
+        <li class="flex gap-5">
+          <h1 class="text-md sm:text-xl font-semibold w-1/3">Date :</h1>
+          <h1 class=" text-neutral-500 font-light text-sm sm:text-lg">
             {{ orderStore.orderDetail.createdDate }}
           </h1>
         </li>
-        <li class="flex gap-5 items-center">
-          <h1 class="text-xl font-semibold">Status :</h1>
+        <li class="flex gap-5">
+          <h1 class="text-md sm:text-xl  font-semibold">Status :</h1>
           <StatusBadge
             v-model:type="orderStore.orderDetail.status"></StatusBadge>
         </li>

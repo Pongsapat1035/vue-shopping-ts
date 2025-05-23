@@ -38,7 +38,7 @@ const handleChange = () => {
   updateProgress();
 };
 
-const resetValue = async() => {
+const resetAllFilter = async() => {
   minRange.value = 0;
   maxRange.value = 0
   await nextTick()
@@ -46,6 +46,7 @@ const resetValue = async() => {
   updateProgress();
   productStore.productQuery.variants = [];
   productStore.productQuery.searchText = ""
+  productStore.productQuery.sortBy = "Newest First"
   productStore.queryProduct();
 };
 
@@ -116,7 +117,7 @@ watch(
     </div>
   </div>
   <div class="flex gap-3 justify-end">
-    <button class="btn btn-ghost rounded-xl" @click="resetValue()">
+    <button class="btn btn-ghost rounded-xl" @click="resetAllFilter()">
       Reset
     </button>
     <button class="btn btn-primary rounded-xl" @click="handleSubmit()">

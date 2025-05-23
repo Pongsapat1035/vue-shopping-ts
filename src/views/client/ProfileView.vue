@@ -91,7 +91,7 @@ onMounted(async () => {
 </script>
 <template>
   <UserLayout>
-    <div class="flex flex-col gap-10 w-full md:w-3/4 lg:w-2/4 px-4 md:px-0 mx-auto">
+    <div class="flex flex-col gap-10 w-full md:w-3/4 lg:w-2/4 px-8 md:px-0 mx-auto">
       <ProfileSetting
         v-model:name="userInfo.name"
         v-model:profileImg="userInfo.profileImg"

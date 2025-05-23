@@ -13,9 +13,9 @@ import { RouterLink } from "vue-router";
         essentials—curated for you.
       </p>
       <div class="flex gap-5 bg-white rounded-full p-4 w-max">
-        <button class="btn btn-primary bg-[#EB5E28] text-white border-0">
+        <RouterLink :to="{ name: 'user-products'}" class="btn btn-primary bg-[#EB5E28] text-white border-0">
           Shop Now
-        </button>
+        </RouterLink>
         <RouterLink
           :to="{ name: 'seller-dashboard' }"
           class="btn bg-[#252422] text-white border-0">

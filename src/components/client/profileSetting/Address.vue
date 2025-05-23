@@ -29,7 +29,7 @@ const errMsg = defineModel<AddressInfo>("error", {
 <template>
   <div class="flex flex-col gap-5">
     <h1 class="text-3xl font-bold">Address setting</h1>
-    <p class="text-neutral-500 font-light mb-8">
+    <p class="text-sm sm:text-md text-neutral-500 font-light mb-8">
       The Address Settings section enables users to manage their shipping
       details by adding, editing, or replacing their saved address, ensuring
       accurate delivery information is always up to date across the platform.
@@ -57,7 +57,7 @@ const errMsg = defineModel<AddressInfo>("error", {
       v-model:error="errMsg.address"
       validateWith="isNotEmpty"
       type="text"></InputTag>
-    <div class="gap-5 grid grid-cols-3">
+    <div class="gap-5 grid grid-cols-2 sm:grid-cols-3">
       <InputTag
         title="District"
         name="recievedName"
