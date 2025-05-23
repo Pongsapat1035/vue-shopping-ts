@@ -33,8 +33,7 @@ onMounted(async () => {
       <div class="flex justify-center items-center min-h-14">
         <span class="font-semibold"
           >“This is a portfolio project for educational purposes only. All
-          product content belongs to Nike.”</span
-        >
+          product content belongs to Nike.”</span>
       </div>
     </div>
     <AlertBadge></AlertBadge>

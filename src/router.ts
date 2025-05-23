@@ -41,28 +41,28 @@ const routes: RouteRecordRaw[] = [
     component: ProductDetailView,
   },
   {
-    path: "/seller/dashboard",
-    name: "seller-dashboard",
+    path: "/admin/dashboard",
+    name: "admin-dashboard",
     component: DashboardView,
   },
   {
-    path: "/seller/orders",
+    path: "/admin/orders",
     name: "admin-orders",
     component: OrderManangeView,
   },
   {
-    path: "/seller/products",
-    name: "seller-products",
+    path: "/admin/products",
+    name: "admin-products",
     component: ProductManageView,
   },
   {
-    path: "/seller/product/add",
-    name: "seller-addProduct",
+    path: "/admin/product/add",
+    name: "admin-addProduct",
     component: ProductFormView,
   },
   {
-    path: "/seller/product/edit/:id",
-    name: "seller-editproduct",
+    path: "/admin/product/edit/:id",
+    name: "admin-editproduct",
     component: ProductFormView,
   },
 ];

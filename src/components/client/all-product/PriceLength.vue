@@ -54,6 +54,7 @@ const handleSubmit = () => {
   productStore.productQuery.priceFilter.min = minRange.value;
   productStore.productQuery.priceFilter.max = maxRange.value;
   productStore.queryProduct();
+  productStore.filterState = false
 };
 
 watch(
@@ -71,8 +72,8 @@ watch(
 
 </script>
 <template>
-  <div class="relative flex flex-col gap-3">
-    <h1 class="text-xl font-semibold">Price Range</h1>
+  <div class="relative flex flex-col gap-3 overflow-hidden">
+    <h1 class="text-xl font-semibold text-nowrap">Price Range</h1>
     <div class="flex justify-between">
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Min. price</legend>

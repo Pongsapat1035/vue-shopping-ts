@@ -11,7 +11,7 @@ const adminProductStore = useAdminProductStore();
 </script>
 <template>
   <fieldset
-    class="fieldset flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-full h-auto">
+    class="fieldset flex flex-col gap-5 p-4 bg-base-100 border border-base-300 rounded-box w-[300px] h-auto">
     <legend class="fieldset-legend text-xl">{{ variantType }}</legend>
     <div class="flex gap-2 flex-wrap">
       <div v-if="variantType === 'Color'" class="flex gap-1 flex-wrap">

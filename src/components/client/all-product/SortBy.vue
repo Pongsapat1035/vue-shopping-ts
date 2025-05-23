@@ -12,8 +12,8 @@ watch(
 </script>
 <template>
   <div class="flex flex-col gap-4">
-    <h1 class="text-xl font-semibold">Sort by</h1>
-    <div class="flex flex-col gap-3">
+    <h1 class="text-xl font-semibold text-nowrap">Sort by</h1>
+    <div class="flex flex-col gap-3 w-60">
       <div class="flex gap-2 items-center">
         <label for="radio-1" class="text-neutral-500 font-light text-sm">
           <input

@@ -1,0 +1,73 @@
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import MobileButton from "./MobileButton.vue";
+
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+const currentPath = route.path;
+const props = defineProps<{
+  logout: Function;
+}>();
+const navData = ref( [
+  {
+    name: "Dashboard",
+    action: () => router.push({ name: "admin-dashboard" }),
+    isActive: false,
+  },
+  {
+    name: "Order",
+    action: () => router.push({ name: "admin-orders" }),
+    isActive: false,
+  },
+  {
+    name: "Product",
+    action: () => router.push({ name: "admin-products" }),
+    isActive: false,
+  },
+  {
+    name: "Logout",
+    action: () => props.logout(),
+    isActive: false,
+  },
+]);
+
+const getPathIndex = (path: string): number => {
+  let index = -1;
+  switch (path) {
+    case "/admin/dashboard":
+      index = navData.value.findIndex((data) => data.name === "Dashboard");
+      break;
+    case "/admin/orders":
+      index = navData.value.findIndex((data) => data.name === "Order");
+      break;
+    default:
+      index = navData.value.findIndex((data) => data.name === "Product");
+  }
+  return index;
+};
+
+onMounted(() => {
+  console.log("current path : ", currentPath);
+  const pathIndex = getPathIndex(currentPath)
+  if(pathIndex >= 0){
+    navData.value[pathIndex].isActive = true
+  }
+});
+</script>
+<template>
+  <div
+    class="w-screen bg-white-500 fixed bottom-8 left-0 z-10 px-8 py-5 flex justify-center">
+    <div class="w-4/5 bg-neutral-900 rounded-2xl flex justify-around gap-5 p-4">
+      <RouterLink to="/" class="text-2xl font-semibold text-white"
+        >Mart.shop</RouterLink
+      >
+      <MobileButton
+        v-for="link in navData"
+        :name="link.name"
+        :action="link.action"
+        :isActive="link.isActive"></MobileButton>
+    </div>
+  </div>
+</template>

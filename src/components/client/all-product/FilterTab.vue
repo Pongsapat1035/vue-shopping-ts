@@ -13,17 +13,28 @@ const adminProductStore = useAdminProductStore();
 onMounted(async () => {
   await adminProductStore.loadConfig();
 });
-
 </script>
 
 <template>
   <div
-    :class="productStore.filterState ? 'block' : 'hidden'"
-    class="w-[350px] min-w-[350px] h-max sticky top-5 flex flex-col gap-5 px-5 py-8 border border-gray-200 z-10 bg-white rounded-2xl overflow-hidden">
-    <h1 class="text-3xl font-semibold">Filter</h1>
-    <SortBy></SortBy>
-    <VariantsFilter variantType="Color" v-model="productStore.productQuery.variants"></VariantsFilter>
-    <VariantsFilter variantType="Size" v-model="productStore.productQuery.variants"></VariantsFilter>
-    <PriceLength></PriceLength>
+    :class="
+      productStore.filterState
+        ? 'w-[350px] min-w-[350px] px-5 py-8 border border-gray-200'
+        : 'w-0 p-0'"
+    class=" h-max sticky top-5 hidden lg:flex flex-col gap-5 z-10 bg-white rounded-2xl overflow-hidden transition-all duration-300">
+    <h1 v-if="productStore.filterState" class="text-3xl font-semibold">
+      Filter
+    </h1>
+   
+    <SortBy v-if="productStore.filterState"></SortBy>
+    <VariantsFilter
+      v-if="productStore.filterState"
+      variantType="Color"
+      v-model="productStore.productQuery.variants"></VariantsFilter>
+    <VariantsFilter
+      v-if="productStore.filterState"
+      variantType="Size"
+      v-model="productStore.productQuery.variants"></VariantsFilter>
+    <PriceLength v-if="productStore.filterState"></PriceLength>
   </div>
 </template>

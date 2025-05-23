@@ -42,7 +42,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
     productLists: [],
     productMaxprice: 0,
     backupProduct: [],
-    filterState: true,
+    filterState: false,
     productQuery: {
       searchText: "",
       sortBy: "Newest First",
@@ -123,6 +123,39 @@ export const useClientProductStore = defineStore("clientProductStore", {
           this.isLoading = false
         }, 1000)
 
+      } catch (error) {
+        throw new Error(error instanceof Error ? error.message : String(error));
+      }
+    },
+    async loadHomeProducts(productLimit: number = 10): Promise<ProductCardData[]> {
+      try {
+        this.isLoading = true
+
+        const productsRef = collection(db, "products")
+        const docRef = query(productsRef, where("status", "==", true), limit(productLimit));
+        const response = await getDocs(docRef);
+
+        const products: ProductCardData[] = [];
+        response.forEach((doc) => {
+          const data: Partial<ProductData> = doc.data();
+          const convertData: ProductCardData = {
+            id: doc.id,
+            name: data.productInfo?.name ?? "",
+            coverImg: data.productInfo?.coverImg ?? "",
+            description: data.productInfo?.description ?? "",
+            price: data.productInfo?.price ?? 0,
+            remainQuantity: data.totalQuantity?.remainQty ?? 0,
+            variantType: data.variantType ?? "",
+            variantName: data.variantName ?? [],
+          };
+          products.push(convertData);
+        });
+
+        this.productLists = products
+        setTimeout(() => {
+          this.isLoading = false
+        }, 1000)
+        return products
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }

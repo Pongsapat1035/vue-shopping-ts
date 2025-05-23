@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { RouterLink } from "vue-router";
 
 defineProps<{
-  path: string;
   name: string;
+  action: Function
+  isActive: boolean
   state: boolean;
 }>();
 </script>
 <template>
-  <RouterLink :to="path">
-    <div
+  
+    <button
       class="flex items-center gap-5 p-4 h-15 rounded-lg text-white hover:text-black hover:bg-white transition duration-500 fill-white hover:fill-black"
-      :class="!state ? 'justify-center' : ''">
+      :class="!state ? 'justify-center' : ''" @click="action()">
       <svg
         v-if="name === 'Dashboard'"
         xmlns="http://www.w3.org/2000/svg"
@@ -36,9 +36,16 @@ defineProps<{
         <path
           d="M14 2.2C22.5-1.7 32.5-.3 39.6 5.8L80 40.4 120.4 5.8c9-7.7 22.3-7.7 31.2 0L192 40.4 232.4 5.8c9-7.7 22.3-7.7 31.2 0L304 40.4 344.4 5.8c7.1-6.1 17.1-7.5 25.6-3.6s14 12.4 14 21.8l0 464c0 9.4-5.5 17.9-14 21.8s-18.5 2.5-25.6-3.6L304 471.6l-40.4 34.6c-9 7.7-22.3 7.7-31.2 0L192 471.6l-40.4 34.6c-9 7.7-22.3 7.7-31.2 0L80 471.6 39.6 506.2c-7.1 6.1-17.1 7.5-25.6 3.6S0 497.4 0 488L0 24C0 14.6 5.5 6.1 14 2.2zM96 144c-8.8 0-16 7.2-16 16s7.2 16 16 16l192 0c8.8 0 16-7.2 16-16s-7.2-16-16-16L96 144zM80 352c0 8.8 7.2 16 16 16l192 0c8.8 0 16-7.2 16-16s-7.2-16-16-16L96 336c-8.8 0-16 7.2-16 16zM96 240c-8.8 0-16 7.2-16 16s7.2 16 16 16l192 0c8.8 0 16-7.2 16-16s-7.2-16-16-16L96 240z" />
       </svg>
+       <svg v-else
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 512 512"
+            class="size-[1.2rem]">
+            <path
+              d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z" />
+          </svg>
       <p v-if="state">{{ name }}</p>
-    </div>
-  </RouterLink>
+    </button>
+  
 </template>
 
 <style scoped></style>

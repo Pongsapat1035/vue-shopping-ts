@@ -6,7 +6,7 @@ const productStore = useClientProductStore();
 <template>
   <div
     class="w-full py-4 flex justify-end item-center sticky top-0 z-10 bg-white">
-    <div class="flex gap-4 w-full px-8 sm:p-0">
+    <div class="flex gap-4 w-full sm:w-2/3  px-8 sm:p-0 justify-end">
       <label class="input w-full sm:w-96 pl-4 py-1 pr-1 outline-0">
         <input
           type="search"

@@ -6,11 +6,15 @@ import UserLayout from "../../layout/UserLayout.vue";
 import ProductCard from "../../components/client/ProductCard.vue";
 import SearchWrapper from "../../components/client/all-product/SearchWrapper.vue";
 import FilterTab from "../../components/client/all-product/FilterTab.vue";
+import MobileFilterTab from "../../components/client/all-product/MobileFilterTab.vue";
 
 const productStore = useClientProductStore();
 
 onMounted(async () => {
   try {
+    productStore.productQuery.searchText = ""
+    productStore.productQuery.variants = []
+    
     await productStore.loadProducts(10, false);
     const maxPrice = await productStore.getMaxPrice();
     nextTick(() => {
@@ -32,21 +36,19 @@ onMounted(async () => {
       <FilterTab></FilterTab>
       <div class="flex-auto flex flex-col gap-4 relative">
         <SearchWrapper></SearchWrapper>
-        <div class="flex flex-wrap gap-8 w-full">
+        <div
+          class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] auto-cols-min gap-8 w-full  px-8 sm:px-0">
           <div
             v-if="productStore.isLoading"
-            v-for="i in 9"
-            class="skeleton h-120 w-90"></div>
+            v-for="_ in 9"
+            class="skeleton h-120 w-full"></div>
           <ProductCard
             v-else
             v-for="product in productStore.productLists"
             :data="product"></ProductCard>
         </div>
-        <div class="join grid grid-cols-2">
-          <button class="join-item btn btn-outline">Previous page</button>
-          <button class="join-item btn btn-outline">Next</button>
-        </div>
       </div>
     </div>
+    <MobileFilterTab></MobileFilterTab>
   </UserLayout>
 </template>
