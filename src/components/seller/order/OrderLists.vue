@@ -13,11 +13,11 @@ const orderModalState = ref<boolean>(false);
 </script>
 <template>
   <li
-    class="list-row grid grid-cols-5 items-center cursor-pointer"
+    class="list-row grid grid-cols-2 sm:grid-cols-5 items-center cursor-pointer"
     @click="orderModalState = true">
-    <div class="flex gap-5">
+    <div class="hidden sm:flex gap-5">
       <div class="list-col-grow">
-        <div class="text-xs uppercase font-semibold opacity-60">
+        <div class=" text-xs uppercase font-semibold opacity-60">
           {{ orderData.customerName || "Customer name" }}
         </div>
       </div>
@@ -27,19 +27,19 @@ const orderModalState = ref<boolean>(false);
         {{ orderData.id }}
       </div>
     </div>
-    <div class="list-col-grow">
+    <div class="hidden sm:flex list-col-grow">
       <div class="text-xs uppercase font-semibold opacity-60">
         {{ orderData.createdDate }}
       </div>
     </div>
-    <div class="flex gap-5">
+    <div class="hidden sm:flex gap-5">
       <div class="list-col-grow">
         <div class="text-xs uppercase font-semibold opacity-60">
           {{ orderData.totalPrice.toLocaleString() }} THB
         </div>
       </div>
     </div>
-    <div class="flex items-center">
+    <div class="flex items-center justify-center">
       <StatusBadge v-model:type="orderData.status"></StatusBadge>
     </div>
   </li>

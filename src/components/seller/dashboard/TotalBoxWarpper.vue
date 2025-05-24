@@ -7,7 +7,7 @@ const dashboardStore = useAdminDashboard()
 
 </script>
 <template>
-  <div class="flex gap-5">
+  <div class="flex gap-5 flex-wrap">
     <TotalBox name="Total product" :value="dashboardStore.totalData.product"></TotalBox>
     <TotalBox name="Completed order" :value="dashboardStore.totalData.successOrder"></TotalBox>
     <TotalBox name="Canceled order" :value="dashboardStore.totalData.cancelOrder"></TotalBox>

@@ -39,8 +39,8 @@ onMounted(async () => {
 </script>
 <template>
   <SellerLayout>
-    <div class="w-full flex flex-col gap-8">
-      <h1 class="text-3xl font-semibold">{{welcomeMessage}}, {{ userName }}</h1>
+    <div class="w-full flex flex-col gap-8 p-5">
+      <h1 class="text-xl sm:text-3xl font-semibold">{{welcomeMessage}}, {{ userName }}</h1>
       <TotalBoxWarpper></TotalBoxWarpper>
       <OrderChartWarpper></OrderChartWarpper>
       <LastTransectionTable></LastTransectionTable>

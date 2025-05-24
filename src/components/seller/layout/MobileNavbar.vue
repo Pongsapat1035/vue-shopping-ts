@@ -7,10 +7,12 @@ import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
 const currentPath = route.path;
+
 const props = defineProps<{
   logout: Function;
 }>();
-const navData = ref( [
+
+const navData = ref([
   {
     name: "Dashboard",
     action: () => router.push({ name: "admin-dashboard" }),
@@ -50,17 +52,17 @@ const getPathIndex = (path: string): number => {
 
 onMounted(() => {
   console.log("current path : ", currentPath);
-  const pathIndex = getPathIndex(currentPath)
-  if(pathIndex >= 0){
-    navData.value[pathIndex].isActive = true
+  const pathIndex = getPathIndex(currentPath);
+  if (pathIndex >= 0) {
+    navData.value[pathIndex].isActive = true;
   }
 });
 </script>
 <template>
   <div
-    class="w-screen bg-white-500 fixed bottom-8 left-0 z-10 px-8 py-5 flex justify-center">
-    <div class="w-4/5 bg-neutral-900 rounded-2xl flex justify-around gap-5 p-4">
-      <RouterLink to="/" class="text-2xl font-semibold text-white"
+    class="flex lg:hidden w-screen bg-white-500 fixed bottom-8 left-0 z-10 px-8 py-5 justify-center">
+    <div class="w-[90%] bg-neutral-900 rounded-2xl flex justify-around gap-5 p-4">
+      <RouterLink to="/" class="hidden sm:block text-2xl font-semibold text-white"
         >Mart.shop</RouterLink
       >
       <MobileButton

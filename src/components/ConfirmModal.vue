@@ -13,7 +13,9 @@ defineProps<{
     <div
       class="bg-white rounded-2xl flex flex-col p-8 gap-4 min-w-[300px] w-1/4">
       <h1 class="font-semibold text-2xl">{{ title }}</h1>
-      <p class="font-light text-neutral-500">{{ description }}</p>
+      <p class="text-sm sm:text-md font-light text-neutral-500">
+        {{ description }}
+      </p>
       <div class="flex gap-5 justify-end mt-5">
         <button class="btn btn-neutral" @click="cancel()">Cancel</button>
         <button class="btn btn-primary" @click="action()">Confirm</button>

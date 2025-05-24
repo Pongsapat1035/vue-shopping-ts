@@ -44,13 +44,9 @@ const handleFileInput = async (e: Event) => {
         @change="handleFileInput" />
     </div>
     <div
-      class="flex-1 rounded-lg relative bg-contain bg-no-repeat bg-center"
+      class="flex-1 min-h-[400px] rounded-lg relative bg-contain bg-no-repeat bg-center"
       :class="imgUrl ? '' : 'bg-gray-200'"
-      :style="{
-        backgroundImage:
-          `url(${imgUrl})`,
-      }">
-      <!-- <img v-if="imgUrl" :src="imgUrl" alt="cover-picture" class="h-full w-full object-contain"> -->
+      :style="{ backgroundImage:`url(${imgUrl})` }">
       <button
         type="button"
         class="btn btn-square absolute -top-4 -right-4"

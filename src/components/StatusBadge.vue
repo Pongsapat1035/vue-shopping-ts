@@ -21,7 +21,7 @@ const iconBg = computed(() => {
 </script>
 <template>
   <div
-    class="px-2 p-1 rounded-4xl border w-max flex items-center gap-1 font-semibold"
+    class="px-2 p-1 rounded-4xl border w-max flex items-center gap-1 font-semibold text-xs md:sm"
     :class="containerColor">
     <div
       class="p-1 w-4 h-4 rounded-full flex justify-center items-center"

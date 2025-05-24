@@ -8,21 +8,21 @@ import ConfirmModal from "../components/ConfirmModal.vue";
 import MobileNavbar from "../components/seller/layout/MobileNavbar.vue";
 const confirmState = ref<boolean>(false);
 const authStore = useAuthStore();
-const sideBarState = ref<boolean>(true);
+const sideBarState = ref<boolean>(false);
 </script>
 <template>
   <div
-    class="container mx-auto flex flex-col md:flex-row gap-5 relative h-max min-h-screen">
+    class="container mx-auto flex flex-row gap-5 relative h-max min-h-screen">
     <Sidebar
       :sideBarState="sideBarState"
       :toggleState="() => (sideBarState = !sideBarState)"
       :logout="() => (confirmState = true)">
     </Sidebar>
-    <div class="flex-auto p-8">
+    <div class="lg:flex-auto lg:p-8">
       <slot></slot>
     </div>
-    <MobileNavbar :logout="() => (confirmState = true)"></MobileNavbar>
   </div>
+  <MobileNavbar :logout="() => (confirmState = true)"></MobileNavbar>
   <AlertBadge></AlertBadge>
   <ConfirmModal
     v-if="confirmState"
@@ -30,5 +30,4 @@ const sideBarState = ref<boolean>(true);
     description="Are you sure to logout"
     :action="authStore.signout"
     :cancel="() => (confirmState = false)"></ConfirmModal>
-    
 </template>

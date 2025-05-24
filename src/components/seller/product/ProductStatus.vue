@@ -17,7 +17,7 @@ const toggleProductStatus = () => {
 </script>
 <template>
   <div
-    class="flex gap-2 items-center rounded-lg py-1 px-2 border border-neutral-200 w-max cursor-pointer"
+    class="flex gap-2 items-center text-xs rounded-lg py-1 px-2 border border-neutral-200 w-max cursor-pointer"
     @click="toggleProductStatus">
     <div
       class="w-2 h-2 rounded-full"

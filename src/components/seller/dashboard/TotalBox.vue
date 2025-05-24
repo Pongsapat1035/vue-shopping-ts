@@ -6,7 +6,7 @@ defineProps<{
 </script>
 <template>
   <div
-    class="border border-neutral-200 rounded-2xl p-5 flex items-center gap-5 min-w-[200px]">
+    class="border border-neutral-200 rounded-2xl p-5 flex items-center gap-5 w-full sm:w-max min-w-[240px]">
     <div
       class="p-2 h-12 w-12 rounded-full bg-gray-200 flex justify-center items-center">
       <svg
@@ -43,7 +43,7 @@ defineProps<{
       </svg>
     </div>
     <div class="flex flex-col justify-between">
-      <span class="text-neutral-500 font-light text-md">{{ name }}</span>
+      <span class=" text-neutral-500 font-light text-sm sm:text-md">{{ name }}</span>
       <span class="font-medium text-2xl">{{ value }}</span>
     </div>
   </div>

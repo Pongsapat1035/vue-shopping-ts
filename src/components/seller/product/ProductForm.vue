@@ -56,7 +56,7 @@ const radioVariantData = [
 
 </script>
 <template>
-  <div class="flex-1 flex flex-col gap-5">
+  <div class="flex-1 flex flex-col gap-5 mb-20 sm:mb-0">
     <h1 class="text-2xl font-semibold">Product info</h1>
     <InputTag
       title="Name"

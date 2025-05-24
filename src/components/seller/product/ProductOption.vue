@@ -38,7 +38,7 @@ onUnmounted(() => {
       @click="
         () =>
           router.push({
-            name: 'seller-editproduct',
+            name: 'admin-editproduct',
             params: { id: productId },
           })
       ">

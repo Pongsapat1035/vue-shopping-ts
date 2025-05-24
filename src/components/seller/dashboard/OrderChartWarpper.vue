@@ -44,20 +44,20 @@ watch(
 );
 </script>
 <template>
-  <div class="rounded-2xl w-full p-10 flex justify-between items-center">
+  <div class="rounded-2xl w-full  p-4 sm:p-10 flex justify-between gap-5 items-center flex-wrap">
     <div class="flex flex-col gap-2">
       <h1 class="text-semibold text-xl">Your sale report</h1>
-      <p class="text-neutral-500 font-light text-sm">Look at your sale</p>
-      <h1 class="font-semibold text-6xl mt-5">
+      <p class="hidden sm:block text-neutral-500 font-light text-sm">Look at your sale</p>
+      <h1 class="font-semibold text-5xl sm:text-6xl mt-5">
         THB {{ dashboardStore.totalData.sale.toLocaleString() }}
       </h1>
     </div>
-    <div class="">
+    <div class="w-full sm:2/3 lg:w-1/2">
       <apexchart
         class="min-h-0"
         ref="chartRef"
         type="line"
-        width="600"
+        width="100%"
         height="300"
         :options="data.options"
         :series="data.series"></apexchart>

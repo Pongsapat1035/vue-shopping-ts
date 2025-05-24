@@ -4,7 +4,11 @@ import { useRoute, useRouter } from "vue-router";
 
 import { useAdminProductStore } from "../../store/admin/product";
 import { useAlertStore } from "../../store/alert";
-import type { ProductVariants, ProductInfo, ProductFormData } from "../../types";
+import type {
+  ProductVariants,
+  ProductInfo,
+  ProductFormData,
+} from "../../types";
 import { allInputIsFilled, allErrorEmpty } from "../../utils/validate.method";
 
 import ProductForm from "../../components/seller/product/ProductForm.vue";
@@ -120,9 +124,12 @@ const handleSubmit = async () => {
     } else {
       await productStore.updateProduct(productId, productData);
     }
-    const successMsg = formMode.value === 'create' ?  "Create new product success" : "Update product success"
+    const successMsg =
+      formMode.value === "create"
+        ? "Create new product success"
+        : "Update product success";
     alertStore.toggleAlert("Success", successMsg);
-    router.push({ name: "seller-products" });
+    router.push({ name: "admin-products" });
   } catch (error) {
     console.log("add product error : ", error);
     alertStore.toggleAlert(
@@ -181,17 +188,24 @@ onMounted(() => {
 </script>
 <template>
   <SellerLayout>
-    <form class="p-5" @submit.prevent="handleSubmit">
-      <div class="flex justify-between mb-8">
-        <h1 class="text-3xl font-semibold">
+    <form class="p-0 sm:p-5 mb-20 sm:mb-0" @submit.prevent="handleSubmit">
+      <div class="flex items-center justify-between mb-8">
+        <RouterLink
+          :to="{ name: 'admin-products' }"
+          class="hidden sm:block text-3xl font-semibold">
           {{ formMode === "create" ? "Create new product" : "Edit product" }}
-        </h1>
+        </RouterLink>
+        <RouterLink
+          class="block sm:hidden text-sm text-neutral-500 underline"
+          :to="{ name: 'admin-products' }"
+          >Back</RouterLink
+        >
         <button type="submit" class="btn btn-primary">
           {{ formMode === "create" ? "Create product" : "Update product" }}
         </button>
       </div>
-      <div class="flex gap-5 p-5">
-        <div class="flex-1 p-5 h-[650px]">
+      <div class="flex flex-col lg:flex-row gap-5 sm:p-5">
+        <div class="flex-1 p-5 h-[650px] min-h-[500px]">
           <CoverPicture v-model:imgUrl="productInfo.coverImg"></CoverPicture>
         </div>
         <ProductForm
