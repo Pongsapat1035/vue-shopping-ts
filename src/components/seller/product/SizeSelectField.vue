@@ -15,7 +15,6 @@ watch(
   () => sizes,
   () => {
     sizeEnableLists.value = sizes.value.filter((size) => size.enable === true);
-    console.log('check enable list : ', sizeEnableLists.value)
   },
   { immediate: true,deep: true }
 );

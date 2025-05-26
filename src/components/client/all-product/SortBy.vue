@@ -1,25 +1,23 @@
 <script setup lang="ts">
 import { useClientProductStore } from "../../../store/client/product";
-import { watch } from "vue";
 const productStore = useClientProductStore();
 
-watch(
-  () => productStore.productQuery.sortBy,
-  () => {
-    productStore.queryProduct();
-  }
-);
+defineProps<{
+  uniqueId: string;
+}>();
 </script>
 <template>
   <div class="flex flex-col gap-4">
     <h1 class="text-xl font-semibold text-nowrap">Sort by</h1>
     <div class="flex flex-col gap-3 w-60">
       <div class="flex gap-2 items-center">
-        <label for="radio-1" class="text-neutral-500 font-light text-sm">
+        <label
+          :for="`radio-1-${uniqueId}`"
+          class="text-neutral-500 font-light text-sm">
           <input
-            id="radio-1"
+            :id="`radio-1-${uniqueId}`"
             type="radio"
-            name="radio-1"
+            :name="`sortby-${uniqueId}`"
             value="Newest First"
             class="radio"
             v-model="productStore.productQuery.sortBy" />
@@ -27,11 +25,13 @@ watch(
         >
       </div>
       <div class="flex gap-2 items-center">
-        <label for="radio-2" class="text-neutral-500 font-light text-sm">
+        <label
+          :for="`radio-2-${uniqueId}`"
+          class="text-neutral-500 font-light text-sm">
           <input
-            id="radio-2"
+            :id="`radio-2-${uniqueId}`"
             type="radio"
-            name="radio-2"
+            :name="`sortby-${uniqueId}`"
             value="Name A-Z"
             class="radio"
             v-model="productStore.productQuery.sortBy" />
@@ -39,11 +39,13 @@ watch(
         >
       </div>
       <div class="flex gap-2 items-center">
-        <label for="radio-3" class="text-neutral-500 font-light text-sm">
+        <label
+          :for="`radio-3-${uniqueId}`"
+          class="text-neutral-500 font-light text-sm">
           <input
-            id="radio-3"
+            :id="`radio-3-${uniqueId}`"
             type="radio"
-            name="radio-3"
+            :name="`sortby-${uniqueId}`"
             value="Name Z-A"
             class="radio"
             v-model="productStore.productQuery.sortBy" />

@@ -21,7 +21,6 @@ const fetchProductLists = async () => {
     if(response.length > 0){
       productLists.value = response
     }
-    console.log('loaded product : ', response)
   } catch (error) {
     console.log("error : ", error);
   }
@@ -44,7 +43,7 @@ onMounted(async () => {
           <div v-else
             v-if="productStore.isLoading"
             v-for="_ in 4"
-            class="skeleton h-120 w-full"></div>
+            class="skeleton h-120 min-w-[300px] w-full"></div>
       </div>
       <RouterLink
         to="/user/all-product"

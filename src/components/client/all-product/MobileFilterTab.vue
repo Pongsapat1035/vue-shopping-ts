@@ -34,7 +34,7 @@ const productStore = useClientProductStore();
       <h1 v-if="productStore.filterState" class="text-3xl font-semibold">
         Filter
       </h1>
-      <SortBy v-if="productStore.filterState"></SortBy>
+      <SortBy uniqueId="mobile" v-if="productStore.filterState"></SortBy>
       <VariantsFilter
         v-if="productStore.filterState"
         variantType="Color"

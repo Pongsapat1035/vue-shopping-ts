@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, ref, watch } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import { useClientProductStore } from "../../../store/client/product";
 
 const productStore = useClientProductStore();
@@ -10,14 +10,13 @@ const maxPrice = ref<number>(0);
 const minRange = ref<number>(0);
 const maxRange = ref<number>(100);
 
-const updateProgress = () => {
-  const minValue = minRange.value;
-  const maxValue = maxRange.value;
-  const range = maxPrice.value - minPrice;
+const updateProgress = (minValue: number, maxValue: number) => {
+  const range = productStore.productMaxprice - minPrice;
   const valueRange = maxValue - minValue;
 
   const width = (valueRange / range) * 100;
   const minOffset = ((minValue - minPrice) / range) * 100;
+ 
   if (progress.value) {
     progress.value.style.width = `${width}%`; // Set the width of the progress bar
     progress.value.style.left = `${minOffset}%`; // Set the left offset of the progress bar
@@ -35,18 +34,18 @@ const handleChange = () => {
   if (maxRange.value <= minRange.value && minRange.value !== 0) {
     maxRange.value = minRange.value + 1;
   }
-  updateProgress();
+  updateProgress(minRange.value, maxRange.value);
 };
 
-const resetAllFilter = async() => {
+const resetAllFilter = async () => {
   minRange.value = 0;
-  maxRange.value = 0
-  await nextTick()
+  maxRange.value = 0;
+  await nextTick();
   maxRange.value = productStore.productMaxprice;
-  updateProgress();
+  updateProgress(minRange.value, maxRange.value);
   productStore.productQuery.variants = [];
-  productStore.productQuery.searchText = ""
-  productStore.productQuery.sortBy = "Newest First"
+  productStore.productQuery.searchText = "";
+  productStore.productQuery.sortBy = "Newest First";
   productStore.queryProduct();
 };
 
@@ -54,21 +53,15 @@ const handleSubmit = () => {
   productStore.productQuery.priceFilter.min = minRange.value;
   productStore.productQuery.priceFilter.max = maxRange.value;
   productStore.queryProduct();
-  productStore.filterState = false
+  productStore.filterState = false;
 };
 
-watch(
-  () => productStore.productMaxprice,
-  async (newPrice) => {
-    maxRange.value = 0
-    await nextTick()
-    maxRange.value = newPrice;
-    maxPrice.value = newPrice;
-    productStore.productQuery.priceFilter.min = minRange.value;
-    productStore.productQuery.priceFilter.max = maxRange.value;
-    updateProgress();
-  }, { immediate: true }
-);
+onMounted(() => {
+  maxRange.value = productStore.productQuery.priceFilter.max;
+  maxPrice.value = productStore.productQuery.priceFilter.max;
+  minRange.value = productStore.productQuery.priceFilter.min;
+  updateProgress(minRange.value, maxRange.value);
+});
 
 </script>
 <template>

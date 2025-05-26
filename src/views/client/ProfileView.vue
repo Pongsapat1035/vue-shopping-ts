@@ -101,7 +101,7 @@ onMounted(async () => {
         v-model:error="errorMsg.addressInfo"></Address>
       <div class="self-end flex gap-5 mt-8">
         <button class="btn btn-primary" @click="handleSubmit">
-          Update address
+          Update profile
         </button>
       </div>
     </div>

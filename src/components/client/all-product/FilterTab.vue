@@ -20,13 +20,13 @@ onMounted(async () => {
     :class="
       productStore.filterState
         ? 'w-[350px] min-w-[350px] px-5 py-8 border border-gray-200'
-        : 'w-0 p-0'"
-    class=" h-max sticky top-5 hidden lg:flex flex-col gap-5 z-10 bg-white rounded-2xl overflow-hidden transition-all duration-300">
+        : 'w-0 p-0'
+    "
+    class="h-max sticky top-5 hidden lg:flex flex-col gap-5 z-4 bg-white rounded-2xl overflow-hidden transition-all duration-300">
     <h1 v-if="productStore.filterState" class="text-3xl font-semibold">
       Filter
     </h1>
-   
-    <SortBy v-if="productStore.filterState"></SortBy>
+    <SortBy uniqueId="desktop" v-if="productStore.filterState"></SortBy>
     <VariantsFilter
       v-if="productStore.filterState"
       variantType="Color"

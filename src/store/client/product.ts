@@ -215,7 +215,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
           field = "createAt"
           type = "desc"
           break
-        case "Name (A-Z)":
+        case "Name A-Z":
           field = "productInfo.name"
           type = "asc"
           break
@@ -261,14 +261,11 @@ export const useClientProductStore = defineStore("clientProductStore", {
     },
     async queryProduct() {
       try {
-        console.log(this.productQuery)
         const { searchText } = this.productQuery
         if (searchText) {
           this.fetchProductAlgolia()
         } else {
-          console.log('fetch from firebase')
           this.loadProducts()
-
         }
 
       } catch (error) {

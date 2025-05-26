@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { useAdminProductStore } from "../store/admin/product";
 import { useCartStore } from "../store/client/cart";
 import { useAuthStore } from "../store/auth";
+
 import AlertBadge from "../components/AlertBadge.vue";
 import Navbar from "../components/client/layout/Navbar.vue";
 
@@ -14,7 +15,7 @@ onMounted(async () => {
   try {
     await cartStore.loadCart();
     await sellerProductStore.setConfig();
-    if(authStore.userId){
+    if (authStore.userId) {
       await authStore.loadUserInfo();
     }
   } catch (error) {
@@ -25,7 +26,7 @@ onMounted(async () => {
 
 <template>
   <div class="w-screen flex justify-center">
-    <div class="container h-screen flex flex-col ">
+    <div class="container h-screen flex flex-col">
       <Navbar></Navbar>
       <div class="flex-auto">
         <slot></slot>

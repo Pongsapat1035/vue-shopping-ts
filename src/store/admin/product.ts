@@ -8,7 +8,6 @@ import type {
 } from "../../types";
 import {
   collection,
-  addDoc,
   doc,
   getDoc,
   getDocs,
@@ -58,7 +57,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         response.forEach((doc) => {
           const docData = doc.data() as ProductData;
           const totalQuantity = (docData.totalQuantity?.remainQty || 0)
-          console.log('check quantity : ', totalQuantity)
+         
           const convertData = {
             id: doc.id,
             name: docData.productInfo.name,
@@ -89,7 +88,7 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         }
       }
     },
-    async addProduct(data: ProductFormData) {
+    async addProduct(productId: string, data: ProductFormData) {
       try {
         const { productInfo, quantity, variants, variantType } = data
         const variantName: string[] = variants.filter(variant => variant.enable === true).map(item => item.name)
@@ -110,8 +109,8 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         const checkNameExist = await this.isNameUsed(productName)
         if (!checkNameExist) throw new Error("Name is already used");
 
-        const colRef = collection(db, "products")
-        await addDoc(colRef, convertData);
+        const colRef = doc(db, "products", productId)
+        await setDoc(colRef, convertData);
       } catch (error) {
         console.log("error from add product : ", error);
         if (error instanceof Error) {

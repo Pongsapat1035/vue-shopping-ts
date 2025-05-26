@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, watch, ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
+import { v4 as uuidv4 } from 'uuid';
 import { useAdminProductStore } from "../../store/admin/product";
 import { useAlertStore } from "../../store/alert";
 import type {
@@ -56,6 +56,7 @@ const variantConfig = reactive<VariantConfig>({
 const variantType = ref<string>("none");
 const variants = ref<ProductVariants[]>([]);
 const productQty = ref<number>(0);
+const productUuid = ref<string>("")
 
 const validateQuantity = () => {
   if (variantType.value !== "none") {
@@ -118,9 +119,9 @@ const handleSubmit = async () => {
       variants: variantType.value === "none" ? [] : variants.value,
       quantity: productQty.value,
     };
-    console.log("check product data : ", productData);
+
     if (formMode.value === "create") {
-      await productStore.addProduct(productData);
+      await productStore.addProduct(productUuid.value, productData);
     } else {
       await productStore.updateProduct(productId, productData);
     }
@@ -178,17 +179,21 @@ const fetchProduct = async (productId: string) => {
 };
 
 onMounted(() => {
-  loadDefaultOptions();
+  
 
   if (productId) {
     formMode.value = "edit";
     fetchProduct(productId);
+  } else {
+    loadDefaultOptions();
+    productUuid.value = uuidv4()
   }
+
 });
 </script>
 <template>
   <SellerLayout>
-    <form class="p-0 sm:p-5 mb-20 sm:mb-0" @submit.prevent="handleSubmit">
+    <form class="p-5 mb-20 sm:mb-0" @submit.prevent="handleSubmit">
       <div class="flex items-center justify-between mb-8">
         <RouterLink
           :to="{ name: 'admin-products' }"
@@ -197,16 +202,14 @@ onMounted(() => {
         </RouterLink>
         <RouterLink
           class="block sm:hidden text-sm text-neutral-500 underline"
-          :to="{ name: 'admin-products' }"
-          >Back</RouterLink
-        >
+          :to="{ name: 'admin-products' }">Back</RouterLink>
         <button type="submit" class="btn btn-primary">
           {{ formMode === "create" ? "Create product" : "Update product" }}
         </button>
       </div>
       <div class="flex flex-col lg:flex-row gap-5 sm:p-5">
         <div class="flex-1 p-5 h-[650px] min-h-[500px]">
-          <CoverPicture v-model:imgUrl="productInfo.coverImg"></CoverPicture>
+          <CoverPicture :productId="productUuid" v-model:imgUrl="productInfo.coverImg"></CoverPicture>
         </div>
         <ProductForm
           v-model:productInfo="productInfo"

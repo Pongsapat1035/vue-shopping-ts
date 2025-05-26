@@ -72,14 +72,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   const authStore = useAuthStore();
   await authStore.checkAuth();
   const role = authStore.role;
   // check if not admin can't access seller page
   if (
     typeof to.name === "string" &&
-    to.name.includes("seller") &&
+    to.name.includes("admin") &&
     role !== "admin"
   ) {
     next({ name: "home" });

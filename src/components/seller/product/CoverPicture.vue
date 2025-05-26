@@ -2,11 +2,11 @@
 import { storage } from "../../../firebase";
 import { ref as refDB } from "firebase/storage";
 import { uploadBytes, getDownloadURL } from "firebase/storage";
-import { uid } from "uid";
 import { useAuthStore } from "../../../store/auth";
 
-defineProps<{
+const props = defineProps<{
   imgUrl: string;
+  productId:string
 }>();
 
 const emit = defineEmits(["update:imgUrl"]);
@@ -21,12 +21,14 @@ const handleFileInput = async (e: Event) => {
       if (!file.type.includes("image")) {
         throw new Error("Wrong type");
       }
-      const fileUid = uid();
-      const path = `${authStore.userId}/${fileUid}`;
-      const mountainsRef = refDB(storage, path);
-      const response = await uploadBytes(mountainsRef, file);
+  
+      const { productId } = props
+      const path = `products/${authStore.userId}/${productId}`;
+     
+      const dbRef = refDB(storage, path);
+      const response = await uploadBytes(dbRef, file);
       const downloadUrl = await getDownloadURL(response.ref);
-      console.log("upload success");
+    
       emit("update:imgUrl", downloadUrl);
     }
   } catch (error) {

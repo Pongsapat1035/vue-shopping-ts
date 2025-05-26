@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref as refDB } from "firebase/storage";
 import { uploadBytes, getDownloadURL } from "firebase/storage";
-import { uid } from "uid";
 
 import { useAuthStore } from "../../../store/auth";
 import { useAlertStore } from "../../../store/alert";
@@ -23,8 +22,7 @@ const handleFileSubmit = async (e: Event) => {
     if (file) {
       if (!file.type.includes("image")) throw new Error("Wrong type");
 
-      const fileUid = uid();
-      const path = `${authStore.userId}/profile/${fileUid}`;
+      const path = `profile/${authStore.userId}/`;
       const mountainsRef = refDB(storage, path);
       const response = await uploadBytes(mountainsRef, file);
       const downloadUrl = await getDownloadURL(response.ref);

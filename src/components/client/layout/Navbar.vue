@@ -1,14 +1,18 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import { RouterLink } from "vue-router";
 import { useAuthStore } from "../../../store/auth";
 import { useCartStore } from "../../../store/client/cart";
+import ConfirmModal from "../../ConfirmModal.vue";
 
 const authStore = useAuthStore();
 const cartStore = useCartStore();
+const confirmModalState = ref<boolean>(false);
+
 </script>
 <template>
-  <div class="navbar bg-base-100 sticky top-0">
-    <div class="flex-1">
+  <div class="navbar bg-base-100 sticky top-0 z-6">
+    <div class="flex-1 z-6">
       <RouterLink to="/" class="btn btn-ghost text-xl">Mart.shop</RouterLink>
     </div>
     <div class="flex gap-2">
@@ -39,12 +43,19 @@ const cartStore = useCartStore();
         </div>
         <div
           tabindex="0"
-          class="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
-          <div class="card-body">
-            <span class="text-lg font-bold">{{ cartStore.getTotalItem }} Items</span>
-            <span class="text-neutral-700">Subtotal: THB {{ cartStore.getTotalProductPrice.toLocaleString() }}</span>
+          class="card card-compact dropdown-content bg-base-100 mt-3 w-52 shadow">
+          <div class="card-body z-15">
+            <span class="text-lg font-bold"
+              >{{ cartStore.getTotalItem }} Items</span
+            >
+            <span class="text-neutral-700"
+              >Subtotal: THB
+              {{ cartStore.getTotalProductPrice.toLocaleString() }}</span
+            >
             <div class="card-actions">
-              <RouterLink to="/user/cart" class="btn btn-primary btn-block">View cart</RouterLink>
+              <RouterLink to="/user/cart" class="btn btn-primary btn-block"
+                >View cart</RouterLink
+              >
             </div>
           </div>
         </div>
@@ -77,4 +88,10 @@ const cartStore = useCartStore();
       </div>
     </div>
   </div>
+  <ConfirmModal
+      v-if="confirmModalState"
+      title="Logout"
+      description="Are you want to logout?"
+      :action="authStore.signout"
+      :cancel="() => (confirmModalState = false)"></ConfirmModal>
 </template>

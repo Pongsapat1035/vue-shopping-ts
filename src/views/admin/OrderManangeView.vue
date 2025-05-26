@@ -6,7 +6,6 @@ import OrderListWarpper from "../../components/seller/order/OrderListWarpper.vue
 
 const orderStore = useAdminOrderStore();
 
-
 </script>
 <template>
   <SellerLayout>

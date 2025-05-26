@@ -18,7 +18,7 @@ const sideBarState = ref<boolean>(false);
       :toggleState="() => (sideBarState = !sideBarState)"
       :logout="() => (confirmState = true)">
     </Sidebar>
-    <div class="lg:flex-auto lg:p-8">
+    <div class="flex-auto lg:p-8">
       <slot></slot>
     </div>
   </div>

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import UserLayout from "../../layout/UserLayout.vue";
 import { useOrderStore } from "../../store/client/order";
 import { onMounted } from "vue";
 import { RouterLink } from "vue-router";
+
+import UserLayout from "../../layout/UserLayout.vue";
 import OrderCard from "../../components/client/order/OrderCard.vue";
 
 const orderStore = useOrderStore();

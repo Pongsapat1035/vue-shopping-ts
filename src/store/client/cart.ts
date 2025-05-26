@@ -17,7 +17,7 @@ import type {
   ProductData,
   ProductCart,
   ProductCartDetail,
-  OrderDetail, AddressInfo
+  OrderDetail
 } from "../../types";
 import { allInputIsFilled } from "../../utils/validate.method";
 
@@ -100,7 +100,6 @@ export const useCartStore = defineStore("cartStore", {
                 }
               });
               this.productLists = await Promise.all(promise);
-              console.log("check product lists : ", this.productLists);
             }
           });
         }
@@ -209,7 +208,7 @@ export const useCartStore = defineStore("cartStore", {
         const addressInfo = useAuthStore().userInfo.addressInfo;
         const checkAddress = allInputIsFilled(addressInfo)
 
-        if(!checkAddress) {
+        if (!checkAddress) {
           throw new Error("Please set shipping address in profile setting")
         }
 

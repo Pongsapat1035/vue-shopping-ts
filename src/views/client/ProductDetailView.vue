@@ -30,15 +30,17 @@ const selectedVariant = ref<string>("");
 onMounted(async () => {
   try {
     await productStore.loadProduct(productId);
-    productRemainQty.value = productStore.product.totalQuantity?.remainQty ?? 0
+    productRemainQty.value = productStore.product.totalQuantity?.remainQty ?? 0;
   } catch (error) {
     console.log(error);
   }
 });
 
-
 const handleSubmit = (e: Event) => {
-  if (!authStore.userId) router.push({ name: "auth-login" });
+  if (!authStore.userId) {
+    router.push({ name: "auth" });
+    return;
+  }
   try {
     const target = e.target as HTMLFormElement;
     const data = new FormData(target);
@@ -46,9 +48,9 @@ const handleSubmit = (e: Event) => {
     const quantity = data.get("quantity") ? Number(data.get("quantity")) : 0;
 
     // check size and color option
-    if (!selectedVariant.value && productStore.product.variantType !== 'none')
+    if (!selectedVariant.value && productStore.product.variantType !== "none")
       throw new Error(`please select ${productStore.product.variantType}`);
-   
+
     const productData: ProductCart = {
       id: productId,
       quantity,
@@ -101,7 +103,8 @@ watch(
         <li>{{ productStore.product.productInfo.name }}</li>
       </ul>
     </div>
-    <div class="w-4/5 mx-auto mt-10 flex flex-col items-center lg:flex-row  lg:h-[600px]">
+    <div
+      class="w-4/5 mx-auto mt-10 flex flex-col items-center lg:flex-row lg:h-[600px]">
       <ProductImg
         :coverImg="productStore.product.productInfo.coverImg"></ProductImg>
       <form
@@ -117,7 +120,9 @@ watch(
             Out of stock
           </div>
         </div>
-        <p class="text-5xl">{{ productStore.product.productInfo.price.toLocaleString() }} ฿</p>
+        <p class="text-5xl">
+          {{ productStore.product.productInfo.price.toLocaleString() }} ฿
+        </p>
         <VariantSelect
           v-if="productStore.product.variantType !== 'none'"
           v-model:value="selectedVariant"></VariantSelect>
@@ -134,7 +139,7 @@ watch(
           <h1 class="font-semibold text-xl">Description</h1>
           <div class="divider"></div>
           <p class="font-light text-neutral-500">
-            {{ productStore.product.productInfo.description }} 
+            {{ productStore.product.productInfo.description }}
           </p>
         </div>
       </form>
