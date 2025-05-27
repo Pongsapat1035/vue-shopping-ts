@@ -23,7 +23,7 @@ const confirmModalInfo = {
 
 </script>
 <template>
-  <div v-if="index != 0" class="divider"></div>
+  <div v-if="index != 0" class="divider border-gray-200"></div>
   <div v-if="data.productInfo" class="flex gap-5 h-40">
     <div class="w-1/3 h-full">
       <img

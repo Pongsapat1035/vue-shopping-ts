@@ -1,19 +1,19 @@
-import { initializeApp } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
-import { getDatabase } from "firebase-admin/database";
+import {initializeApp, applicationDefault} from "firebase-admin/app";
+import {getFirestore} from "firebase-admin/firestore";
+import {getAuth} from "firebase-admin/auth";
+import {getDatabase} from "firebase-admin/database";
 import dotenv from "dotenv";
 import path from "path";
 
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({path: path.resolve(__dirname, "../.env")});
 
 initializeApp({
-  projectId: process.env.FB_PROJECT_ID,
-  databaseURL: 'http://127.0.0.1:9000/?ns=vue-shopping-web-default-rtdb'
+  credential: applicationDefault(),
+  databaseURL: process.env.FB_DATABASE_URL,
 });
 
 const db = getFirestore();
 const auth = getAuth();
-const realtimeDB = getDatabase()
+const realtimeDB = getDatabase();
 
-export { db, auth, realtimeDB };
+export {db, auth, realtimeDB};

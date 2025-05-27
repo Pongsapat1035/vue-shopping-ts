@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 
-import { useAuthStore } from "@/store/auth";
-import { useAlertStore } from "@/store/alert";
+import { useAuthStore } from "../../store/auth";
+import { useAlertStore } from "../../store/alert";
 
 import AlertBadge from "@/components/AlertBadge.vue";
 

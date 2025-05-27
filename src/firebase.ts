@@ -10,6 +10,7 @@ const firebaseConfig = {
   projectId: import.meta.env.VITE_FB_PROJECT_ID,
   storageBucket: import.meta.env.VITE_FB_STORAGE_BUCKET,
   messagingSenderId: import.meta.env.VITE_FB_MESSAGING_SENDER_ID,
+  databaseURL: import.meta.env.VITE_DB_URL,
   appId: import.meta.env.VITE_FB_APP_ID,
 };
 
@@ -18,7 +19,7 @@ const db = getFirestore(app);
 const auth = getAuth();
 const storage = getStorage();
 const realtimeDB = getDatabase(app);
-const enableEmulator = true;
+const enableEmulator = false;
 
 if (enableEmulator) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099");

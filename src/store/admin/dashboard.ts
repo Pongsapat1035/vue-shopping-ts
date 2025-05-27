@@ -88,7 +88,6 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
                             label,
                             series1,
                         }
-                        console.log('check chart data : ', this.chartData)
                     }
                 })
             } catch (error) {

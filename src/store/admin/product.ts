@@ -248,8 +248,6 @@ export const useAdminProductStore = defineStore("adminProductStore", {
           colors,
           sizes,
         });
-        // console.log("testing : create config success");
-
       } catch (error) {
         console.log("error from set config");
       }

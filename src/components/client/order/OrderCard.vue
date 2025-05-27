@@ -28,7 +28,7 @@ const convertIndex = () => {
         {{ convertIndex() }}
       </div>
       <div class="list-col-grow ml-6 flex flex-col gap-2">
-        <div class="font-semibold">
+        <div class="font-semibold flex gap-2">
           <span class="hidden sm:block">Order number : </span>{{ orderData.id }}
         </div>
         <StatusBadge :type="orderData.status"></StatusBadge>

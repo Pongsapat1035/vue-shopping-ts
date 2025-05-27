@@ -6,9 +6,11 @@ import AlertBadge from "../components/AlertBadge.vue";
 import Sidebar from "../components/seller/layout/Sidebar.vue";
 import ConfirmModal from "../components/ConfirmModal.vue";
 import MobileNavbar from "../components/seller/layout/MobileNavbar.vue";
+
 const confirmState = ref<boolean>(false);
 const authStore = useAuthStore();
 const sideBarState = ref<boolean>(false);
+
 </script>
 <template>
   <div

@@ -35,8 +35,8 @@ onMounted(async () => {
 });
 
 const handleCancel = async () => {
-  console.log('call cancel order')
   await orderStore.cancel(orderId)
+  window.location.reload()
 }
 
 const handlePayment = async () => {
