@@ -20,7 +20,8 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
         totalData: TotalData,
         selectedMonth: string,
         chartData: ChartData,
-        orderLists: OrderDetail[]
+        orderLists: OrderDetail[],
+        isLoading: boolean
     } => ({
         totalData: {
             product: 0,
@@ -34,7 +35,8 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
             label: [],
             series1: []
         },
-        orderLists: []
+        orderLists: [],
+        isLoading: false
     }),
     getters: {
         currentMonth() {
@@ -45,6 +47,7 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
     actions: {
         async loadDashboard() {
             try {
+                this.isLoading = true
                 const docRef = collection(db, "products")
                 const productSnap = await getCountFromServer(docRef)
                 const productCount = productSnap.data().count
@@ -72,6 +75,10 @@ export const useAdminDashboard = defineStore("adminDashboardStore", {
                 })
                 await this.loadChartData()
                 await this.loadLastOrder()
+                setTimeout(() => {
+                    this.isLoading = false
+                }, 1000);
+
             } catch (error) {
                 console.log('load dashboard data error : ', error)
             }

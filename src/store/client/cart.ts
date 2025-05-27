@@ -27,11 +27,13 @@ export const useCartStore = defineStore("cartStore", {
     productLists: ProductCartDetail[];
     userId: string;
     shippingPrice: number;
+    isLoading: boolean
   } => ({
     cartItems: [],
     productLists: [],
     userId: "",
     shippingPrice: 10,
+    isLoading: true
   }),
   getters: {
     user(): string {
@@ -64,7 +66,7 @@ export const useCartStore = defineStore("cartStore", {
       try {
         if (this.user) {
           const productStore = useAdminProductStore();
-
+          this.isLoading = true
           onValue(this.cartRef, async (snapShot) => {
             const data = snapShot.val();
             this.cartItems = data || [];
@@ -100,7 +102,11 @@ export const useCartStore = defineStore("cartStore", {
                 }
               });
               this.productLists = await Promise.all(promise);
+             
             }
+             setTimeout(() => {
+                this.isLoading = false
+              }, 1000);
           });
         }
       } catch (error) {

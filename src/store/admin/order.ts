@@ -6,8 +6,10 @@ import type { OrderDetail } from "../../types/order";
 export const useAdminOrderStore = defineStore("adminOrderStore", {
   state: (): {
     orderLists: Array<OrderDetail>;
+    isLoading: boolean
   } => ({
     orderLists: [],
+    isLoading: false
   }),
   getters: {
     totalOrder(state) {
@@ -17,11 +19,12 @@ export const useAdminOrderStore = defineStore("adminOrderStore", {
       const successOrderLists = state.orderLists.filter((order) => order.status === 'Successful')
       return successOrderLists.reduce((acc, cur) => acc + cur.totalPrice, 0)
     }
-
   },
+  
   actions: {
     async loadOrders() {
       try {
+        this.isLoading = true
         const docRef = query(collection(db, "orders"), orderBy("createdDate", "desc"));
 
         const docSnap = await getDocs(docRef);
@@ -40,6 +43,9 @@ export const useAdminOrderStore = defineStore("adminOrderStore", {
           orders.push(orderData as OrderDetail);
         });
         this.orderLists = orders
+        setTimeout(() => {
+            this.isLoading = false
+        }, 800);
       } catch (error) {
         console.log(error);
       }

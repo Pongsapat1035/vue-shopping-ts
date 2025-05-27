@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { AddressInfo } from "../../../types";
-
+import { useAuthStore } from "../../../store/auth";
 import InputTag from "@/components/InputTag.vue";
 
+const authStore = useAuthStore();
 const addressInfo = defineModel<AddressInfo>("address", {
   default: {
     name: "",
@@ -24,7 +25,6 @@ const errMsg = defineModel<AddressInfo>("error", {
     postcode: "",
   },
 });
-
 </script>
 <template>
   <div class="flex flex-col gap-5">
@@ -34,14 +34,26 @@ const errMsg = defineModel<AddressInfo>("error", {
       details by adding, editing, or replacing their saved address, ensuring
       accurate delivery information is always up to date across the platform.
     </p>
-    <div class="gap-5 grid grid-cols-2">
-      <InputTag
-        title="Reciever name"
-        name="recievedName"
-        v-model:value="addressInfo.name"
-        v-model:error="errMsg.name"
-        validateWith="isNotEmpty"
-        type="text"></InputTag>
+    <div
+      v-if="authStore.isLoading"
+      class="grid grid-cols-3 grid-rows-[repeat(3,60px)] gap-8">
+      <div class="skeleton col-span-2"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton col-span-3"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+      <div class="skeleton"></div>
+    </div>
+    <div v-else class="grid grid-cols-3 grid-rows-[repeat(3,100px)] gap-4">
+      <div class="col-span-2">
+        <InputTag
+          title="Reciever name"
+          name="recievedName"
+          v-model:value="addressInfo.name"
+          v-model:error="errMsg.name"
+          validateWith="isNotEmpty"
+          type="text"></InputTag>
+      </div>
       <InputTag
         title="Tel."
         name="telephoneNumber"
@@ -49,15 +61,15 @@ const errMsg = defineModel<AddressInfo>("error", {
         v-model:error="errMsg.tel"
         validateWith="phoneNumber"
         type="text"></InputTag>
-    </div>
-    <InputTag
-      title="Address"
-      name="recievedName"
-      v-model:value="addressInfo.address"
-      v-model:error="errMsg.address"
-      validateWith="isNotEmpty"
-      type="text"></InputTag>
-    <div class="gap-5 grid grid-cols-2 sm:grid-cols-3">
+      <div class="col-span-3">
+        <InputTag
+          title="Address"
+          name="recievedName"
+          v-model:value="addressInfo.address"
+          v-model:error="errMsg.address"
+          validateWith="isNotEmpty"
+          type="text"></InputTag>
+      </div>
       <InputTag
         title="District"
         name="recievedName"

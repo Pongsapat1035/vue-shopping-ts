@@ -27,10 +27,12 @@ export const useAdminProductStore = defineStore("adminProductStore", {
     colorsConfig: string[];
     sizesConfig: string[];
     productLists: ProductListsData[];
+    isLoading: boolean
   } => ({
     colorsConfig: [],
     sizesConfig: [],
     productLists: [],
+    isLoading: false
   }),
   getters: {
     convertedConfig() {
@@ -45,19 +47,18 @@ export const useAdminProductStore = defineStore("adminProductStore", {
         return convertItem;
       };
     },
-
-
   },
   actions: {
     async loadAllProducts() {
       try {
+        this.isLoading = true
         const docRef = collection(db, "products");
         const response = await getDocs(docRef);
         const products: ProductListsData[] = [];
         response.forEach((doc) => {
           const docData = doc.data() as ProductData;
           const totalQuantity = (docData.totalQuantity?.remainQty || 0)
-         
+
           const convertData = {
             id: doc.id,
             name: docData.productInfo.name,
@@ -68,6 +69,11 @@ export const useAdminProductStore = defineStore("adminProductStore", {
           products.push(convertData);
         });
         this.productLists = products;
+
+        setTimeout(() => {
+          this.isLoading = false
+        }, 1000);
+
       } catch (error) {
         console.log("load product error : ", error);
       }

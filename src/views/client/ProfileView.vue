@@ -96,7 +96,8 @@ onMounted(async () => {
         v-model:name="userInfo.name"
         v-model:profileImg="userInfo.profileImg"
         v-model:error="errorMsg.name"></ProfileSetting>
-      <Address
+     
+      <Address 
         v-model:address="userInfo.addressInfo"
         v-model:error="errorMsg.addressInfo"></Address>
       <div class="self-end flex gap-5 mt-8">

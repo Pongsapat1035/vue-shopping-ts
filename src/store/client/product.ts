@@ -182,6 +182,7 @@ export const useClientProductStore = defineStore("clientProductStore", {
     },
     async loadProduct(productId: string) {
       try {
+        this.isLoading = true
         const docRef = doc(db, "products", productId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -189,6 +190,9 @@ export const useClientProductStore = defineStore("clientProductStore", {
         } else {
           throw new Error("Not found doc");
         }
+        setTimeout(() => {
+          this.isLoading = false
+        }, 1000);
       } catch (error) {
         console.log(error);
       }

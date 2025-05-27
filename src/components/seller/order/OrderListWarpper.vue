@@ -20,12 +20,17 @@ onMounted(async () => {
       <div class="hidden sm:block text-xs uppercase font-semibold">amout</div>
       <div class="text-xs uppercase font-semibold text-center">Status</div>
     </li>
-    <OrderLists
-      v-if="orderStore.orderLists.length > 0"
-      v-for="order in orderStore.orderLists"
-      :orderData="order"></OrderLists>
-    <div v-else class="flex justify-center items-center h-full w-full">
-      There are currently no orders to display.
+    <div v-if="orderStore.isLoading" class="flex flex-col gap-5 p-5">
+      <div v-for="_ in 8" class="skeleton w-full h-14"></div>
+    </div>
+    <div v-else>
+      <OrderLists
+        v-if="orderStore.orderLists.length > 0"
+        v-for="order in orderStore.orderLists"
+        :orderData="order"></OrderLists>
+      <div v-else class="flex justify-center items-center h-full w-full">
+        There are currently no orders to display.
+      </div>
     </div>
   </ul>
 </template>

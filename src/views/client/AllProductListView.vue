@@ -39,7 +39,7 @@ watch(
   <UserLayout>
     <div
       class="hidden md:flex bg-primary rounded-lg h-70 w-full mb-8 justify-center items-center text-3xl font-bold">
-      <h1 class="text-white">Baner</h1>
+      <h1 class="text-6xl text-white">Just Do It Better</h1>
     </div>
     <div class="flex gap-5 relative">
       <FilterTab></FilterTab>

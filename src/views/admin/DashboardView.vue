@@ -39,7 +39,18 @@ onMounted(async () => {
 </script>
 <template>
   <SellerLayout>
-    <div class="w-full flex flex-col gap-8 p-5">
+    <div v-if="dashboardStore.isLoading" class="flex flex-col gap-12">
+      <div class="flex gap-8">
+        <div v-for="_ in 4" class="skeleton w-50 h-25"></div>
+      </div>
+      <div class="flex w-full skeleton h-80"></div>
+      <div class="flex gap-8">
+        <div class="skeleton rounded-full w-15 h-15"></div>
+        <div class="skeleton w-1/2"></div>
+      </div>
+      <div class="skeleton w-full h-50"></div>
+    </div>
+    <div v-else class="w-full flex flex-col gap-8 p-5">
       <h1 class="text-xl sm:text-3xl font-semibold">{{welcomeMessage}}, {{ userName }}</h1>
       <TotalBoxWarpper></TotalBoxWarpper>
       <OrderChartWarpper></OrderChartWarpper>

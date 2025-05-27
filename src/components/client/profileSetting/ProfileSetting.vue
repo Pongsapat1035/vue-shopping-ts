@@ -28,6 +28,8 @@ const handleFileSubmit = async (e: Event) => {
       const downloadUrl = await getDownloadURL(response.ref);
 
       profileImg.value = downloadUrl;
+      const userId  = authStore.userId
+      await authStore.updateProfileImage(userId, downloadUrl)
       alertStore.toggleAlert("Success", "Upload Profile success!");
     }
   } catch (error) {
@@ -48,7 +50,11 @@ const handleFileSubmit = async (e: Event) => {
       name, with changes saved and reflected across the app in real time.
     </p>
     <div class="flex flex-col gap-3">
-      <div class="flex gap-5 items-center">
+      <div v-if="authStore.isLoading" class="flex justify-around items-center px-8">
+        <div class="w-30 h-30 rounded-full skeleton"></div>
+        <div class="skeleton w-2/3 h-12"></div>
+      </div>
+      <div v-else class="flex gap-5 items-center">
         <div class="avatar">
           <div class="w-30 rounded-full">
             <img :src="profileImg" />
@@ -58,29 +64,35 @@ const handleFileSubmit = async (e: Event) => {
           type="file"
           class="file-input file-input-ghost"
           @change="handleFileSubmit" />
-        <button class="btn btn-secondary" @click="profileImg = ''">
+        <button class="btn btn-secondary" @click="profileImg = 'https://www.thaimediafund.or.th/wp-content/uploads/2024/04/blank-profile-picture-973460_1280.png'">
           Remove picture
         </button>
       </div>
     </div>
-    <InputTag
-      name="name"
-      title="Profile name"
-      type="text"
-      v-model:value="name"
-      v-model:error="errMsg"
-      validateWith="isNotEmpty"
-      placeHolderText=""></InputTag>
-    <fieldset class="flex flex-col gap-2">
-      <legend class="font-semibold mb-2">Email</legend>
-      <div class="px-4 py-3 bg-gray-100 rounded-lg">
-        <input
-          type="email"
-          name="email"
-          :value="authStore.userInfo.email"
-          class="outline-none w-full font-light text-sm"
-          disabled />
-      </div>
-    </fieldset>
+    <div v-if="authStore.isLoading" class="flex flex-col gap-8">
+      <div class="w-full h-20 skeleton"></div>
+      <div class="w-full h-20 skeleton"></div>
+    </div>
+    <div v-else class="flex flex-col gap-4">
+      <InputTag
+        name="name"
+        title="Profile name"
+        type="text"
+        v-model:value="name"
+        v-model:error="errMsg"
+        validateWith="isNotEmpty"
+        placeHolderText=""></InputTag>
+      <fieldset class="flex flex-col gap-2">
+        <legend class="font-semibold mb-2">Email</legend>
+        <div class="px-4 py-3 bg-gray-100 rounded-lg">
+          <input
+            type="email"
+            name="email"
+            :value="authStore.userInfo.email"
+            class="outline-none w-full font-light text-sm"
+            disabled />
+        </div>
+      </fieldset>
+    </div>
   </div>
 </template>

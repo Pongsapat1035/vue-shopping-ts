@@ -41,6 +41,7 @@ export const useOrderStore = defineStore("orderStore", {
   state: (): {
     orderLists: OrderList[];
     orderDetail: OrderDetail;
+    isLoading: boolean
   } => ({
     orderLists: [],
     orderDetail: {
@@ -62,6 +63,7 @@ export const useOrderStore = defineStore("orderStore", {
         postcode: "",
       }
     },
+    isLoading: true
   }),
   getters: {
     user(): string {
@@ -71,6 +73,7 @@ export const useOrderStore = defineStore("orderStore", {
   actions: {
     async loadOrder(orderId: string) {
       try {
+        this.isLoading = true
         const docRef = doc(db, "orders", orderId);
         const docSnapshot = await getDoc(docRef);
         if (docSnapshot.exists()) {
@@ -79,6 +82,9 @@ export const useOrderStore = defineStore("orderStore", {
           recievedData.id = docSnapshot.id;
           this.orderDetail = { ...(recievedData as OrderDetail) };
         }
+        setTimeout(()=>{
+          this.isLoading = false
+        }, 1000)
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }
@@ -104,7 +110,7 @@ export const useOrderStore = defineStore("orderStore", {
           result.push(orderData);
         });
         this.orderLists = result;
-        console.log('order lists : ', this.orderLists)
+        
       } catch (error) {
         console.log(error);
       }

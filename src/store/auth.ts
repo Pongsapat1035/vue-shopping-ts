@@ -18,9 +18,11 @@ export const useAuthStore = defineStore("authStore", {
     userId: string;
     userInfo: UserInfo;
     role: string;
+    isLoading: boolean
   } => ({
     userId: "",
     role: "",
+    isLoading: false,
     userInfo: {
       name: "",
       email: "",
@@ -79,6 +81,7 @@ export const useAuthStore = defineStore("authStore", {
     },
     async loadUserInfo() {
       try {
+        this.isLoading = true
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
@@ -89,6 +92,9 @@ export const useAuthStore = defineStore("authStore", {
           this.userInfo.addressInfo = addressInfo;
           this.userInfo.role = role;
         }
+        setTimeout(() => {
+          this.isLoading= false
+        }, 1000);
       } catch (error) {
         console.log("error from load user info : ", error);
       }
@@ -155,5 +161,17 @@ export const useAuthStore = defineStore("authStore", {
         console.log("error from signout : ", error);
       }
     },
+    async updateProfileImage(userId:string, imgUrl:string){
+      try{
+        const docSnap =  doc(db, "users", userId )
+        await updateDoc(docSnap, {
+          "profileImg": imgUrl
+        })
+      } catch(error){
+        if(error instanceof Error){
+          console.log('error from update profile image : ', error.message)
+        }
+      }
+    }
   },
 });

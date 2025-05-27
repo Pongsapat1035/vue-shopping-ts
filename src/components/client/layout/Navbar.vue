@@ -65,9 +65,10 @@ const confirmModalState = ref<boolean>(false);
           <div class="w-10 rounded-full">
             <img
               alt="Tailwind CSS Navbar component"
+              class="object-contain"
               :src="
                 authStore.userInfo.profileImg ||
-                'https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp'
+                'https://www.thaimediafund.or.th/wp-content/uploads/2024/04/blank-profile-picture-973460_1280.png'
               " />
           </div>
         </div>
@@ -83,7 +84,7 @@ const confirmModalState = ref<boolean>(false);
           <li>
             <RouterLink to="/user/order">My order</RouterLink>
           </li>
-          <li><a @click="authStore.signout()">Logout</a></li>
+          <li><a @click="()=> confirmModalState = true">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -91,7 +92,7 @@ const confirmModalState = ref<boolean>(false);
   <ConfirmModal
       v-if="confirmModalState"
       title="Logout"
-      description="Are you want to logout?"
+      description="Are you sure to logout ?"
       :action="authStore.signout"
       :cancel="() => (confirmModalState = false)"></ConfirmModal>
 </template>

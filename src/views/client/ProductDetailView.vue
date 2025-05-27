@@ -105,9 +105,26 @@ watch(
     </div>
     <div
       class="w-4/5 mx-auto mt-10 flex flex-col items-center lg:flex-row lg:h-[600px]">
+      <div
+        v-if="productStore.isLoading"
+        class="skeleton w-full md:w-3/4 lg:w-1/2 h-full"></div>
       <ProductImg
+        v-else
         :coverImg="productStore.product.productInfo.coverImg"></ProductImg>
+      <div
+        v-if="productStore.isLoading"
+        class="flex flex-col gap-6 w-full lg:w-1/2 h-full p-5">
+        <div class="skeleton h-8 w-1/3"></div>
+        <div class="skeleton h-8 w-1/4"></div>
+        <div class="skeleton h-8 w-1/4"></div>
+        <div class="skeleton h-20 w-2/4"></div>
+
+        <div class="skeleton h-8 w-3/4"></div>
+         <div class="skeleton h-20 w-full"></div>
+
+      </div>
       <form
+        v-else
         class="flex-auto w-full lg:w-1/2 p-4 md:p-8 flex flex-col gap-5"
         @submit.prevent="handleSubmit">
         <div class="flex justify-between items-center">

@@ -76,9 +76,9 @@ watch(quantity, ()=>{
       </svg>
     </button>
     <span  class="text-sm text-gray-400 ml-4">
-      stock : {{ remainQuantity }}
+     : {{ remainQuantity }}
     </span>
-    <span v-if="currentQuantity > remainQuantity" class="text-xs ml-4 p-1 bg-red-200 rounded-full text-red-800">
+    <span v-if="currentQuantity > remainQuantity" class="text-[12px] ml-4 p-1 bg-red-200 rounded-full text-red-800">
       Stock insufficient
     </span>
   </div>

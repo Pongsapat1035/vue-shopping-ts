@@ -22,7 +22,7 @@ onMounted(async () => {
         ? 'w-[350px] min-w-[350px] px-5 py-8 border border-gray-200'
         : 'w-0 p-0'
     "
-    class="h-max sticky top-5 hidden lg:flex flex-col gap-5 z-4 bg-white rounded-2xl overflow-hidden transition-all duration-300">
+    class="h-max sticky top-20 hidden lg:flex flex-col gap-5 z-4 bg-white rounded-2xl overflow-hidden transition-all duration-300">
     <h1 v-if="productStore.filterState" class="text-3xl font-semibold">
       Filter
     </h1>
