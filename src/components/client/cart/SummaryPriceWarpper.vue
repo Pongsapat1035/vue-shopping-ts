@@ -17,7 +17,7 @@ const handleSubmit = async () => {
     if (!isEmpty) throw new Error("Cart is empty !");
     const orderId: string = await cartStore.createOrder();
     alertStore.toggleAlert("Success", "Create order success !");
-    router.push({ name: "user-checkout", params: { id: orderId } });
+    router.push({ name: "user-checkout-auth", params: { id: orderId } });
   } catch (error) {
     console.log(error);
     if (error instanceof Error) {

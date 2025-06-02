@@ -12,7 +12,6 @@ watch(
   () => dashboardStore.orderLists,
   (newOrderLists) => {
     orderList.value = newOrderLists;
-    console.log(orderList.value)
   },
   { immediate: true }
 );

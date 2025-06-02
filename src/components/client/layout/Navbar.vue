@@ -8,7 +8,6 @@ import ConfirmModal from "../../ConfirmModal.vue";
 const authStore = useAuthStore();
 const cartStore = useCartStore();
 const confirmModalState = ref<boolean>(false);
-
 </script>
 <template>
   <div class="navbar bg-base-100 sticky top-0 z-6">
@@ -48,7 +47,7 @@ const confirmModalState = ref<boolean>(false);
             <span class="text-lg font-bold"
               >{{ cartStore.getTotalItem }} Items</span
             >
-            <span class="text-neutral-700"
+            <span class="text-neutral-500 font-light"
               >Subtotal: THB
               {{ cartStore.getTotalProductPrice.toLocaleString() }}</span
             >
@@ -76,23 +75,25 @@ const confirmModalState = ref<boolean>(false);
           tabindex="0"
           class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
           <li>
-            <RouterLink to="/user/profile" class="justify-between">
+            <RouterLink
+              :to="{ name: 'user-profile-auth' }"
+              class="justify-between">
               Profile
               <span class="badge">New</span>
             </RouterLink>
           </li>
           <li>
-            <RouterLink to="/user/order">My order</RouterLink>
+            <RouterLink :to="{ name: 'user-order-auth' }">My order</RouterLink>
           </li>
-          <li><a @click="()=> confirmModalState = true">Logout</a></li>
+          <li><a @click="() => (confirmModalState = true)">Logout</a></li>
         </ul>
       </div>
     </div>
   </div>
   <ConfirmModal
-      v-if="confirmModalState"
-      title="Logout"
-      description="Are you sure to logout ?"
-      :action="authStore.signout"
-      :cancel="() => (confirmModalState = false)"></ConfirmModal>
+    v-if="confirmModalState"
+    title="Logout"
+    description="Are you sure to logout ?"
+    :action="authStore.signout"
+    :cancel="() => (confirmModalState = false)"></ConfirmModal>
 </template>

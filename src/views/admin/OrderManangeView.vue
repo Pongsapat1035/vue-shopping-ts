@@ -8,7 +8,7 @@ const orderStore = useAdminOrderStore();
 </script>
 <template>
   <SellerLayout>
-    <div class="flex flex-col h-full gap-10 p-5 overflow-scroll mb-20 sm:mb-0">
+    <div class="flex flex-col h-full gap-10 p-5 pb-25 overflow-scroll mb-20 sm:mb-0">
       <div class="flex-0 flex flex-col gap-5">
         <h1 class="text-2xl sm:text-3xl font-semibold">Order management</h1>
         <div v-if="orderStore.isLoading" class="flex gap-5">

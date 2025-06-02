@@ -51,7 +51,6 @@ const getPathIndex = (path: string): number => {
 };
 
 onMounted(() => {
-  console.log("current path : ", currentPath);
   const pathIndex = getPathIndex(currentPath);
   if (pathIndex >= 0) {
     navData.value[pathIndex].isActive = true;
@@ -60,7 +59,7 @@ onMounted(() => {
 </script>
 <template>
   <div
-    class="flex lg:hidden w-screen bg-white-500 fixed bottom-8 left-0 z-10 px-8 py-5 justify-center">
+    class="flex lg:hidden w-screen bg-white-500 fixed bottom-2 left-0 z-10 px-8 justify-center">
     <div class="w-[90%] bg-neutral-900 rounded-2xl flex justify-around gap-5 p-4">
       <RouterLink to="/" class="hidden sm:block text-2xl font-semibold text-white"
         >Mart.shop</RouterLink

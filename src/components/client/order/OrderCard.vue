@@ -38,7 +38,7 @@ const convertIndex = () => {
       </div>
     </div>
     <RouterLink
-      :to="{ name: 'user-checkout', params: { id: orderData.id } }"
+      :to="{ name: 'user-checkout-auth', params: { id: orderData.id } }"
       class="btn btn-primary max-w-[120px]">
       <svg
         xmlns="http://www.w3.org/2000/svg"

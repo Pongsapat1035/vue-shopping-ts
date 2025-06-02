@@ -18,14 +18,13 @@ const confirmModalState = ref<boolean>(false);
 
 const confirmModalInfo = {
   title: "Delete",
-  desctiption: `Are you sure to delete ${props.data.productInfo?.name}`
-}
-
+  desctiption: `Are you sure to delete ${props.data.productInfo?.name}`,
+};
 </script>
 <template>
-  <div v-if="index != 0" class="divider border-gray-200"></div>
+  <hr v-if="index != 0" class="w-full text-neutral-200 my-4"></hr>
   <div v-if="data.productInfo" class="flex gap-5 h-40">
-    <div class="w-1/3 h-full">
+    <div class="w-1/3 max-w-[180px] h-full">
       <img
         :src="data.productInfo.coverImg"
         class="w-full h-full rounded-lg object-scale-down" />
@@ -35,9 +34,7 @@ const confirmModalInfo = {
         <h1 class="font-semibold text-xl">
           {{ data.productInfo.name }}
         </h1>
-        <button
-          class="btn btn-circle"
-          @click="confirmModalState = true">
+        <button class="btn btn-circle" @click="confirmModalState = true">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             stroke-width="2.5"

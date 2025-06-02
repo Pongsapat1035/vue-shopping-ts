@@ -45,26 +45,31 @@ const getPathIndex = (path: string): number => {
       index = navData.value.findIndex((data) => data.name === "Dashboard");
       break;
     case "/admin/orders":
-      index = navData.value.findIndex((data) => data.name === "Order Management");
+      index = navData.value.findIndex(
+        (data) => data.name === "Order Management"
+      );
       break;
     default:
-      index = navData.value.findIndex((data) => data.name === "Product Management");
+      index = navData.value.findIndex(
+        (data) => data.name === "Product Management"
+      );
   }
   return index;
 };
 
 onMounted(() => {
-  const pathIndex = getPathIndex(currentPath)
-  if(pathIndex >= 0){
-    navData.value[pathIndex].isActive = true
+  const pathIndex = getPathIndex(currentPath);
+  if (pathIndex >= 0) {
+    navData.value[pathIndex].isActive = true;
   }
 });
-
 </script>
 <template>
   <div
-    class="hidden lg:block my-5 rounded-2xl py-8 px-5 bg-slate-900 overflow-hidden duration-300 transition-all"
-    :class="sideBarState ? 'w-[350px] min-w-[350px]' : 'w-[100px] min-w-[100px]'">
+    class="hidden lg:block my-5 rounded-2xl py-8 px-5 bg-slate-900  duration-300 transition-all relative"
+    :class="
+      sideBarState ? 'w-[350px] min-w-[350px]' : 'w-[100px] min-w-[100px]'
+    ">
     <div class="sticky top-5">
       <div
         class="flex justify-between"

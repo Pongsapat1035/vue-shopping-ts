@@ -51,6 +51,6 @@ const alertStore = useAlertStore();
 @reference "tailwindcss";
 
 .alert-container {
-  @apply p-5 border border-neutral-200 rounded-2xl fixed bottom-5 right-5 flex gap-4 min-w-[300px] bg-white shadow-xl;
+  @apply p-5 border border-neutral-200 rounded-2xl fixed bottom-5 right-5 flex gap-4 min-w-[300px] bg-white shadow-xl z-10;
 }
 </style>

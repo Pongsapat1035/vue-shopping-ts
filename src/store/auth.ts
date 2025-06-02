@@ -52,6 +52,11 @@ export const useAuthStore = defineStore("authStore", {
             if (docSnap.exists()) {
               // user exist
               const userInfo = docSnap.data();
+
+              if (user.displayName && userInfo.name !== user.displayName) {
+                const colRef = collection(db, "users");
+                await updateDoc(doc(colRef, uid), { name: user.displayName })
+              }
               this.role = userInfo.role;
             } else {
               // new user
@@ -93,7 +98,7 @@ export const useAuthStore = defineStore("authStore", {
           this.userInfo.role = role;
         }
         setTimeout(() => {
-          this.isLoading= false
+          this.isLoading = false
         }, 1000);
       } catch (error) {
         console.log("error from load user info : ", error);
@@ -101,10 +106,16 @@ export const useAuthStore = defineStore("authStore", {
     },
     async updateUserInfo(userData: UserInfo) {
       try {
-        console.log("check user data : ", userData)
         const uid: string = this.userId;
         const docRef = doc(db, "users", uid);
         await updateDoc(docRef, userData as Partial<UserInfo>);
+        if (auth.currentUser) {
+          await updateProfile(auth.currentUser, {
+            displayName: userData.name
+          });
+        } else {
+          throw new Error("No authenticated user found.");
+        }
       } catch (error) {
         throw new Error(error instanceof Error ? error.message : String(error));
       }
@@ -129,6 +140,8 @@ export const useAuthStore = defineStore("authStore", {
         await updateProfile(response.user, {
           displayName: name,
         });
+
+        await this.checkAuth();
       } catch (error) {
         if (error instanceof Error) {
           console.log("error from signup : ", error);
@@ -161,14 +174,14 @@ export const useAuthStore = defineStore("authStore", {
         console.log("error from signout : ", error);
       }
     },
-    async updateProfileImage(userId:string, imgUrl:string){
-      try{
-        const docSnap =  doc(db, "users", userId )
+    async updateProfileImage(userId: string, imgUrl: string) {
+      try {
+        const docSnap = doc(db, "users", userId)
         await updateDoc(docSnap, {
           "profileImg": imgUrl
         })
-      } catch(error){
-        if(error instanceof Error){
+      } catch (error) {
+        if (error instanceof Error) {
           console.log('error from update profile image : ', error.message)
         }
       }

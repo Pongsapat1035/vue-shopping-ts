@@ -21,11 +21,11 @@ import ProductFormView from "./views/admin/ProductFormView.vue"
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: HomeView },
-  { path: "/auth", name: "auth", component: AuthView },
-  { path: "/user/cart", name: "user-cart", component: CartView },
+  { path: "/auth", name: "login", component: AuthView },
+  { path: "/user/cart", name: "user-cart-auth", component: CartView },
   {
     path: "/user/checkout/:id",
-    name: "user-checkout",
+    name: "user-checkout-auth",
     component: CheckoutView,
   },
   {
@@ -33,8 +33,8 @@ const routes: RouteRecordRaw[] = [
     name: "user-products",
     component: AllProductListView,
   },
-  { path: "/user/profile", name: "user-profile", component: ProfileView },
-  { path: "/user/order", name: "user-order", component: OrderView },
+  { path: "/user/profile", name: "user-profile-auth", component: ProfileView },
+  { path: "/user/order", name: "user-order-auth", component: OrderView },
   {
     path: "/product/:id",
     name: "user-productDetail",
@@ -76,15 +76,15 @@ router.beforeEach(async (to, _, next) => {
   const authStore = useAuthStore();
   await authStore.checkAuth();
   const role = authStore.role;
+
   // check if not admin can't access seller page
-  if (
-    typeof to.name === "string" &&
-    to.name.includes("admin") &&
-    role !== "admin"
-  ) {
+  const pathName = (to.name?.toString() ?? "")
+  if (pathName.includes("admin") && role !== "admin") {
+    next({ name: "home" });
+  } else if (pathName.includes("auth") && role === "") {
     next({ name: "home" });
   } else {
-    next();
+    next()
   }
 });
 

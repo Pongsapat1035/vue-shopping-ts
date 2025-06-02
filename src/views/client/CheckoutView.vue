@@ -27,7 +27,6 @@ const loadingState = ref<boolean>(false);
 onMounted(async () => {
   try {
     await orderStore.loadOrder(orderId);
-    console.log("check order : ", orderStore.orderDetail);
   } catch (error) {
     console.log(error);
   }
@@ -42,7 +41,6 @@ const handlePayment = async () => {
   try {
     if (!allInputIsFilled(authStore.userInfo.addressInfo))
       throw new Error("Please set your address");
-    console.log("call payment");
     loadingState.value = true;
     const paymentUrl: string | null = await orderStore.payment();
     if (paymentUrl) {
@@ -64,7 +62,7 @@ const handlePayment = async () => {
       <ul>
         <li>
           <RouterLink
-            :to="{ name: 'user-order' }"
+            :to="{ name: 'user-order-auth' }"
             class="text-neutral-400 font-light"
             >Order lists</RouterLink
           >
@@ -113,7 +111,7 @@ const handlePayment = async () => {
       <AddressWarpper
         v-else
         :address="orderStore.orderDetail.address"></AddressWarpper>
-      <div class="divider"></div>
+      <hr class="w-full text-neutral-200 my-4"></hr>
       <div class="flex flex-col gap-5 px-5">
         <div
           v-if="orderStore.isLoading"
@@ -131,7 +129,7 @@ const handlePayment = async () => {
           v-for="product in orderStore.orderDetail.products"
           :data="product"></ProductCard>
       </div>
-      <div class="divider"></div>
+      <hr class="w-full text-neutral-200 my-4"></hr>
       <div v-if="orderStore.isLoading" class="w-full h-40 skeleton"></div>
       <div v-else class="flex flex-col gap-5 rounded-2xl bg-gray-100 p-10">
         <div class="flex justify-between">
@@ -151,7 +149,7 @@ const handlePayment = async () => {
           </p>
         </div>
       </div>
-      <div class="divider"></div>
+      <hr class="w-full text-neutral-200 my-4"></hr>
       <div
         v-if="orderStore.orderDetail.status === 'Pending'"
         class="flex justify-end items-center gap-5 mt-4">

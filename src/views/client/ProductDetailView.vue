@@ -38,6 +38,10 @@ onMounted(async () => {
 
 const handleSubmit = (e: Event) => {
   if (!authStore.userId) {
+    alertStore.toggleAlert(
+      "Warning",
+      "Please login before add product to cart"
+    );
     router.push({ name: "auth" });
     return;
   }
@@ -120,8 +124,7 @@ watch(
         <div class="skeleton h-20 w-2/4"></div>
 
         <div class="skeleton h-8 w-3/4"></div>
-         <div class="skeleton h-20 w-full"></div>
-
+        <div class="skeleton h-20 w-full"></div>
       </div>
       <form
         v-else

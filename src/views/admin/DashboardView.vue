@@ -50,7 +50,7 @@ onMounted(async () => {
       </div>
       <div class="skeleton w-full h-50"></div>
     </div>
-    <div v-else class="w-full flex flex-col gap-8 p-5">
+    <div v-else class="w-full flex flex-col gap-8 p-5 pb-25">
       <h1 class="text-xl sm:text-3xl font-semibold">{{welcomeMessage}}, {{ userName }}</h1>
       <TotalBoxWarpper></TotalBoxWarpper>
       <OrderChartWarpper></OrderChartWarpper>

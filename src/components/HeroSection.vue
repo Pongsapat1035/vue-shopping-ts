@@ -19,7 +19,7 @@ import { RouterLink } from "vue-router";
         <RouterLink
           :to="{ name: 'admin-dashboard' }"
           class="btn bg-[#252422] text-white border-0">
-          Become Seller
+          Shop Dashboard
         </RouterLink>
       </div>
     </div>

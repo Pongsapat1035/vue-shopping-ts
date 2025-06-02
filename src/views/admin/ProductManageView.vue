@@ -17,7 +17,7 @@ onMounted(async () => {
 <template>
   <SellerLayout>
     <div
-      class="h-full w-full flex flex-col gap-10 p-5 overflow-scroll mb-25 sm:mb-0">
+      class="h-full w-full flex flex-col gap-10 p-5  pb-25 overflow-scroll mb-25 sm:mb-0">
       <div class="flex-0">
         <div class="flex justify-end sm:justify-between">
           <h1 class="hidden sm:block text-2xl md:text-3xl font-semibold">

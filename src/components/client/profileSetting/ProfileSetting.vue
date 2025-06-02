@@ -28,8 +28,8 @@ const handleFileSubmit = async (e: Event) => {
       const downloadUrl = await getDownloadURL(response.ref);
 
       profileImg.value = downloadUrl;
-      const userId  = authStore.userId
-      await authStore.updateProfileImage(userId, downloadUrl)
+      const userId = authStore.userId;
+      await authStore.updateProfileImage(userId, downloadUrl);
       alertStore.toggleAlert("Success", "Upload Profile success!");
     }
   } catch (error) {
@@ -50,7 +50,9 @@ const handleFileSubmit = async (e: Event) => {
       name, with changes saved and reflected across the app in real time.
     </p>
     <div class="flex flex-col gap-3">
-      <div v-if="authStore.isLoading" class="flex justify-around items-center px-8">
+      <div
+        v-if="authStore.isLoading"
+        class="flex justify-around items-center px-8">
         <div class="w-30 h-30 rounded-full skeleton"></div>
         <div class="skeleton w-2/3 h-12"></div>
       </div>
@@ -64,7 +66,12 @@ const handleFileSubmit = async (e: Event) => {
           type="file"
           class="file-input file-input-ghost"
           @change="handleFileSubmit" />
-        <button class="btn btn-secondary" @click="profileImg = 'https://www.thaimediafund.or.th/wp-content/uploads/2024/04/blank-profile-picture-973460_1280.png'">
+        <button
+          class="btn btn-secondary"
+          @click="
+            profileImg =
+              'https://www.thaimediafund.or.th/wp-content/uploads/2024/04/blank-profile-picture-973460_1280.png'
+          ">
           Remove picture
         </button>
       </div>

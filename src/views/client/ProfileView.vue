@@ -49,7 +49,7 @@ const fetchUserInfo = async () => {
     const { profileImg, name, email, addressInfo, role } = authStore.userInfo;
     userInfo.profileImg =
       profileImg ||
-      "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp";
+      "https://www.thaimediafund.or.th/wp-content/uploads/2024/04/blank-profile-picture-973460_1280.png";
     userInfo.email = email;
     userInfo.role = role;
     userInfo.addressInfo = addressInfo;
@@ -87,17 +87,16 @@ const handleSubmit = async () => {
 onMounted(async () => {
   await fetchUserInfo();
 });
-
 </script>
 <template>
   <UserLayout>
-    <div class="flex flex-col gap-10 w-full md:w-3/4 lg:w-2/4 px-8 md:px-0 mx-auto">
+    <div
+      class="flex flex-col gap-10 w-full md:w-3/4 lg:w-2/4 px-8 md:px-0 mx-auto">
       <ProfileSetting
         v-model:name="userInfo.name"
         v-model:profileImg="userInfo.profileImg"
         v-model:error="errorMsg.name"></ProfileSetting>
-     
-      <Address 
+      <Address
         v-model:address="userInfo.addressInfo"
         v-model:error="errorMsg.addressInfo"></Address>
       <div class="self-end flex gap-5 mt-8">
