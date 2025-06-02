@@ -2,7 +2,7 @@
 
 A fullstack e-commerce project built with **Vue 3** for frontend and **Firebase** for backend services. This project was created as part of my journey to become a fullstack developer.
 
----
+
 
 ## 🚀 Tech Stack
 
@@ -13,8 +13,13 @@ A fullstack e-commerce project built with **Vue 3** for frontend and **Firebase*
   - **Algolia** – Search Indexing  
   - **Zod** – Input Validation  
   - **ApexCharts** – Dashboard Charts
+  
 
----
+# 🛍️ Demo
+
+https://vue-shopping-web.web.app/
+
+
 
 ## 🔐 Authentication
 
@@ -23,14 +28,13 @@ A fullstack e-commerce project built with **Vue 3** for frontend and **Firebase*
 - All input fields are validated with **Zod**  
 - Navigation guards protect routes based on user roles  
 
----
 
 ## 👥 Roles
 
 - **User (Client)**  
 - **Admin (Seller)**  
 
----
+
 
 ## 🛒 User Features
 
@@ -42,7 +46,7 @@ A fullstack e-commerce project built with **Vue 3** for frontend and **Firebase*
 - Search and sort products using **Algolia** by name, variant, and price range  
 - Edit profile and upload profile picture (**Firebase Storage**)  
 
----
+
 
 ## 🛠️ Admin Features
 
@@ -55,7 +59,7 @@ A fullstack e-commerce project built with **Vue 3** for frontend and **Firebase*
   - Best-selling products
   - Daily sales chart (**ApexCharts**, from Realtime DB)
 
----
+
 
 ## ⚙️ Cloud Functions
 
@@ -65,32 +69,25 @@ A fullstack e-commerce project built with **Vue 3** for frontend and **Firebase*
   - On order status change → update stock (decrease/restock)  
   - On product change → update **Algolia** index  
 
----
+
 
 ## 📱 Responsive Design
 
 - Fully responsive UI across mobile, tablet, and desktop  
 
----
+
 
 ## 🧪 Validation
 
 - All forms and inputs validated using **Zod** for safety and consistency  
 
----
+
 
 ## 📦 Deployment
 
 - Hosted with **Firebase Hosting**  
 - Backend logic managed via **Firebase Cloud Functions**  
 
----
-
-## 📸 Screenshots (optional)
-
-_Add screenshots here if you'd like to showcase the UI._
-
----
 
 ## 🧠 Lessons Learned
 
