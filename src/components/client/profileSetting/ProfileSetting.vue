@@ -56,7 +56,9 @@ const handleFileSubmit = async (e: Event) => {
         <div class="w-30 h-30 rounded-full skeleton"></div>
         <div class="skeleton w-2/3 h-12"></div>
       </div>
-      <div v-else class="flex gap-5 items-center">
+      <div
+        v-else
+        class="flex gap-5 items-start sm:items-center flex-col sm:flex-row">
         <div class="avatar">
           <div class="w-30 rounded-full">
             <img :src="profileImg" />

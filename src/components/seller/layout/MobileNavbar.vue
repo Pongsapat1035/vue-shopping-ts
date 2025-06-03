@@ -59,9 +59,11 @@ onMounted(() => {
 </script>
 <template>
   <div
-    class="flex lg:hidden w-screen bg-white-500 fixed bottom-2 left-0 z-10 px-8 justify-center">
-    <div class="w-[90%] bg-neutral-900 rounded-2xl flex justify-around gap-5 p-4">
-      <RouterLink to="/" class="hidden sm:block text-2xl font-semibold text-white"
+    class="flex lg:hidden w-screen bg-white-500 fixed bottom-0 left-0 z-15 justify-center">
+    <div class="w-full bg-neutral-900 flex justify-around gap-5 p-4">
+      <RouterLink
+        to="/"
+        class="hidden sm:block text-2xl font-semibold text-white"
         >Mart.shop</RouterLink
       >
       <MobileButton

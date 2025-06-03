@@ -67,7 +67,7 @@ const handleSubmit = async () => {
 </script>
 <template>
   <form
-    class="flex flex-col p-0 md:p-10 gap-5 w-3/4 md:w-1/2 lg:w-1/3 max-w-[480px] bg-white rounded-2xl"
+    class="flex flex-col px-0 py-4 md:p-10 gap-5 w-3/4 md:w-1/2 lg:w-1/3 max-w-[480px] bg-white rounded-2xl"
     @submit.prevent="handleSubmit">
     <h1 class="font-bold text-5xl mb-5">Login</h1>
     <InputTag

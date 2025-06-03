@@ -73,7 +73,7 @@ const handleDelete = async () => {
       <h1 class="font-semibold text-sm">Name</h1>
       <p class="font-light text-sm text-neutral-500">{{ data.name }}</p>
     </div>
-    <div class="divider my-0"></div>
+    <hr class="w-full text-neutral-200 my-2"></hr>
     <div class="flex justify-between items-center h-7">
       <h1 class="font-semibold text-sm">Quantity</h1>
       <p class="font-light text-sm text-neutral-500">{{ data.remainQty }}</p>

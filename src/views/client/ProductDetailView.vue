@@ -95,7 +95,7 @@ watch(
 
 <template>
   <UserLayout>
-    <div class="breadcrumbs text-md px-7 my-5">
+    <div class="breadcrumbs text-md px-7 my-5 ">
       <ul>
         <li>
           <RouterLink
@@ -104,7 +104,7 @@ watch(
             >Product lists</RouterLink
           >
         </li>
-        <li>{{ productStore.product.productInfo.name }}</li>
+        <li class="text-clip">{{ productStore.product.productInfo.name }}</li>
       </ul>
     </div>
     <div
@@ -131,7 +131,7 @@ watch(
         class="flex-auto w-full lg:w-1/2 p-4 md:p-8 flex flex-col gap-5"
         @submit.prevent="handleSubmit">
         <div class="flex justify-between items-center">
-          <h1 class="text-3xl font-semibold">
+          <h1 class="text-3xl font-semibold w-full break-words">
             {{ productStore.product.productInfo.name }}
           </h1>
           <div
@@ -157,7 +157,7 @@ watch(
         </div>
         <div class="rounded-xl bg-neutral-100/70 p-5 mt-2">
           <h1 class="font-semibold text-xl">Description</h1>
-          <div class="divider"></div>
+          <hr class="w-full text-neutral-200 my-4"></hr>
           <p class="font-light text-neutral-500">
             {{ productStore.product.productInfo.description }}
           </p>

@@ -28,7 +28,7 @@ onMounted(async () => {
         v-if="orderStore.orderLists.length > 0"
         v-for="order in orderStore.orderLists"
         :orderData="order"></OrderLists>
-      <div v-else class="flex justify-center items-center h-full w-full">
+      <div v-else class="flex justify-center items-center h-full w-full my-5 font-light text-neutral-500">
         There are currently no orders to display.
       </div>
     </div>

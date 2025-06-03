@@ -32,7 +32,7 @@ onMounted(async () => {
         <slot></slot>
       </div>
       <div class="flex justify-center items-center min-h-14">
-        <span class="font-semibold"
+        <span class="font-semibold text-center text-xs sm:text-sm"
           >“This is a portfolio project for educational purposes only. All
           product content belongs to Nike.”</span>
       </div>

@@ -45,7 +45,7 @@ const errMsg = defineModel<AddressInfo>("error", {
       <div class="skeleton"></div>
     </div>
     <div v-else class="grid grid-cols-3 grid-rows-[repeat(3,100px)] gap-4">
-      <div class="col-span-2">
+      <div class="col-span-3 sm:col-span-2">
         <InputTag
           title="Reciever name"
           name="recievedName"
@@ -54,13 +54,15 @@ const errMsg = defineModel<AddressInfo>("error", {
           validateWith="isNotEmpty"
           type="text"></InputTag>
       </div>
-      <InputTag
-        title="Tel."
-        name="telephoneNumber"
-        v-model:value="addressInfo.tel"
-        v-model:error="errMsg.tel"
-        validateWith="phoneNumber"
-        type="text"></InputTag>
+      <div class="col-span-2 sm:col-span-1">
+        <InputTag
+          title="Tel."
+          name="telephoneNumber"
+          v-model:value="addressInfo.tel"
+          v-model:error="errMsg.tel"
+          validateWith="phoneNumber"
+          type="text"></InputTag>
+      </div>
       <div class="col-span-3">
         <InputTag
           title="Address"
@@ -70,27 +72,33 @@ const errMsg = defineModel<AddressInfo>("error", {
           validateWith="isNotEmpty"
           type="text"></InputTag>
       </div>
-      <InputTag
-        title="District"
-        name="recievedName"
-        v-model:value="addressInfo.district"
-        v-model:error="errMsg.district"
-        validateWith="isNotEmpty"
-        type="text"></InputTag>
-      <InputTag
-        title="Province"
-        name="telephoneNumber"
-        v-model:value="addressInfo.province"
-        v-model:error="errMsg.province"
-        validateWith="isNotEmpty"
-        type="text"></InputTag>
-      <InputTag
-        title="Postcode"
-        name="telephoneNumber"
-        v-model:value="addressInfo.postcode"
-        v-model:error="errMsg.postcode"
-        validateWith="postcode"
-        type="text"></InputTag>
+      <div class="col-span-2 sm:col-span-1">
+        <InputTag
+          title="District"
+          name="recievedName"
+          v-model:value="addressInfo.district"
+          v-model:error="errMsg.district"
+          validateWith="isNotEmpty"
+          type="text"></InputTag>
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <InputTag
+          title="Province"
+          name="telephoneNumber"
+          v-model:value="addressInfo.province"
+          v-model:error="errMsg.province"
+          validateWith="isNotEmpty"
+          type="text"></InputTag>
+      </div>
+      <div class="col-span-2 sm:col-span-1">
+        <InputTag
+          title="Postcode"
+          name="telephoneNumber"
+          v-model:value="addressInfo.postcode"
+          v-model:error="errMsg.postcode"
+          validateWith="postcode"
+          type="text"></InputTag>
+      </div>
     </div>
   </div>
 </template>

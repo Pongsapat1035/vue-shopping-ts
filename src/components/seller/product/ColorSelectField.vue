@@ -38,7 +38,7 @@ watch(
         </label>
       </div>
       <div v-if="colorEnableLists.length > 0">
-        <div class="divider"></div>
+        <hr class="w-full text-neutral-200 my-4"></hr>
         <h1 class="font-semibold">Product quantity</h1>
         <div class="flex flex-col gap-2">
           <div
